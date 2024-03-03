@@ -15,9 +15,20 @@ import lombok.NoArgsConstructor;
 
 public class ProductEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
     private long id;
 
     private String name;
+
+    private int price;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id")
+    private TransactionEntity transactionEntity;
+
+    public void testThatTransactionCanBeCreatedAndRecalled(){
+
+    }
   
 
 }

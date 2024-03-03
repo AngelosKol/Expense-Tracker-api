@@ -20,7 +20,7 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     private Long id;
 
-    private String name;
+    private String shop;
 
-    private Date date;
+    private String date;
 }
