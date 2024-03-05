@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductEntity createProduct(Long id, ProductEntity product);
+    ProductEntity createProduct( ProductEntity product);
 
     List<ProductEntity> findAll();
 }

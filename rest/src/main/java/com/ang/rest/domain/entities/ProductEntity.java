@@ -26,9 +26,6 @@ public class ProductEntity {
     @JoinColumn(name = "transaction_id")
     private TransactionEntity transactionEntity;
 
-    public void testThatTransactionCanBeCreatedAndRecalled(){
-
-    }
   
 
 }
