@@ -6,6 +6,9 @@ import com.ang.rest.services.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,6 +26,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> findAll() {
-        return null;
+        return StreamSupport.stream(productRepository.
+                findAll()
+                .spliterator(),false)
+                .collect(Collectors.toList());
+
+    }
+    @Override
+    public Optional<ProductEntity> findOne(Long id){
+        return productRepository.findById(id);
     }
 }

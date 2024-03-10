@@ -1,6 +1,8 @@
 package com.ang.rest;
 
 
+import com.ang.rest.domain.dto.ProductDto;
+import com.ang.rest.domain.dto.TransactionDto;
 import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.domain.entities.TransactionEntity;
 
@@ -31,21 +33,23 @@ public class TestData {
                 .build();
     }
 
-    public static ProductEntity getCreateTestProductA(){
+    public static ProductEntity createProductEntityA(final TransactionEntity transactionEntity){
         return ProductEntity.builder()
                 .id(1L)
                 .name("Milk")
                 .price(2)
+                .transactionEntity(transactionEntity)
                 .build();
     }
-    public static ProductEntity getCreateTestProductB(){
-        return ProductEntity.builder()
+    public static ProductDto createTestProductDTOA(final TransactionDto transactionDto){
+        return ProductDto.builder()
                 .id(2L)
                 .name("Butter")
                 .price(3)
+                .transaction(transactionDto)
                 .build();
     }
-    public static ProductEntity getCreateTestProductC(){
+    public static ProductEntity createTestProductC(){
         return ProductEntity.builder()
                 .id(1L)
                 .name("Cheese")
