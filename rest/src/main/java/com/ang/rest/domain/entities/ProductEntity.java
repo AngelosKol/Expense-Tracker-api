@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -24,7 +24,7 @@ public class ProductEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
-    private TransactionEntity transactionEntity;
+    private TransactionEntity transaction;
 
   
 

@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProductDto {
-    private long id;
+    private Long id;
     private String name;
     private int price;
+    private TransactionDto transaction;
+
 
 }
