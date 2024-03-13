@@ -11,4 +11,8 @@ public interface TransactionService {
     List<TransactionEntity> findAll();
 
     Optional<TransactionEntity> findOne(Long id);
+
+    boolean isExists(Long id);
+
+    void delete(Long id);
 }

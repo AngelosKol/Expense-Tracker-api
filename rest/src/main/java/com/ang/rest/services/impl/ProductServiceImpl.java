@@ -20,6 +20,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public boolean isExists(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    @Override
     public ProductEntity createProduct( ProductEntity product) {
         return productRepository.save(product);
     }
@@ -35,5 +40,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<ProductEntity> findOne(Long id){
         return productRepository.findById(id);
+    }
+
+    @Override
+    public List<ProductEntity> findByTransactionId(Long id){
+        return productRepository.findByTransactionId(id);
     }
 }

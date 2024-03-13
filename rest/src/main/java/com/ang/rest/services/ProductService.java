@@ -7,9 +7,14 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    ProductEntity createProduct( ProductEntity product);
+
+    ProductEntity createProduct(ProductEntity product);
 
     List<ProductEntity> findAll();
 
     Optional<ProductEntity> findOne(Long id);
+
+    boolean isExists(Long id);
+
+    List<ProductEntity> findByTransactionId(Long id);
 }

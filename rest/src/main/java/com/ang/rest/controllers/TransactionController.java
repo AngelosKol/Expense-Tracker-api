@@ -47,4 +47,31 @@ public class TransactionController {
             return new ResponseEntity<>(transactionDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PutMapping(path = "/transactions/{id}")
+    public ResponseEntity<TransactionDto> fullUpdateTransaction(
+            @PathVariable("id")Long id,
+            @RequestBody TransactionDto transactionDto){
+      if(!transactionService.isExists(id)){
+          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+
+      transactionDto.setId(id);
+      TransactionEntity transactionEntity = mapper.mapFrom(transactionDto);
+      TransactionEntity savedTransactionEntity =  transactionService.save(transactionEntity);
+
+      return  new ResponseEntity<>(
+              mapper.mapTo(savedTransactionEntity),
+              HttpStatus.OK
+      );
+    }
+
+    @DeleteMapping(path = "/transactions/{id}")
+    public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
+        if(!transactionService.isExists(id)){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        transactionService.delete(id);
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

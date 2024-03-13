@@ -38,7 +38,7 @@ public class TestData {
                 .id(1L)
                 .name("Milk")
                 .price(2)
-                .transactionEntity(transactionEntity)
+                .transaction(transactionEntity)
                 .build();
     }
     public static ProductDto createTestProductDTOA(final TransactionDto transactionDto){

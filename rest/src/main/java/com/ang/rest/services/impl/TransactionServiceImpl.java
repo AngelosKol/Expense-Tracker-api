@@ -37,4 +37,14 @@ public class TransactionServiceImpl implements TransactionService {
     public Optional<TransactionEntity> findOne(Long id) {
      return    transactionRepository.findById(id);
     }
+
+    @Override
+    public boolean isExists(Long id){
+        return transactionRepository.existsById(id);
+    }
+
+    @Override
+    public void delete(Long id) {
+         transactionRepository.deleteById(id);
+    }
 }
