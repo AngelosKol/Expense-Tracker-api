@@ -3,6 +3,7 @@ package com.ang.rest.services.impl;
 import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.services.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,4 +47,14 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductEntity> findByTransactionId(Long id){
         return productRepository.findByTransactionId(id);
     }
+
+
+
+    @Override
+    @Transactional
+    public void deleteProduct(Long tid, Long pid){
+        productRepository.deleteProduct(tid, pid);
+    }
+
+
 }

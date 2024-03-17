@@ -17,4 +17,9 @@ public interface ProductService {
     boolean isExists(Long id);
 
     List<ProductEntity> findByTransactionId(Long id);
+
+
+    void deleteProduct(Long tid, Long pid);
+
+
 }

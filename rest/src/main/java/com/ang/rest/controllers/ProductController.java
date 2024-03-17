@@ -60,17 +60,10 @@ public class ProductController {
 
     }
 
-//    @GetMapping(path = "products/{id}")
-//    public ResponseEntity<ProductDto> getProduct(@PathVariable("id") Long id) {
-//        Optional<ProductEntity> foundProduct = productService.findOne(id);
-//        return foundProduct.map(productEntity -> {
-//            ProductDto productDto = productMapper.mapTo(productEntity);
-//            return new ResponseEntity<>(productDto, HttpStatus.OK);
-//        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
+
 
     @PutMapping(path = "/products/{id}")
-    public ResponseEntity<ProductDto> fullUpdateTransaction(
+    public ResponseEntity<ProductDto> fullUpdateProduct(
             @PathVariable("id") Long id,
             @RequestBody ProductDto productDto) {
         if (!productService.isExists(id)) {
@@ -83,6 +76,12 @@ public class ProductController {
                 productMapper.mapTo(savedProductEntity),
                 HttpStatus.OK
         );
+    }
 
+    @DeleteMapping(path = "/products/{transactionId}/{productId}")
+    public ResponseEntity deleteProduct(@PathVariable("transactionId")Long tid,
+                                        @PathVariable("productId")Long pid){
+        productService.deleteProduct(tid,pid);
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

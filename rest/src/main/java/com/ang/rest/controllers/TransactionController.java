@@ -1,8 +1,11 @@
 package com.ang.rest.controllers;
 
 import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.domain.entities.TransactionEntity;
 import com.ang.rest.mappers.Mapper;
+import com.ang.rest.repositories.ProductRepository;
+import com.ang.rest.services.ProductService;
 import com.ang.rest.services.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,13 @@ public class TransactionController {
 
     private TransactionService transactionService;
 
+    private ProductService productService;
+
     private Mapper<TransactionEntity, TransactionDto> mapper;
 
-    public TransactionController(TransactionService transactionService, Mapper<TransactionEntity, TransactionDto> authorMapper) {
+    public TransactionController(TransactionService transactionService,ProductService productService, Mapper<TransactionEntity, TransactionDto> authorMapper) {
         this.transactionService = transactionService;
+        this.productService = productService;
         this.mapper = authorMapper;
     }
 
