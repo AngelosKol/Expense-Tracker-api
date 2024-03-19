@@ -4,6 +4,8 @@ import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.services.ProductService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +40,9 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
 
     }
+
+
+
     @Override
     public Optional<ProductEntity> findOne(Long id){
         return productRepository.findById(id);
@@ -48,6 +53,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByTransactionId(id);
     }
 
+    @Override
+    public Page<ProductEntity> findByTransactionId(Long id, Pageable pageable) {
+        return productRepository.findByTransactionId(id, pageable);
+    }
 
 
     @Override

@@ -9,6 +9,8 @@ import com.ang.rest.mappers.impl.ProductMapper;
 import com.ang.rest.services.ProductService;
 import com.ang.rest.services.TransactionService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,13 +54,24 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
+//    @GetMapping(path = "products/{transactionId}")
+//    public List<ProductDto> findProductsByTransactionId(@PathVariable("transactionId")Long id){
+//        List<ProductEntity> products = productService.findByTransactionId(id);
+//        return products.stream().map(productEntity -> productMapper.mapTo(productEntity))
+//                .collect(Collectors.toList());
+//
+//    }
+
     @GetMapping(path = "products/{transactionId}")
-    public List<ProductDto> findProductsByTransactionId(@PathVariable("transactionId")Long id){
-        List<ProductEntity> products = productService.findByTransactionId(id);
-        return products.stream().map(productEntity -> productMapper.mapTo(productEntity))
-                .collect(Collectors.toList());
+    public Page<ProductDto> findProductsByTransactionId(@PathVariable("transactionId")Long id, Pageable pageable){
+        Page<ProductEntity> products = productService.findByTransactionId(id, pageable );
+        return products.map(productEntity -> productMapper.mapTo(productEntity));
+
 
     }
+
+
+
 
 
 
