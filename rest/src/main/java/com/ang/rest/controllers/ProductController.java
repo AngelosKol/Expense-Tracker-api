@@ -2,7 +2,6 @@ package com.ang.rest.controllers;
 
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.dto.TransactionDto;
 import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.domain.entities.TransactionEntity;
 import com.ang.rest.mappers.impl.ProductMapper;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -38,14 +36,15 @@ public class ProductController {
     @PostMapping(path = "/products")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws ChangeSetPersister.NotFoundException {
         ProductEntity productEntity = productMapper.mapFrom(productDto);
-        Long transactionId = productDto.getTransactionId();
-        TransactionEntity transaction = transactionService.findOne(transactionId)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-
-        productEntity.setTransaction(transaction);
         ProductEntity savedProduct = productService.createProduct(productEntity);
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
     }
+
+//    @GetMapping(path = "/products")
+//    public Page<ProductDto> getProducts(Pageable pageable) {
+//        Page<ProductEntity> products = productService.findAll(pageable);
+//     return    products.map(productEntity -> productMapper.mapTo(productEntity));
+//    }
 
     @GetMapping(path = "/products")
     public List<ProductDto> getProducts() {
@@ -53,27 +52,6 @@ public class ProductController {
         return products.stream().map(productEntity -> productMapper.mapTo(productEntity))
                 .collect(Collectors.toList());
     }
-
-//    @GetMapping(path = "products/{transactionId}")
-//    public List<ProductDto> findProductsByTransactionId(@PathVariable("transactionId")Long id){
-//        List<ProductEntity> products = productService.findByTransactionId(id);
-//        return products.stream().map(productEntity -> productMapper.mapTo(productEntity))
-//                .collect(Collectors.toList());
-//
-//    }
-
-    @GetMapping(path = "products/{transactionId}")
-    public Page<ProductDto> findProductsByTransactionId(@PathVariable("transactionId")Long id, Pageable pageable){
-        Page<ProductEntity> products = productService.findByTransactionId(id, pageable );
-        return products.map(productEntity -> productMapper.mapTo(productEntity));
-
-
-    }
-
-
-
-
-
 
     @PutMapping(path = "/products/{id}")
     public ResponseEntity<ProductDto> fullUpdateProduct(
@@ -91,10 +69,13 @@ public class ProductController {
         );
     }
 
-    @DeleteMapping(path = "/products/{transactionId}/{productId}")
-    public ResponseEntity deleteProduct(@PathVariable("transactionId")Long tid,
-                                        @PathVariable("productId")Long pid){
-        productService.deleteProduct(tid,pid);
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
+    @DeleteMapping(path = "/products/{id}")
+    public ResponseEntity deleteProduct(@PathVariable("id")Long id){
+        if (!productService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        productService.deleteProduct(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
 }

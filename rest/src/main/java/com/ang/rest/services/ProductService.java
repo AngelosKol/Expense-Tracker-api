@@ -1,6 +1,7 @@
 package com.ang.rest.services;
 
 import com.ang.rest.domain.entities.ProductEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,16 +15,17 @@ public interface ProductService {
 
     List<ProductEntity> findAll();
 
+    // Page<ProductEntity> findAll(Pageable pageable);
 
 
     Optional<ProductEntity> findOne(Long id);
 
     boolean isExists(Long id);
 
-    List<ProductEntity> findByTransactionId(Long id);
+//    List<ProductEntity> findByTransactionId(Long id);
 
-    Page<ProductEntity> findByTransactionId(Long id,Pageable pageable);
-    void deleteProduct(Long tid, Long pid);
+//    Page<ProductEntity> findByTransactionId(Long id,Pageable pageable);
+//    void deleteProductFromTransaction(Long tid, Long pid);
 
-
+    void deleteProduct(Long productId);
 }

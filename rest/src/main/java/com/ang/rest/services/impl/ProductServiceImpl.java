@@ -4,10 +4,7 @@ import com.ang.rest.domain.entities.ProductEntity;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.services.ProductService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +38,15 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+//    public Page<ProductEntity> findAll(Pageable pageable) {
+//        return productRepository.findAll(pageable);
+//    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(Long productId){
+        productRepository.deleteById(productId);
+    }
 
 
     @Override
@@ -48,22 +54,23 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id);
     }
 
-    @Override
-    public List<ProductEntity> findByTransactionId(Long id){
-        return productRepository.findByTransactionId(id);
-    }
+//    @Override
+//    public List<ProductEntity> findByTransactionId(Long id){
+//        return productRepository.findByTransactionId(id);
+//    }
+//
+//    @Override
+//    public Page<ProductEntity> findByTransactionId(Long id, Pageable pageable) {
+//        return productRepository.findByTransactionId(id, pageable);
+//    }
+//
+//
+//    @Override
+//    @Transactional
+//    public void deleteProductFromTransaction(Long tid, Long pid){
+//        productRepository.deleteProduct(tid, pid);
+//    }
 
-    @Override
-    public Page<ProductEntity> findByTransactionId(Long id, Pageable pageable) {
-        return productRepository.findByTransactionId(id, pageable);
-    }
-
-
-    @Override
-    @Transactional
-    public void deleteProduct(Long tid, Long pid){
-        productRepository.deleteProduct(tid, pid);
-    }
 
 
 }

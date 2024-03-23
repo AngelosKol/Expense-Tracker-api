@@ -49,15 +49,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
-        List<ProductEntity> productsToDelete = productRepository.findByTransactionId(id);
 
-        // Delete each related product
-        for (ProductEntity product : productsToDelete) {
-            productRepository.delete(product);
-        }
-
-        transactionRepository.deleteById(id);
     }
+
+//    @Override
+//    @Transactional
+//    public void delete(Long id) {
+//        List<ProductEntity> productsToDelete = productRepository.findByTransactionId(id);
+//        // Delete each related product
+//        for (ProductEntity product : productsToDelete) {
+//            productRepository.delete(product);
+//        }
+//
+//        transactionRepository.deleteById(id);
+//    }
 }

@@ -17,17 +17,15 @@ import java.util.List;
 public interface ProductRepository extends CrudRepository<ProductEntity,Long>,
         PagingAndSortingRepository<ProductEntity,Long> {
 
-    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
-    List<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId);
-
-    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
-    Page<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId, Pageable pageable);
-
-
-
-    @Modifying
-    @Query("DELETE FROM ProductEntity p WHERE p.transaction.id = :transactionId AND p.id = :productId")
-    void deleteProduct(@Param("transactionId") Long transactionId, @Param("productId") Long productId);
-
+//    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
+//    List<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId);
+//
+//    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
+//    Page<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId, Pageable pageable);
+//
+//    @Modifying
+//    @Query("DELETE FROM ProductEntity p WHERE p.transaction.id = :transactionId AND p.id = :productId")
+//    void deleteProduct(@Param("transactionId") Long transactionId, @Param("productId") Long productId);
+//
 
 }
