@@ -2,8 +2,7 @@ package com.ang.rest.controllers;
 
 import com.ang.rest.TestData;
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.entities.ProductEntity;
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Product;
 import com.ang.rest.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -76,7 +75,7 @@ public class ProductControllerIntegrationTests {
 
     @Test
     public void testThatGetProductsReturnsListOfProducts() throws  Exception{
-        ProductEntity product = TestData.createProductEntityA(null);
+        Product product = TestData.createProductEntityA(null);
         productService.createProduct(product);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/products")
@@ -93,7 +92,7 @@ public class ProductControllerIntegrationTests {
 
     @Test
     public  void testThatGetProductReturnsHttpStatus200WhenProductExists() throws Exception {
-        ProductEntity product = TestData.createProductEntityA(null);
+        Product product = TestData.createProductEntityA(null);
         productService.createProduct(product);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/products/" + product.getId())
@@ -111,7 +110,7 @@ public class ProductControllerIntegrationTests {
     }
     @Test
     public  void testThatGetProductReturnsProductWhenProductExists() throws Exception {
-        ProductEntity product = TestData.createProductEntityA(null);
+        Product product = TestData.createProductEntityA(null);
         productService.createProduct(product);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/products/" + product.getId())

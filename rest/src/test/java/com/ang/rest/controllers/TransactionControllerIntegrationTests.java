@@ -1,9 +1,8 @@
 package com.ang.rest.controllers;
 
 import com.ang.rest.TestData;
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.services.TransactionService;
-import com.ang.rest.services.impl.TransactionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +36,7 @@ public class TransactionControllerIntegrationTests {
 
     @Test
     public void testThatCreateTransactionSuccessfullyReturnsHttp201Created() throws Exception {
-        TransactionEntity transaction = TestData.createTestTransactionA();
+        Transaction transaction = TestData.createTestTransactionA();
         transaction.setId(null);
         String stringJson = objectMapper.writeValueAsString(transaction);
         mockMvc.perform(
@@ -52,7 +51,7 @@ public class TransactionControllerIntegrationTests {
 
     @Test
     public void testThatCreateTransactionSuccessfullyReturnsSavedTransaction() throws Exception {
-        TransactionEntity transaction = TestData.createTestTransactionA();
+        Transaction transaction = TestData.createTestTransactionA();
         transaction.setId(null);
         String transactionJson = objectMapper.writeValueAsString(transaction);
         mockMvc.perform(
@@ -82,8 +81,8 @@ public class TransactionControllerIntegrationTests {
 
     @Test
     public void testThatGetTransactionsReturnsListOfTransactions() throws Exception {
-        TransactionEntity transactionEntity = TestData.createTestTransactionA();
-        transactionService.save(transactionEntity);
+        Transaction transaction = TestData.createTestTransactionA();
+        transactionService.save(transaction);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,8 +98,8 @@ public class TransactionControllerIntegrationTests {
 
     @Test
     public void testThatGetTransactionReturnsHttpStatus200WhenTransactionExists() throws Exception {
-        TransactionEntity transactionEntity = TestData.createTestTransactionA();
-        transactionService.save(transactionEntity);
+        Transaction transaction = TestData.createTestTransactionA();
+        transactionService.save(transaction);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/transactions/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,8 +115,8 @@ public class TransactionControllerIntegrationTests {
     }
     @Test
     public void testThatGetTransactionReturnsTransaction() throws Exception {
-        TransactionEntity transactionEntity = TestData.createTestTransactionA();
-        transactionService.save(transactionEntity);
+        Transaction transaction = TestData.createTestTransactionA();
+        transactionService.save(transaction);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/transactions/1")
                         .contentType(MediaType.APPLICATION_JSON)

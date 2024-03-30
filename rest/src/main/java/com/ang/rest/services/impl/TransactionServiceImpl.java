@@ -1,15 +1,18 @@
 package com.ang.rest.services.impl;
 
-import com.ang.rest.domain.entities.ProductEntity;
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Product;
+import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.repositories.TransactionRepository;
 import com.ang.rest.services.TransactionService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -19,18 +22,20 @@ public class TransactionServiceImpl implements TransactionService {
     private  ProductRepository productRepository;
     private TransactionRepository transactionRepository;
 
+
+
     public TransactionServiceImpl(TransactionRepository transactionRepository, ProductRepository productRepository) {
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
     }
 
     @Override
-    public TransactionEntity save(TransactionEntity transaction) {
+    public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
     @Override
-    public List<TransactionEntity> findAll() {
+    public List<Transaction> findAll() {
      return  StreamSupport.stream(transactionRepository.
                      findAll()
                      .spliterator(),
@@ -39,9 +44,53 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Optional<TransactionEntity> findOne(Long id) {
+    public Optional<Transaction> findOne(Long id) {
      return    transactionRepository.findById(id);
     }
+
+    public void addProductToTransaction(Long transactionId, Long productId) {
+        Optional<Transaction> optionalTransaction = transactionRepository.findById(transactionId);
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalTransaction.isPresent() && optionalProduct.isPresent()) {
+            Transaction transaction = optionalTransaction.get();
+            Product product = optionalProduct.get();
+            var products = transaction.getProducts();
+            products.add(product);
+            transaction.setProducts(products);
+            transactionRepository.save(transaction);
+        } else {
+            throw new RuntimeException("Transaction or Product not found");
+        }
+    }
+
+
+
+
+    public Set<Product> getProducts2(Long id) {
+        Optional<Transaction> transaction = transactionRepository.findById(id);
+        if (transaction.isPresent()) {
+            System.out.println("Transaction IS " + transaction.get());
+            var products = transaction.get().getProducts();
+            System.out.println("Products are " + products);
+            System.out.print("Found " + products.size() + " products for transaction with ID: " + id + "\n");
+            return products;
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    @Override
+    public Set<Product> getProducts(Long id) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Not found"));
+        System.out.println("Transaction IS " + transaction);
+        var products = transaction.getProducts();
+        System.out.println("Products are " + products);
+        System.out.print("Found " + products.size() + " products for transaction with ID: " + id + "\n");
+        System.out.println(products);
+        return products;
+    }
+
 
     @Override
     public boolean isExists(Long id){
@@ -50,18 +99,31 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void delete(Long id) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Not found"));
 
+        transactionRepository.deleteById(id);
     }
 
-//    @Override
-//    @Transactional
-//    public void delete(Long id) {
-//        List<ProductEntity> productsToDelete = productRepository.findByTransactionId(id);
-//        // Delete each related product
-//        for (ProductEntity product : productsToDelete) {
-//            productRepository.delete(product);
-//        }
-//
-//        transactionRepository.deleteById(id);
-//    }
+    @Override
+    @Transactional
+    public void deleteProductFromTransaction(Long tid, Long pid) {
+        Transaction transaction = transactionRepository.findById(tid)
+                .orElseThrow(()-> new EntityNotFoundException("Not found"));
+
+        Product productToRemove = null;
+        for(Product product : transaction.getProducts()){
+            if(product.getId().equals(pid)){
+                productToRemove = product;
+                break;
+            }
+        }
+        if(productToRemove != null){
+            transaction.getProducts().remove(productToRemove);
+            transactionRepository.save(transaction);
+        }else{
+            throw new EntityNotFoundException("Product not found");
+        }
+    }
+
 }

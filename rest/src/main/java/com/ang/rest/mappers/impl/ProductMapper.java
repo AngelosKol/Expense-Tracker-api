@@ -1,13 +1,13 @@
 package com.ang.rest.mappers.impl;
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.entities.ProductEntity;
+import com.ang.rest.domain.entities.Product;
 import com.ang.rest.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper implements Mapper<ProductEntity, ProductDto> {
+public class ProductMapper implements Mapper<Product, ProductDto> {
 
     private ModelMapper modelMapper;
 
@@ -16,12 +16,12 @@ public class ProductMapper implements Mapper<ProductEntity, ProductDto> {
     }
 
     @Override
-    public ProductDto mapTo(ProductEntity productEntity) {
-        return modelMapper.map(productEntity, ProductDto.class);
+    public ProductDto mapTo(Product product) {
+        return modelMapper.map(product, ProductDto.class);
     }
 
     @Override
-    public ProductEntity mapFrom(ProductDto productDto) {
-        return modelMapper.map(productDto, ProductEntity.class);
+    public Product mapFrom(ProductDto productDto) {
+        return modelMapper.map(productDto, Product.class);
     }
 }

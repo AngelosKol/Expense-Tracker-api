@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,5 @@ public class ProductDto {
     private Long id;
     private String name;
     private int price;
-    private Long transactionId;
-
 
 }

@@ -1,9 +1,6 @@
 package com.ang.rest.services;
 
-import com.ang.rest.domain.entities.ProductEntity;
-import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.ang.rest.domain.entities.Product;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,14 +8,14 @@ import java.util.Optional;
 public interface ProductService {
 
 
-    ProductEntity createProduct(ProductEntity product);
+    Product createProduct(Product product);
 
-    List<ProductEntity> findAll();
+    List<Product> findAll();
 
     // Page<ProductEntity> findAll(Pageable pageable);
 
 
-    Optional<ProductEntity> findOne(Long id);
+    Optional<Product> findOne(Long id);
 
     boolean isExists(Long id);
 

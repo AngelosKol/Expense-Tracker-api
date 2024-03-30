@@ -1,13 +1,13 @@
 package com.ang.rest.mappers.impl;
 
 import com.ang.rest.domain.dto.TransactionDto;
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionMapper implements Mapper<TransactionEntity, TransactionDto> {
+public class TransactionMapper implements Mapper<Transaction, TransactionDto> {
 
     private ModelMapper modelMapper;
 
@@ -16,13 +16,13 @@ public class TransactionMapper implements Mapper<TransactionEntity, TransactionD
     }
 
     @Override
-    public TransactionDto mapTo(TransactionEntity transactionEntity) {
-       return  modelMapper.map(transactionEntity, TransactionDto.class);
+    public TransactionDto mapTo(Transaction transaction) {
+       return  modelMapper.map(transaction, TransactionDto.class);
 
     }
 
     @Override
-    public TransactionEntity mapFrom(TransactionDto transactionDto) {
-        return modelMapper.map(transactionDto, TransactionEntity.class);
+    public Transaction mapFrom(TransactionDto transactionDto) {
+        return modelMapper.map(transactionDto, Transaction.class);
     }
 }

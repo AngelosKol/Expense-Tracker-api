@@ -1,18 +1,25 @@
 package com.ang.rest.services;
 
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Product;
+import com.ang.rest.domain.entities.Transaction;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TransactionService {
-    TransactionEntity save(TransactionEntity transaction);
+    Transaction save(Transaction transaction);
 
-    List<TransactionEntity> findAll();
+    List<Transaction> findAll();
 
-    Optional<TransactionEntity> findOne(Long id);
+    Optional<Transaction> findOne(Long id);
+
+    void addProductToTransaction(Long transactionId, Long productId);
+    Set<Product> getProducts(Long id);
 
     boolean isExists(Long id);
 
     void delete(Long id);
+
+    void deleteProductFromTransaction(Long tid, Long pid);
 }

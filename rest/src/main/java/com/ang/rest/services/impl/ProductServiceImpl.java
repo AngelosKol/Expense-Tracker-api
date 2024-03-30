@@ -1,6 +1,6 @@
 package com.ang.rest.services.impl;
 
-import com.ang.rest.domain.entities.ProductEntity;
+import com.ang.rest.domain.entities.Product;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.services.ProductService;
 import jakarta.transaction.Transactional;
@@ -25,12 +25,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity createProduct( ProductEntity product) {
+    public Product createProduct(Product product) {
         return productRepository.save(product);
     }
 
     @Override
-    public List<ProductEntity> findAll() {
+    public List<Product> findAll() {
         return StreamSupport.stream(productRepository.
                 findAll()
                 .spliterator(),false)
@@ -38,9 +38,6 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-//    public Page<ProductEntity> findAll(Pageable pageable) {
-//        return productRepository.findAll(pageable);
-//    }
 
     @Override
     @Transactional
@@ -50,27 +47,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Optional<ProductEntity> findOne(Long id){
+    public Optional<Product> findOne(Long id){
         return productRepository.findById(id);
     }
-
-//    @Override
-//    public List<ProductEntity> findByTransactionId(Long id){
-//        return productRepository.findByTransactionId(id);
-//    }
-//
-//    @Override
-//    public Page<ProductEntity> findByTransactionId(Long id, Pageable pageable) {
-//        return productRepository.findByTransactionId(id, pageable);
-//    }
-//
-//
-//    @Override
-//    @Transactional
-//    public void deleteProductFromTransaction(Long tid, Long pid){
-//        productRepository.deleteProduct(tid, pid);
-//    }
-
 
 
 }

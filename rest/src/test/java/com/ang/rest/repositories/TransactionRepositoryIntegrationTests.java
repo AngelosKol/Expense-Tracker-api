@@ -1,7 +1,7 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.TestData;
-import com.ang.rest.domain.entities.TransactionEntity;
+import com.ang.rest.domain.entities.Transaction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,47 +25,47 @@ public class TransactionRepositoryIntegrationTests {
 
     @Test
     public void testThatTransactionCanBeCreatedAndRecalled(){
-        TransactionEntity transactionEntity = TestData.createTestTransactionA();
-        underTest.save(transactionEntity);
-        Optional<TransactionEntity>  result = underTest.findById(transactionEntity.getId());
+        Transaction transaction = TestData.createTestTransactionA();
+        underTest.save(transaction);
+        Optional<Transaction>  result = underTest.findById(transaction.getId());
         assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(transactionEntity);
+        assertThat(result.get()).isEqualTo(transaction);
     }
 
     @Test
     public void testThatMultipleTransactionsCanBeCreatedAndRecalled(){
-        TransactionEntity transactionEntityA = TestData.createTestTransactionA();
-        underTest.save(transactionEntityA);
-        TransactionEntity transactionEntityB = TestData.createTestTransactionB();
-        underTest.save(transactionEntityB);
-        TransactionEntity transactionEntityC = TestData.createTestTransactionC();
-        underTest.save(transactionEntityC);
+        Transaction transactionA = TestData.createTestTransactionA();
+        underTest.save(transactionA);
+        Transaction transactionB = TestData.createTestTransactionB();
+        underTest.save(transactionB);
+        Transaction transactionC = TestData.createTestTransactionC();
+        underTest.save(transactionC);
 
-        Iterable<TransactionEntity> result = underTest.findAll();
+        Iterable<Transaction> result = underTest.findAll();
         assertThat(result)
                 .hasSize(3)
-                .containsExactly(transactionEntityA,transactionEntityB,transactionEntityC);
+                .containsExactly(transactionA, transactionB, transactionC);
     }
 
 
     @Test
     public void testThatTransactionCanBeUpdated(){
-        TransactionEntity transactionEntity = TestData.createTestTransactionB();
-        underTest.save(transactionEntity);
-        transactionEntity.setShop("Market in(updated)");
-        underTest.save(transactionEntity);
-        Optional<TransactionEntity>  result = underTest.findById(transactionEntity.getId());
+        Transaction transaction = TestData.createTestTransactionB();
+        underTest.save(transaction);
+        transaction.setShop("Market in(updated)");
+        underTest.save(transaction);
+        Optional<Transaction>  result = underTest.findById(transaction.getId());
         assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(transactionEntity);
+        assertThat(result.get()).isEqualTo(transaction);
     }
 
     @Test
     public void testThatTransactionCanBeDeleted(){
-        TransactionEntity transaction = TestData.createTestTransactionB();
+        Transaction transaction = TestData.createTestTransactionB();
         underTest.save(transaction);
         underTest.deleteById(transaction.getId());
 
-        Optional<TransactionEntity> result = underTest.findById(transaction.getId());
+        Optional<Transaction> result = underTest.findById(transaction.getId());
         assertThat(result).isEmpty();
     }
 
