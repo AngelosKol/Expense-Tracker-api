@@ -1,6 +1,7 @@
 package com.ang.rest.controllers;
 
 import com.ang.rest.domain.dto.ProductDto;
+import com.ang.rest.domain.dto.ProductRequest;
 import com.ang.rest.domain.dto.TransactionDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
@@ -16,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @RestController
 public class TransactionController {
 
@@ -63,14 +65,13 @@ public class TransactionController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping(path = "/transactions/{id}/product/{productId}")
-    public ResponseEntity<ProductDto> saveProductToTransaction(@PathVariable("id") Long id, @PathVariable("productId") Long productId) {
-        try {
-            transactionService.addProductToTransaction(id, productId);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+    @PostMapping(path = "/transactions/{id}/products")
+    public ResponseEntity<?> addProductToTransaction(@PathVariable("id") Long id,
+                                                     @RequestBody ProductRequest request) {
+
+           transactionService.addProductToTransaction(id, request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 

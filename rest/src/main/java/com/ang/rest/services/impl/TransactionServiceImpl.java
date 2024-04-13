@@ -1,5 +1,6 @@
 package com.ang.rest.services.impl;
 
+import com.ang.rest.domain.dto.ProductRequest;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.repositories.ProductRepository;
@@ -48,13 +49,15 @@ public class TransactionServiceImpl implements TransactionService {
      return    transactionRepository.findById(id);
     }
 
-    public void addProductToTransaction(Long transactionId, Long productId) {
+
+    public void addProductToTransaction(Long transactionId, ProductRequest request) {
         Optional<Transaction> optionalTransaction = transactionRepository.findById(transactionId);
-        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Optional<Product> optionalProduct = productRepository.findById(request.getProductId());
         if (optionalTransaction.isPresent() && optionalProduct.isPresent()) {
             Transaction transaction = optionalTransaction.get();
-            Product product = optionalProduct.get();
             var products = transaction.getProducts();
+            Product product = optionalProduct.get();
+            product.setPrice(request.getPrice());
             products.add(product);
             transaction.setProducts(products);
             transactionRepository.save(transaction);

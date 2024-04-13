@@ -4,6 +4,8 @@ import com.ang.rest.domain.entities.Product;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.services.ProductService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,13 @@ public class ProductServiceImpl implements ProductService {
                 findAll()
                 .spliterator(),false)
                 .collect(Collectors.toList());
+    }
 
+
+
+    @Override
+    public Page<Product> findAll(Pageable pageable) {
+       return productRepository.findAll(pageable);
     }
 
 

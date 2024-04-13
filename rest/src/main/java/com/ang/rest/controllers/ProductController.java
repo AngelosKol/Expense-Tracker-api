@@ -7,6 +7,8 @@ import com.ang.rest.mappers.impl.ProductMapper;
 import com.ang.rest.services.ProductService;
 import com.ang.rest.services.TransactionService;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,11 +39,17 @@ public class ProductController {
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/products")
-    public List<ProductDto> getProducts() {
+
+    @GetMapping(path = "/products/all")
+    public List<ProductDto> getAllProducts(){
         List<Product> products = productService.findAll();
-        return products.stream().map(productEntity -> productMapper.mapTo(productEntity))
-                .collect(Collectors.toList());
+        return products.stream().map(product -> productMapper.mapTo(product)).collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/products")
+    public Page<ProductDto> getProducts(Pageable pageable) {
+        Page<Product> products = productService.findAll(pageable);
+        return products.map(productEntity -> productMapper.mapTo(productEntity));
     }
 
     @PutMapping(path = "/products/{id}")

@@ -1,22 +1,21 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.entities.Product;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ProductRepository extends CrudRepository<Product, Long> {
+import java.util.Optional;
+import java.util.OptionalInt;
 
-//    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
-//    List<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId);
-//
-//    @Query("SELECT p FROM ProductEntity p WHERE p.transaction.id = :transactionId")
-//    Page<ProductEntity> findByTransactionId(@Param("transactionId") Long transactionId, Pageable pageable);
-//
-//    @Modifying
-//    @Query("DELETE FROM ProductEntity p WHERE p.transaction.id = :transactionId AND p.id = :productId")
-//    void deleteProduct(@Param("transactionId") Long transactionId, @Param("productId") Long productId);
-//
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long>,
+        PagingAndSortingRepository<Product,Long> {
+
+
+    @Query("SELECT p FROM Product p WHERE p.name = :name")
+    Optional<Product> findByCustomCriteria(@Param("name") String name);
 
 }
