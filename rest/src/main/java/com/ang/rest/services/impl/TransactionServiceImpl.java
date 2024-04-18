@@ -55,11 +55,9 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Product> optionalProduct = productRepository.findById(request.getProductId());
         if (optionalTransaction.isPresent() && optionalProduct.isPresent()) {
             Transaction transaction = optionalTransaction.get();
-            var products = transaction.getProducts();
             Product product = optionalProduct.get();
             product.setPrice(request.getPrice());
-            products.add(product);
-            transaction.setProducts(products);
+            transaction.getProducts().add(product);
             transactionRepository.save(transaction);
         } else {
             throw new RuntimeException("Transaction or Product not found");
