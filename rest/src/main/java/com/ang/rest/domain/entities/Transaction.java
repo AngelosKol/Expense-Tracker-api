@@ -20,7 +20,10 @@ public class Transaction {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String shop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Set<Shop> shop;
 
     private String date;
 

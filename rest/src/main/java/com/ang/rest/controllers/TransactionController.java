@@ -51,15 +51,14 @@ public class TransactionController {
 
     @GetMapping(path = "/transactions")
     public List<TransactionDto> getTransactions(){
-       List<Transaction> transactions = transactionService.findAll();
-       return transactions.stream().map(transactionEntity -> mapper.mapTo(transactionEntity))
-               .collect(Collectors.toList());
+        List<Transaction> transactions = transactionService.findAll();
+        return transactions.stream().map(transactionEntity -> mapper.mapTo(transactionEntity)).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/transactions/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id")Long id){
-      Optional<Transaction> foundTransaction =  transactionService.findOne(id);
-      return foundTransaction.map(transactionEntity -> {
+        Optional<Transaction> foundTransaction = transactionService.findOne(id);
+        return foundTransaction.map(transactionEntity -> {
             TransactionDto transactionDto = mapper.mapTo(transactionEntity);
             return new ResponseEntity<>(transactionDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
