@@ -1,9 +1,12 @@
 package com.ang.rest.services.impl;
 
 import com.ang.rest.domain.dto.ProductRequest;
+import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
+import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.ProductRepository;
+import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.repositories.TransactionRepository;
 import com.ang.rest.services.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,16 +21,18 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class TransactionServiceImpl implements TransactionService {
+public  class TransactionServiceImpl implements TransactionService {
 
-    private  ProductRepository productRepository;
+    private ProductRepository productRepository;
     private TransactionRepository transactionRepository;
 
-
-
-    public TransactionServiceImpl(TransactionRepository transactionRepository, ProductRepository productRepository) {
+    private  TransactionDetailsRepository tDetailsRepository;
+    public TransactionServiceImpl(TransactionRepository transactionRepository,
+                                  ProductRepository productRepository,
+                                    TransactionDetailsRepository tDetailsRepository) {
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
+        this.tDetailsRepository  = tDetailsRepository;
     }
 
     @Override
@@ -37,94 +42,34 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> findAll() {
-     return  StreamSupport.stream(transactionRepository.
-                     findAll()
-                     .spliterator(),
-                     false)
-              .collect(Collectors.toList());
+        return StreamSupport.stream(transactionRepository.
+                                findAll()
+                                .spliterator(),
+                        false)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Transaction> findOne(Long id) {
-     return    transactionRepository.findById(id);
+        return transactionRepository.findById(id);
     }
 
-
-    public void addProductToTransaction(Long transactionId, ProductRequest request) {
-        Optional<Transaction> optionalTransaction = transactionRepository.findById(transactionId);
-        Optional<Product> optionalProduct = productRepository.findById(request.getProductId());
-        if (optionalTransaction.isPresent() && optionalProduct.isPresent()) {
-            Transaction transaction = optionalTransaction.get();
-            Product product = optionalProduct.get();
-            product.setPrice(request.getPrice());
-            transaction.getProducts().add(product);
-            transactionRepository.save(transaction);
-        } else {
-            throw new RuntimeException("Transaction or Product not found");
-        }
-    }
-
-
-
-
-    public Set<Product> getProducts2(Long id) {
-        Optional<Transaction> transaction = transactionRepository.findById(id);
-        if (transaction.isPresent()) {
-            System.out.println("Transaction IS " + transaction.get());
-            var products = transaction.get().getProducts();
-            System.out.println("Products are " + products);
-            System.out.print("Found " + products.size() + " products for transaction with ID: " + id + "\n");
-            return products;
-        } else {
-            return Collections.emptySet();
-        }
+    public List<TransactionDetails> getTransactionDetailsByTransactionId(Long transactionId) {
+        return tDetailsRepository.findByTransactionId(transactionId);
     }
 
     @Override
-    public Set<Product> getProducts(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Not found"));
-        System.out.println("Transaction IS " + transaction);
-        var products = transaction.getProducts();
-        System.out.println("Products are " + products);
-        System.out.print("Found " + products.size() + " products for transaction with ID: " + id + "\n");
-        System.out.println(products);
-        return products;
-    }
-
-
-    @Override
-    public boolean isExists(Long id){
+    public boolean isExists(Long id) {
         return transactionRepository.existsById(id);
     }
 
     @Override
     public void delete(Long id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Not found"));
-
+                .orElseThrow(() -> new EntityNotFoundException("Not found"));
         transactionRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional
-    public void deleteProductFromTransaction(Long tid, Long pid) {
-        Transaction transaction = transactionRepository.findById(tid)
-                .orElseThrow(()-> new EntityNotFoundException("Not found"));
 
-        Product productToRemove = null;
-        for(Product product : transaction.getProducts()){
-            if(product.getId().equals(pid)){
-                productToRemove = product;
-                break;
-            }
-        }
-        if(productToRemove != null){
-            transaction.getProducts().remove(productToRemove);
-            transactionRepository.save(transaction);
-        }else{
-            throw new EntityNotFoundException("Product not found");
-        }
-    }
 
 }

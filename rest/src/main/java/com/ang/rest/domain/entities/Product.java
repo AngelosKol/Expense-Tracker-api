@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -21,18 +21,12 @@ public class Product {
 
     private String name;
 
-    private Integer price;
-
-    @ManyToMany( fetch = FetchType.LAZY, mappedBy = "products")
-    private Set<Transaction> transactions;
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+                ", name='" + name + '\'' + '}';
     }
 
 }

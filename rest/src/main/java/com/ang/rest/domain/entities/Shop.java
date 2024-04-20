@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "shops")
+@Table(name = "shop")
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
@@ -19,9 +19,5 @@ public class Shop {
     private Long id;
 
     private String name;
-
-
-    @OneToMany(mappedBy = "shop")
-    private Set<Transaction> transactions;
 
 }
