@@ -89,9 +89,7 @@ public class TransactionController {
         List<TransactionDetails> transactionDetails =
                 transactionDetailsService.getTransactionDetailsByTransactionId(id);
 
-        for(TransactionDetails transactionDetail : transactionDetails){
-            System.out.print(transactionDetail);
-        }
+
         return transactionDetails.stream().map(transactionDetail ->
                 transactionDetailsMapper.mapTo(transactionDetail))
                 .collect(Collectors.toList());

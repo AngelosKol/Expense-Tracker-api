@@ -16,7 +16,8 @@ public class TransactionDetailsDto {
 //    private Long id;
 //    private Long transactionId;
 //    private Long productId;
-    private String productName;
+    private Long productId;
+    private String name;
     private int quantity;
     private BigDecimal price;
 
