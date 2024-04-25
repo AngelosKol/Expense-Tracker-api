@@ -15,6 +15,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class TransactionDto {
     private Long id;
-    private String shop;
+    private String shopName;
     private String date;
 }

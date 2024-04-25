@@ -63,7 +63,14 @@ public class TransactionController {
     @GetMapping(path = "/transactions")
     public List<TransactionDto> getTransactions(){
         List<Transaction> transactions = transactionService.findAll();
-        return transactions.stream().map(transactionEntity -> mapper.mapTo(transactionEntity)).collect(Collectors.toList());
+        return transactions.stream()
+                .map(transaction ->{
+                  TransactionDto  transactionDto = mapper.mapTo(transaction);
+                  transactionDto.setShopName(transaction.getShop().getName());
+                  return transactionDto;
+                        })
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping(path = "/transactions/{id}")

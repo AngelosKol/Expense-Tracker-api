@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 @Builder
 public class TransactionDetailsDto {
 
-    private Long id;
-    private Long transactionId;
-    private Long productId;
+//    private Long id;
+//    private Long transactionId;
+//    private Long productId;
     private String productName;
     private int quantity;
     private BigDecimal price;
