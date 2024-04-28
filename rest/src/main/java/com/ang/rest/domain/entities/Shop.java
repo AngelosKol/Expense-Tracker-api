@@ -20,4 +20,7 @@ public class Shop {
 
     private String name;
 
+
+
+
 }

@@ -4,12 +4,16 @@ import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.repositories.ShopRepository;
 import com.ang.rest.services.ShopService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Service
 public class ShopServiceImpl implements ShopService {
 
     private ShopRepository shopRepository;
@@ -28,6 +32,11 @@ public class ShopServiceImpl implements ShopService {
         return StreamSupport.stream(shopRepository.findAll()
                 .spliterator(),false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Shop> findAll(Pageable pageable){
+        return  shopRepository.findAll(pageable);
     }
 
     @Override
