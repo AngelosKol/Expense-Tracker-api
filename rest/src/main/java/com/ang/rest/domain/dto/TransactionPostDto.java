@@ -1,20 +1,17 @@
 package com.ang.rest.domain.dto;
 
 
-import com.ang.rest.domain.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDto {
+public class TransactionPostDto {
     private Long id;
-    private String shopName;
+    private Long shopId;
     private String date;
 }

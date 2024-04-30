@@ -2,7 +2,7 @@ package com.ang.rest;
 
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.dto.TransactionPostDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
 
@@ -41,7 +41,7 @@ public class TestData {
 //                .transactions(transaction)
                 .build();
     }
-    public static ProductDto createTestProductDTOA(final TransactionDto transactionDto){
+    public static ProductDto createTestProductDTOA(final TransactionPostDto transactionPostDto){
         return ProductDto.builder()
                 .id(2L)
                 .name("Butter")
