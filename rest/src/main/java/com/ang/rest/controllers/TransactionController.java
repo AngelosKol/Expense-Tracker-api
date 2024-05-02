@@ -54,6 +54,7 @@ public class TransactionController {
         Transaction transaction = mapper.mapFrom(transactionPostDto);
 
         Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
+
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);

@@ -1,6 +1,8 @@
+
+
 CREATE TABLE IF NOT EXISTS shop (
     id INT PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255)  UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS transaction (
@@ -11,12 +13,12 @@ CREATE TABLE IF NOT EXISTS transaction (
 );
 
 CREATE TABLE IF NOT EXISTS product (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(255)
+    id INT PRIMARY KEY,
+    name VARCHAR(255)   UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS transaction_details (
-    transaction_details_id INT PRIMARY KEY,
+    id INT PRIMARY KEY,
     transaction_id INT,
     product_id INT,
     quantity INT,
