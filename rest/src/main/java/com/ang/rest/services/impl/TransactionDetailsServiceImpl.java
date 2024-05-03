@@ -21,8 +21,24 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
         this.transactionDetailsRepository = transactionDetailsRepository;
     }
 
+
+    @Override
+    public void save(TransactionDetails transactionDetails) {
+        transactionDetailsRepository.save(transactionDetails);
+    }
+
+    @Override
+    public void deleteProduct(Long transactionId, Long productId) {
+        transactionDetailsRepository.removeProductFromTransaction(transactionId, productId);
+    }
+
+
     @Override
     public List<TransactionDetails>  getTransactionDetailsByTransactionId(Long id) {
         return  transactionDetailsRepository.findByTransactionId(id);
     }
+
+
+
+
 }

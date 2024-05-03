@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class TransactionDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_details_seq")
     @EqualsAndHashCode.Include
     private Long id;
 

@@ -1,14 +1,14 @@
 package com.ang.rest.controllers;
 
-import com.ang.rest.domain.dto.TransactionDetailsDto;
-import com.ang.rest.domain.dto.TransactionGetDto;
-import com.ang.rest.domain.dto.TransactionPostDto;
+import com.ang.rest.domain.dto.*;
+import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.mappers.Mapper;
 import com.ang.rest.mappers.impl.ProductMapper;
 import com.ang.rest.mappers.impl.TransactionDetailsMapper;
+import com.ang.rest.services.ProductService;
 import com.ang.rest.services.ShopService;
 import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
@@ -25,6 +25,7 @@ public class TransactionController {
 
     private TransactionService transactionService;
 
+    private ProductService productService;
     private TransactionDetailsService transactionDetailsService;
 
     private ShopService shopService;
@@ -35,12 +36,13 @@ public class TransactionController {
 
     private TransactionDetailsMapper transactionDetailsMapper;
 
-    public TransactionController(TransactionService transactionService, ShopService shopService, TransactionDetailsService transactionDetailsService,
+    public TransactionController(TransactionService transactionService, ProductService productService, ShopService shopService, TransactionDetailsService transactionDetailsService,
                                  Mapper<Transaction, TransactionPostDto> transactionMapper,
                                  Mapper<Transaction, TransactionGetDto> transactionGetMapper,
                                  ProductMapper productMapper, TransactionDetailsMapper transactionDetailsMapper) {
         this.transactionService = transactionService;
         this.shopService = shopService;
+        this.productService = productService;
         this.transactionDetailsService = transactionDetailsService;
         this.mapper = transactionMapper;
         this.transactionGetMapper = transactionGetMapper;
@@ -52,10 +54,9 @@ public class TransactionController {
     @PostMapping(path = "/transactions")
     public ResponseEntity<TransactionPostDto> createTransaction(@RequestBody TransactionPostDto transactionPostDto){
         Transaction transaction = mapper.mapFrom(transactionPostDto);
-
         Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
-
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
+
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
         return new ResponseEntity<>(mapper.mapTo(savedTransaction), HttpStatus.CREATED);
@@ -81,8 +82,9 @@ public class TransactionController {
         Optional<Transaction> foundTransaction = transactionService.findOne(id);
         return foundTransaction.map(t -> {
             TransactionPostDto transactionPostDto = mapper.mapTo(t);
-            return new ResponseEntity<>(transactionPostDto,HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+            return new ResponseEntity<>(transactionPostDto,HttpStatus.OK);})
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
     }
 
@@ -92,30 +94,44 @@ public class TransactionController {
         List<TransactionDetails> transactionDetails =
                 transactionDetailsService.getTransactionDetailsByTransactionId(id);
 
-
         return transactionDetails.stream().map(transactionDetail ->
                 transactionDetailsMapper.mapTo(transactionDetail))
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("transactions/{id}/product")
+    public ResponseEntity addProductToTransaction(@PathVariable Long id,
+                                                  @RequestBody ProductDetailsDto productDetailsDto){
+        Optional<Transaction> transaction = transactionService.findOne(id);
+        if(transaction.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<Product> product = productService.findOne(productDetailsDto.getProductId());
+        if(product.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-    @PutMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionPostDto> fullUpdateTransaction(
-            @PathVariable("id")Long id,
-            @RequestBody TransactionPostDto transactionPostDto){
-      if(!transactionService.isExists(id)){
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-
-      transactionPostDto.setId(id);
-      Transaction transaction = mapper.mapFrom(transactionPostDto);
-      Transaction savedTransaction =  transactionService.save(transaction);
-
-      return  new ResponseEntity<>(
-              mapper.mapTo(savedTransaction),
-              HttpStatus.OK
-      );
+        TransactionDetails transactionDetails = new TransactionDetails();
+        transactionDetails.setTransaction(transaction.get());
+        transactionDetails.setProduct(product.get());
+        transactionDetails.setPrice(productDetailsDto.getPrice());
+        transactionDetails.setQuantity(productDetailsDto.getQuantity());
+        transactionDetailsService.save(transactionDetails);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @DeleteMapping(path = "/transactions/{id}/product/{productId}")
+    public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long id, @PathVariable("productId") Long productId){
+        if(!transactionService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!productService.isExists(productId)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        transactionDetailsService.deleteProduct(id, productId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
     @DeleteMapping(path = "/transactions/{id}")
     public ResponseEntity deleteTransaction(@PathVariable("id")Long id){

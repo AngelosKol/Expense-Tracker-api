@@ -1,6 +1,5 @@
 package com.ang.rest.services;
 
-import com.ang.rest.domain.dto.ProductRequest;
 import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;

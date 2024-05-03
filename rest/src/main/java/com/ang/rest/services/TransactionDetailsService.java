@@ -12,4 +12,10 @@ public interface TransactionDetailsService {
 
     List<TransactionDetails> getTransactionDetailsByTransactionId(Long id);
 
+
+    void save(TransactionDetails transactionDetails);
+
+
+    void deleteProduct(Long transactionId, Long productId);
+
 }

@@ -1,6 +1,8 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.entities.TransactionDetails;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,8 +14,9 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
     List<TransactionDetails> findByTransactionId(Long transactionId);
 
 
-//    @Query("SELECT td.quantity, td.price, p.product_id, p.product_name FROM TransactionDetails td JOIN td.product p WHERE td.transaction.id = :transactionId")
-//    List<Object[]> findProductDetailsByTransactionId
-//            (@Param("transactionId") Long transactionId);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id = :productId")
+    void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("productId") Long productId);
 
 }
