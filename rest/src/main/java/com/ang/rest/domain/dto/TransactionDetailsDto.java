@@ -13,10 +13,8 @@ import java.math.BigDecimal;
 @Builder
 public class TransactionDetailsDto {
 
-//    private Long id;
-//    private Long transactionId;
-//    private Long productId;
-    private Long productId;
+
+
     private String name;
     private int quantity;
     private BigDecimal price;

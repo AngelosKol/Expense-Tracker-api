@@ -16,6 +16,6 @@ public interface TransactionDetailsService {
     void save(TransactionDetails transactionDetails);
 
 
-    void deleteProduct(Long transactionId, Long productId);
+    void deleteProduct(Long transactionId, String productName);
 
 }

@@ -28,8 +28,8 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public void deleteProduct(Long transactionId, Long productId) {
-        transactionDetailsRepository.removeProductFromTransaction(transactionId, productId);
+    public void deleteProduct(Long transactionId, String productName) {
+        transactionDetailsRepository.removeProductFromTransaction(transactionId, productName);
     }
 
 

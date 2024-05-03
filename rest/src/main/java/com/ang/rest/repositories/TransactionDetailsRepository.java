@@ -16,7 +16,7 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id = :productId")
-    void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("productId") Long productId);
+    @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id IN (SELECT p.id FROM Product p WHERE p.name = :name)")
+    void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("name") String name);
 
 }

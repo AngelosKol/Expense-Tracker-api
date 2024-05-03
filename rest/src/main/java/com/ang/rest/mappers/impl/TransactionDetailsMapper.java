@@ -17,7 +17,8 @@ public class TransactionDetailsMapper implements Mapper<TransactionDetails, Tran
 
     @Override
     public TransactionDetailsDto mapTo(TransactionDetails transactionDetails) {
-    return modelMapper.map(transactionDetails, TransactionDetailsDto.class);
+     return   modelMapper.map(transactionDetails, TransactionDetailsDto.class);
+
     }
 
     @Override
