@@ -19,6 +19,7 @@ public interface ShopService {
 
     Optional<Shop> findOne(Long id);
 
+    Optional<Shop> findByName(String name);
     boolean isExists(Long id);
 
     void delete(Long id);

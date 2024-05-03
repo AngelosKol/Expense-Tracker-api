@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionGetDto {
+public class TransactionDto {
     private Long id;
     private String shopName;
     private String date;

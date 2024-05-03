@@ -45,6 +45,11 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public Optional<Shop> findByName(String name) {
+        return shopRepository.findByName(name);
+    }
+
+    @Override
     public boolean isExists(Long id) {
         return shopRepository.existsById(id);
     }

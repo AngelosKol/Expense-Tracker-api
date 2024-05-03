@@ -29,59 +29,67 @@ public class TransactionController {
     private TransactionDetailsService transactionDetailsService;
 
     private ShopService shopService;
-    private Mapper<Transaction, TransactionPostDto> mapper;
 
-    private Mapper<Transaction, TransactionGetDto> transactionGetMapper;
+    private Mapper<Transaction, TransactionDto> transactionMapper;
     private ProductMapper productMapper;
 
     private TransactionDetailsMapper transactionDetailsMapper;
 
     public TransactionController(TransactionService transactionService, ProductService productService, ShopService shopService, TransactionDetailsService transactionDetailsService,
-                                 Mapper<Transaction, TransactionPostDto> transactionMapper,
-                                 Mapper<Transaction, TransactionGetDto> transactionGetMapper,
+                                 Mapper<Transaction, TransactionDto> transactionMapper,
                                  ProductMapper productMapper, TransactionDetailsMapper transactionDetailsMapper) {
         this.transactionService = transactionService;
         this.shopService = shopService;
         this.productService = productService;
         this.transactionDetailsService = transactionDetailsService;
-        this.mapper = transactionMapper;
-        this.transactionGetMapper = transactionGetMapper;
+        this.transactionMapper = transactionMapper;
         this.productMapper = productMapper;
         this.transactionDetailsMapper = transactionDetailsMapper;
     }
 
 
+//    @PostMapping(path = "/transactions")
+//    public ResponseEntity<TransactionPostDto> createTransaction(@RequestBody TransactionPostDto transactionPostDto){
+//        Transaction transaction = mapper.mapFrom(transactionPostDto);
+//        Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
+//        Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
+//
+//        transaction.setShop(shop);
+//        Transaction savedTransaction = transactionService.save(transaction);
+//        return new ResponseEntity<>(mapper.mapTo(savedTransaction), HttpStatus.CREATED);
+//    }
+
     @PostMapping(path = "/transactions")
-    public ResponseEntity<TransactionPostDto> createTransaction(@RequestBody TransactionPostDto transactionPostDto){
-        Transaction transaction = mapper.mapFrom(transactionPostDto);
-        Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
+    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto){
+        Transaction transaction = transactionMapper.mapFrom(transactionDto);
+        Optional<Shop> shopOptional = shopService.findByName(transactionDto.getShopName());
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
 
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
-        return new ResponseEntity<>(mapper.mapTo(savedTransaction), HttpStatus.CREATED);
+        return new ResponseEntity<>(transactionMapper.mapTo(savedTransaction), HttpStatus.CREATED);
     }
 
 
 
     @GetMapping(path = "/transactions")
-    public List<TransactionGetDto> getTransactions(){
+    public List<TransactionDto> getTransactions(){
         List<Transaction> transactions = transactionService.findAll();
         return transactions.stream()
                 .map(transaction ->{
-                    TransactionGetDto transactionGetDto = transactionGetMapper.mapTo(transaction);
-                transactionGetDto.setShopName(transaction.getShop().getName());
-                  return transactionGetDto;
+                    TransactionDto transactionDto = transactionMapper.mapTo(transaction);
+                transactionDto.setShopName(transaction.getShop().getName());
+                  return transactionDto;
                         })
                 .collect(Collectors.toList());
 
     }
 
     @GetMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionPostDto> getTransactionById(@PathVariable("id")Long id){
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id")Long id){
         Optional<Transaction> foundTransaction = transactionService.findOne(id);
         return foundTransaction.map(t -> {
-            TransactionPostDto transactionPostDto = mapper.mapTo(t);
+                    TransactionDto transactionPostDto = transactionMapper.mapTo(t);
 
             return new ResponseEntity<>(transactionPostDto,HttpStatus.OK);})
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
