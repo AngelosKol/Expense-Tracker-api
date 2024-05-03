@@ -1,8 +1,9 @@
 package com.ang.rest.services;
 
-import com.ang.rest.domain.dto.ProductRequest;
+import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
+import com.ang.rest.domain.entities.TransactionDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,12 +16,9 @@ public interface TransactionService {
 
     Optional<Transaction> findOne(Long id);
 
-    void addProductToTransaction(Long transactionId, ProductRequest request);
-    Set<Product> getProducts(Long id);
-
     boolean isExists(Long id);
 
     void delete(Long id);
 
-    void deleteProductFromTransaction(Long tid, Long pid);
+
 }

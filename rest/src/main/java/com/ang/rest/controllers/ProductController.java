@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/products/{id}")
-    public ResponseEntity<ProductDto> fullUpdateProduct(
+    public ResponseEntity<ProductDto> updateProduct(
             @PathVariable("id") Long id,
             @RequestBody ProductDto productDto) {
         if (!productService.isExists(id)) {

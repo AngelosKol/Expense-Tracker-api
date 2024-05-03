@@ -11,22 +11,17 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "product")
-public class Product {
-
+@Table(name = "shop")
+public class Shop {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' + '}';
-    }
+
 
 }

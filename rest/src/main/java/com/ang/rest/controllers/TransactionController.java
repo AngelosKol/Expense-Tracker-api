@@ -1,13 +1,16 @@
 package com.ang.rest.controllers;
 
-import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.dto.ProductRequest;
-import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entities.Product;
+import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.domain.entities.Transaction;
+import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.mappers.Mapper;
 import com.ang.rest.mappers.impl.ProductMapper;
+import com.ang.rest.mappers.impl.TransactionDetailsMapper;
 import com.ang.rest.services.ProductService;
+import com.ang.rest.services.ShopService;
+import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,34 +18,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 @RestController
 public class TransactionController {
 
     private TransactionService transactionService;
 
     private ProductService productService;
+    private TransactionDetailsService transactionDetailsService;
 
-    private Mapper<Transaction, TransactionDto> mapper;
+    private ShopService shopService;
+    private Mapper<Transaction, TransactionPostDto> mapper;
 
+    private Mapper<Transaction, TransactionGetDto> transactionGetMapper;
     private ProductMapper productMapper;
 
+    private TransactionDetailsMapper transactionDetailsMapper;
 
-    public TransactionController(TransactionService transactionService, ProductService productService,
-                                 Mapper<Transaction, TransactionDto> transactionMapper, ProductMapper productMapper) {
+    public TransactionController(TransactionService transactionService, ProductService productService, ShopService shopService, TransactionDetailsService transactionDetailsService,
+                                 Mapper<Transaction, TransactionPostDto> transactionMapper,
+                                 Mapper<Transaction, TransactionGetDto> transactionGetMapper,
+                                 ProductMapper productMapper, TransactionDetailsMapper transactionDetailsMapper) {
         this.transactionService = transactionService;
+        this.shopService = shopService;
         this.productService = productService;
+        this.transactionDetailsService = transactionDetailsService;
         this.mapper = transactionMapper;
+        this.transactionGetMapper = transactionGetMapper;
         this.productMapper = productMapper;
+        this.transactionDetailsMapper = transactionDetailsMapper;
     }
 
 
     @PostMapping(path = "/transactions")
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto){
-        Transaction transaction = mapper.mapFrom(transactionDto);
+    public ResponseEntity<TransactionPostDto> createTransaction(@RequestBody TransactionPostDto transactionPostDto){
+        Transaction transaction = mapper.mapFrom(transactionPostDto);
+        Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
+        Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
+
+        transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
         return new ResponseEntity<>(mapper.mapTo(savedTransaction), HttpStatus.CREATED);
     }
@@ -50,55 +65,73 @@ public class TransactionController {
 
 
     @GetMapping(path = "/transactions")
-    public List<TransactionDto> getTransactions(){
-       List<Transaction> transactions = transactionService.findAll();
-       return transactions.stream().map(transactionEntity -> mapper.mapTo(transactionEntity))
-               .collect(Collectors.toList());
+    public List<TransactionGetDto> getTransactions(){
+        List<Transaction> transactions = transactionService.findAll();
+        return transactions.stream()
+                .map(transaction ->{
+                    TransactionGetDto transactionGetDto = transactionGetMapper.mapTo(transaction);
+                transactionGetDto.setShopName(transaction.getShop().getName());
+                  return transactionGetDto;
+                        })
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id")Long id){
-      Optional<Transaction> foundTransaction =  transactionService.findOne(id);
-      return foundTransaction.map(transactionEntity -> {
-            TransactionDto transactionDto = mapper.mapTo(transactionEntity);
-            return new ResponseEntity<>(transactionDto, HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<TransactionPostDto> getTransactionById(@PathVariable("id")Long id){
+        Optional<Transaction> foundTransaction = transactionService.findOne(id);
+        return foundTransaction.map(t -> {
+            TransactionPostDto transactionPostDto = mapper.mapTo(t);
+
+            return new ResponseEntity<>(transactionPostDto,HttpStatus.OK);})
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
     }
 
+    @GetMapping("/transactions/{id}/details")
+    public List<TransactionDetailsDto> getTransactionDetailsByTransactionId(
+            @PathVariable Long id) {
+        List<TransactionDetails> transactionDetails =
+                transactionDetailsService.getTransactionDetailsByTransactionId(id);
 
-    @PostMapping(path = "/transactions/{id}/products")
-    public ResponseEntity<?> addProductToTransaction(@PathVariable("id") Long id,
-                                                     @RequestBody ProductRequest request) {
+        return transactionDetails.stream().map(transactionDetail ->
+                transactionDetailsMapper.mapTo(transactionDetail))
+                .collect(Collectors.toList());
+    }
 
-           transactionService.addProductToTransaction(id, request);
+    @PostMapping("transactions/{id}/product")
+    public ResponseEntity addProductToTransaction(@PathVariable Long id,
+                                                  @RequestBody ProductDetailsDto productDetailsDto){
+        Optional<Transaction> transaction = transactionService.findOne(id);
+        if(transaction.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<Product> product = productService.findOne(productDetailsDto.getProductId());
+        if(product.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        TransactionDetails transactionDetails = new TransactionDetails();
+        transactionDetails.setTransaction(transaction.get());
+        transactionDetails.setProduct(product.get());
+        transactionDetails.setPrice(productDetailsDto.getPrice());
+        transactionDetails.setQuantity(productDetailsDto.getQuantity());
+        transactionDetailsService.save(transactionDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
-    @GetMapping(path = "/transactions/{id}/products")
-    public ResponseEntity<List<ProductDto>> findProductsByTransactionId(@PathVariable("id")Long id){
-        var products = transactionService.getProducts(id);
-        return  ResponseEntity.ok(products.stream().map(product -> productMapper.mapTo(product))
-                .collect(Collectors.toList()));
+    @DeleteMapping(path = "/transactions/{id}/product/{productName}")
+    public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long id, @PathVariable("productName") String productName){
+        if(!transactionService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+//        if(!productService.isExists(productId)){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+        transactionDetailsService.deleteProduct(id, productName);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionDto> fullUpdateTransaction(
-            @PathVariable("id")Long id,
-            @RequestBody TransactionDto transactionDto){
-      if(!transactionService.isExists(id)){
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-
-      transactionDto.setId(id);
-      Transaction transaction = mapper.mapFrom(transactionDto);
-      Transaction savedTransaction =  transactionService.save(transaction);
-
-      return  new ResponseEntity<>(
-              mapper.mapTo(savedTransaction),
-              HttpStatus.OK
-      );
-    }
 
     @DeleteMapping(path = "/transactions/{id}")
     public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
@@ -109,14 +142,8 @@ public class TransactionController {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(path = "/transactions/{transactionId}/products/{productId}")
-    public ResponseEntity deleteProductFromTransaction(@PathVariable("transactionId") Long tid,
-                                                       @PathVariable("productId") Long pid) {
-        if (!transactionService.isExists(tid) || !productService.isExists(pid)) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        transactionService.deleteProductFromTransaction(tid, pid);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
+
+
+
 
 }

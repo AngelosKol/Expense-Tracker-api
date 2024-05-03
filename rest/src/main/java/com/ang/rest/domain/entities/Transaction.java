@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "transactions")
+@Table(name = "transaction")
 
 public class Transaction {
     @Id
@@ -20,22 +20,16 @@ public class Transaction {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String shop;
-
     private String date;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "transaction_products",
-            joinColumns = @JoinColumn(name = "transaction_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
     @Override
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", shop='" + shop + '\'' +
                 ", date='" + date + '\'' +
                 '}';
     }
