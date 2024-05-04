@@ -48,21 +48,11 @@ public class TransactionController {
     }
 
 
-//    @PostMapping(path = "/transactions")
-//    public ResponseEntity<TransactionPostDto> createTransaction(@RequestBody TransactionPostDto transactionPostDto){
-//        Transaction transaction = mapper.mapFrom(transactionPostDto);
-//        Optional<Shop> shopOptional = shopService.findOne(transactionPostDto.getShopId());
-//        Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
-//
-//        transaction.setShop(shop);
-//        Transaction savedTransaction = transactionService.save(transaction);
-//        return new ResponseEntity<>(mapper.mapTo(savedTransaction), HttpStatus.CREATED);
-//    }
-
     @PostMapping(path = "/transactions")
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto){
         Transaction transaction = transactionMapper.mapFrom(transactionDto);
         Optional<Shop> shopOptional = shopService.findByName(transactionDto.getShopName());
+        System.out.println("Shop is : "+ shopOptional);
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
 
         transaction.setShop(shop);
@@ -89,9 +79,9 @@ public class TransactionController {
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id")Long id){
         Optional<Transaction> foundTransaction = transactionService.findOne(id);
         return foundTransaction.map(t -> {
-                    TransactionDto transactionPostDto = transactionMapper.mapTo(t);
+                    TransactionDto transactionDto = transactionMapper.mapTo(t);
 
-            return new ResponseEntity<>(transactionPostDto,HttpStatus.OK);})
+            return new ResponseEntity<>(transactionDto,HttpStatus.OK);})
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
     }
@@ -144,10 +134,10 @@ public class TransactionController {
     @DeleteMapping(path = "/transactions/{id}")
     public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
         if(!transactionService.isExists(id)){
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         transactionService.delete(id);
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
