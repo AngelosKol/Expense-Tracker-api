@@ -59,5 +59,16 @@ public class ShopController {
 
     }
 
+
+    @DeleteMapping(path = "/shops/{id}")
+    public ResponseEntity deleteShop(@PathVariable Long id){
+        if(!shopService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        shopService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
 }
 

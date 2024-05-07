@@ -21,13 +21,13 @@ public class TransactionDetails {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id" )
     private Product product;
 
     private int quantity;
