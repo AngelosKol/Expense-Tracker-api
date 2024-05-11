@@ -12,6 +12,8 @@ import com.ang.rest.services.ProductService;
 import com.ang.rest.services.ShopService;
 import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,15 +88,28 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transactions/{id}/details")
-    public List<TransactionDetailsDto> getTransactionDetailsByTransactionId(
+
+
+
+    @GetMapping("/transactions/{id}/details/all")
+    public List<TransactionDetailsDto> getAllTransactionDetails(
             @PathVariable Long id) {
         List<TransactionDetails> transactionDetails =
                 transactionDetailsService.getTransactionDetailsByTransactionId(id);
 
         return transactionDetails.stream().map(transactionDetail ->
-                transactionDetailsMapper.mapTo(transactionDetail))
+                        transactionDetailsMapper.mapTo(transactionDetail))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/transactions/{id}/details")
+    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(
+            @PathVariable Long id, Pageable pageable) {
+        Page<TransactionDetails> transactionDetails =
+                transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
+
+        return transactionDetails.map(transactionDetail ->
+                transactionDetailsMapper.mapTo(transactionDetail));
     }
 
     @PostMapping("transactions/{id}/product")

@@ -19,6 +19,4 @@ public class TransactionDetailsDto {
     private int quantity;
     private BigDecimal price;
 
-
-
 }
