@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface ProductService {
 
 
+    boolean existsByName(String name);
+
     Product createProduct(Product product);
 
     List<Product> findAll();

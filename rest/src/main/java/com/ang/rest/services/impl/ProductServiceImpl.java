@@ -26,6 +26,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.existsById(id);
     }
 
+
+    @Override
+    public boolean existsByName(String name){
+        return productRepository.findByCustomCriteria(name);
+    }
+
     @Override
     public Product createProduct(Product product) {
         return productRepository.save(product);

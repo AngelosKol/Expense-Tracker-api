@@ -3,6 +3,7 @@ package com.ang.rest.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Transaction {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String date;
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")
