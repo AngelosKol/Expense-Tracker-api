@@ -12,20 +12,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @Data
+@IdClass(TransactionDetailsId.class)
 
 public class TransactionDetails {
 
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_details_seq")
-    @EqualsAndHashCode.Include
-    private Long id;
-
-
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
-
+    @Id
     @ManyToOne
     @JoinColumn(name = "product_id" )
     private Product product;

@@ -4,28 +4,28 @@ DROP TABLE IF EXISTS SHOP;
 DROP TABLE IF EXISTS PRODUCT;
 
 CREATE TABLE IF NOT EXISTS shop (
-    id SERIAL  PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     name VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS transaction (
-    id SERIAL  PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     date DATE,
-    shop_id INT,
+    shop_id BIGINT,
     FOREIGN KEY (shop_id) REFERENCES shop(id)
 );
 
 CREATE TABLE IF NOT EXISTS product (
-    id SERIAL  PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     name VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS transaction_details (
-    id SERIAL  PRIMARY KEY,
-    transaction_id INT,
-    product_id INT,
+    transaction_id BIGINT,
+    product_id BIGINT,
     quantity INT,
-    price DECIMAL(10, 2),
+    price NUMERIC(38, 2),
+    PRIMARY KEY (transaction_id, product_id),
     FOREIGN KEY (transaction_id) REFERENCES transaction(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );

@@ -136,14 +136,14 @@ public class TransactionController {
     }
 
     @DeleteMapping(path = "/transactions/{id}/product/{productName}")
-    public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long id, @PathVariable("productName") String productName){
-        if(!transactionService.isExists(id)){
+    public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long transactionId, @PathVariable("productName") String productName){
+        if(!transactionService.isExists(transactionId)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 //        if(!productService.isExists(productId)){
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
-        transactionDetailsService.deleteProduct(id, productName);
+        transactionDetailsService.deleteProduct(transactionId, productName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
