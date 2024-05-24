@@ -63,7 +63,6 @@ public class TransactionController {
     }
 
 
-
     @GetMapping(path = "/transactions")
     public List<TransactionDto> getTransactions(){
         List<Transaction> transactions = transactionService.findAll();
@@ -89,7 +88,19 @@ public class TransactionController {
     }
 
 
+    @DeleteMapping(path = "/transactions/{id}")
+    public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
+        if(!transactionService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        transactionService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+    /**
+     *
+     * Transaction Details methods
+     */
 
     @GetMapping("/transactions/{id}/details/all")
     public List<TransactionDetailsDto> getAllTransactionDetails(
@@ -124,8 +135,6 @@ public class TransactionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-
-
         TransactionDetails transactionDetails = new TransactionDetails();
         transactionDetails.setTransaction(transaction.get());
         transactionDetails.setProduct(product.get());
@@ -134,6 +143,8 @@ public class TransactionController {
         transactionDetailsService.save(transactionDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+
 
     @DeleteMapping(path = "/transactions/{id}/product/{productName}")
     public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long transactionId, @PathVariable("productName") String productName){
@@ -145,16 +156,6 @@ public class TransactionController {
 //        }
         transactionDetailsService.deleteProduct(transactionId, productName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-
-    @DeleteMapping(path = "/transactions/{id}")
-    public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
-        if(!transactionService.isExists(id)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        transactionService.delete(id);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

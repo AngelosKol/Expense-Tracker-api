@@ -1,6 +1,7 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthlyCostDto;
 import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.domain.entities.TransactionDetails;
 import jakarta.transaction.Transactional;
@@ -35,4 +36,19 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
             "WHERE t.date >= :fromDate AND t.date <= :toDate " +
             "GROUP BY s.name, t.date")
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+
+
+    @Query(value = "SELECT " +
+            "TO_CHAR(month_series, 'YYYY-MM') AS month, " +
+            "COALESCE(SUM(td.price * td.quantity), 0) AS totalSpent " +
+            "FROM generate_series( " +
+            ":year || '-01-01'::date, " +
+            ":year || '-12-01'::date, " +
+            "'1 month'::interval) AS month_series " +
+            "LEFT JOIN \"transaction\" t ON TO_CHAR(t.\"date\", 'YYYY-MM') = TO_CHAR(month_series, 'YYYY-MM') " +
+            "LEFT JOIN transaction_details td ON t.id = td.transaction_id " +
+            "GROUP BY month_series " +
+            "ORDER BY month_series;",
+            nativeQuery = true)
+    List<MonthlyCostDto> findMonthlyCosts(@Param("year") String year);
 }

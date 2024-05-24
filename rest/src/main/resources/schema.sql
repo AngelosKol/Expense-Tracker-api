@@ -29,3 +29,4 @@ CREATE TABLE IF NOT EXISTS transaction_details (
     FOREIGN KEY (transaction_id) REFERENCES transaction(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+

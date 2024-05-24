@@ -3,6 +3,8 @@ package com.ang.rest.controllers;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
 import com.ang.rest.repositories.TransactionDetailsRepository;
+import com.ang.rest.services.TransactionDetailsService;
+import com.ang.rest.services.TransactionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +16,9 @@ import java.util.Optional;
 
 @RestController
 public class AnalyticsController {
-    private TransactionDetailsRepository transactionDetailsRepository;
-    public AnalyticsController(TransactionDetailsRepository transactionDetailsRepository){
-        this.transactionDetailsRepository = transactionDetailsRepository;
+    private TransactionDetailsService transactionDetailsService;
+    public AnalyticsController(TransactionDetailsService transactionDetailsService){
+        this.transactionDetailsService = transactionDetailsService;
     }
 
 
@@ -25,6 +27,6 @@ public class AnalyticsController {
     public List<AnalyticsDto> getTotalSpentByDate(
             @PathVariable("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @PathVariable("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
-        return transactionDetailsRepository.getTotalSpent(fromDate, toDate);
+        return transactionDetailsService.getTotalSpentByDate(fromDate, toDate);
     }
 }
