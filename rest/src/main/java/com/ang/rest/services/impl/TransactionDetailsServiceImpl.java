@@ -1,9 +1,11 @@
 package com.ang.rest.services.impl;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.TransactionDetailsService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,8 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
     @Override
     public List<TransactionDetails>  getTransactionDetailsByTransactionId(Long id) {
-        return  transactionDetailsRepository.findByTransactionId(id);
+        return  transactionDetailsRepository.findByTransactionId(id)
+                .orElseThrow(()-> new EntityNotFoundException("Transaction with "+ id + "not found."));
     }
     @Override
     public Page<TransactionDetails> getTransactionDetailsByTransactionId(Long id, Pageable pageable)   {
@@ -46,6 +49,11 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Override
      public List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate){
         return transactionDetailsRepository.getTotalSpent(fromDate, toDate);
+    }
+
+    @Override
+    public List<MonthlyCostDto> getMonthlyCosts(String year){
+        return transactionDetailsRepository.getMonthlyCosts(year);
     }
 
 

@@ -54,7 +54,7 @@ public  class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findById(id);
     }
 
-    public List<TransactionDetails> getTransactionDetailsByTransactionId(Long transactionId) {
+    public Optional<List<TransactionDetails>> getTransactionDetailsByTransactionId(Long transactionId) {
         return tDetailsRepository.findByTransactionId(transactionId);
     }
 

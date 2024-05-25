@@ -19,9 +19,9 @@ import java.util.Optional;
 
 public interface TransactionDetailsRepository extends CrudRepository<TransactionDetails, Long>,
         PagingAndSortingRepository<TransactionDetails, Long> {
-    List<TransactionDetails> findByTransactionId(Long transactionId);
+    Optional<List<TransactionDetails>> findByTransactionId(Long transactionId);
 
-    Page<TransactionDetails>  findByTransactionId(Long transactionId, Pageable pageable);
+   Page<TransactionDetails> findByTransactionId(Long transactionId, Pageable pageable);
 
     @Modifying
     @Transactional
@@ -50,5 +50,5 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
             "GROUP BY month_series " +
             "ORDER BY month_series;",
             nativeQuery = true)
-    List<MonthlyCostDto> findMonthlyCosts(@Param("year") String year);
+    List<MonthlyCostDto> getMonthlyCosts(@Param("year") String year);
 }

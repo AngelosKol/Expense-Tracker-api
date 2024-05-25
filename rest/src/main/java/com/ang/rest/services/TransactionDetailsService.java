@@ -1,6 +1,7 @@
 package com.ang.rest.services;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthlyCostDto;
 import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import org.springframework.data.domain.Page;
@@ -26,4 +27,6 @@ public interface TransactionDetailsService {
 
 
     List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate);
+
+    List<MonthlyCostDto> getMonthlyCosts(String year);
 }

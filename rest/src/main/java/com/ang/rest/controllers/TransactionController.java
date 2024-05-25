@@ -12,6 +12,8 @@ import com.ang.rest.services.ProductService;
 import com.ang.rest.services.ShopService;
 import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.action.internal.EntityActionVetoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -102,15 +104,18 @@ public class TransactionController {
      * Transaction Details methods
      */
 
-    @GetMapping("/transactions/{id}/details/all")
-    public List<TransactionDetailsDto> getAllTransactionDetails(
-            @PathVariable Long id) {
-        List<TransactionDetails> transactionDetails =
-                transactionDetailsService.getTransactionDetailsByTransactionId(id);
 
-        return transactionDetails.stream().map(transactionDetail ->
-                        transactionDetailsMapper.mapTo(transactionDetail))
-                .collect(Collectors.toList());
+    @GetMapping("/transactions/{id}/details/all")
+    public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(
+            @PathVariable Long id) {
+        List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
+
+
+
+        List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream()
+                .map((transactionDetailItem)-> transactionDetailsMapper.mapTo(transactionDetailItem))
+                .toList();
+        return  ResponseEntity.ok(transactionDetailsDtos);
     }
 
     @GetMapping("/transactions/{id}/details")
@@ -157,6 +162,8 @@ public class TransactionController {
         transactionDetailsService.deleteProduct(transactionId, productName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 
 
 
