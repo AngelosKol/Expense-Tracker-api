@@ -1,16 +1,13 @@
 package com.ang.rest.services;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.MonthlyCostDto;
-import com.ang.rest.domain.dto.TransactionDetailsDto;
+import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface TransactionDetailsService {
@@ -28,5 +25,6 @@ public interface TransactionDetailsService {
 
     List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate);
 
-    List<MonthlyCostDto> getMonthlyCosts(String year);
+
+    List<Object> getMonthlyCosts(String year);
 }

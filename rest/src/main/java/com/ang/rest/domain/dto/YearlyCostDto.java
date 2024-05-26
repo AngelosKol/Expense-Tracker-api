@@ -9,8 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MonthlyCostDto {
+public class YearlyCostDto {
 
     private String month;
-    private Long totalSpent;
+    private int totalSpent;
+
+//    public YearlyCostDto(String month, Long totalSpent){
+//        this.month = month;
+//        this.totalSpent = totalSpent;
+//    }
 }

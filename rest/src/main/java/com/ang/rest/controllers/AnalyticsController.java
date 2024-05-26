@@ -2,10 +2,12 @@ package com.ang.rest.controllers;
 
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +25,18 @@ public class AnalyticsController {
 
 
 
-    @GetMapping(path = "/analytics/{fromDate}/{toDate}")
+    @GetMapping(path = "/analytics/{fromDate}/to/{toDate}")
     public List<AnalyticsDto> getTotalSpentByDate(
             @PathVariable("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @PathVariable("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         return transactionDetailsService.getTotalSpentByDate(fromDate, toDate);
     }
+
+    @GetMapping(path = "/analytics/totalSpent/{year}")
+    public List<Object> getTotalSpentByMonth(@PathVariable("year") String year){
+        return transactionDetailsService.getMonthlyCosts(year);
+
+    }
+
+
 }

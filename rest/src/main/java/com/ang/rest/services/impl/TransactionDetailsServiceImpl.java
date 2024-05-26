@@ -1,7 +1,7 @@
 package com.ang.rest.services.impl;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.MonthlyCostDto;
+import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.TransactionDetailsService;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -51,8 +52,10 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
         return transactionDetailsRepository.getTotalSpent(fromDate, toDate);
     }
 
+
+
     @Override
-    public List<MonthlyCostDto> getMonthlyCosts(String year){
+    public List<Object> getMonthlyCosts(String year){
         return transactionDetailsRepository.getMonthlyCosts(year);
     }
 

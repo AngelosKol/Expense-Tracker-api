@@ -1,8 +1,7 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.MonthlyCostDto;
-import com.ang.rest.domain.entities.Transaction;
+import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -38,17 +37,23 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
-    @Query(value = "SELECT " +
-            "TO_CHAR(month_series, 'YYYY-MM') AS month, " +
-            "COALESCE(SUM(td.price * td.quantity), 0) AS totalSpent " +
-            "FROM generate_series( " +
-            ":year || '-01-01'::date, " +
-            ":year || '-12-01'::date, " +
-            "'1 month'::interval) AS month_series " +
-            "LEFT JOIN \"transaction\" t ON TO_CHAR(t.\"date\", 'YYYY-MM') = TO_CHAR(month_series, 'YYYY-MM') " +
-            "LEFT JOIN transaction_details td ON t.id = td.transaction_id " +
-            "GROUP BY month_series " +
-            "ORDER BY month_series;",
-            nativeQuery = true)
-    List<MonthlyCostDto> getMonthlyCosts(@Param("year") String year);
+//    @Query("SELECT " +
+//            "TO_CHAR(DATE_TRUNC('month', t.date), 'Month'), " +
+//            "COALESCE(SUM(td.price * td.quantity), 0) " +
+//            "FROM TransactionDetails td " +
+//            "INNER JOIN td.transaction t " +
+//            "WHERE TO_CHAR(t.date, 'YYYY') = :year " +
+//            "GROUP BY DATE_TRUNC('month', t.date) " +
+//            "ORDER BY DATE_TRUNC('month', t.date)")
+//    List<Object> getYearlyCosts(@Param("year") String year);
+
+    @Query(value = "SELECT * from get_monthly_costs(:year)", nativeQuery = true)
+    List<Object> getMonthlyCosts(@Param("year") String year);
+
+
+
 }
+
+
+
+
