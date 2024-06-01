@@ -32,9 +32,15 @@ public class AnalyticsController {
         return transactionDetailsService.getTotalSpentByDate(fromDate, toDate);
     }
 
-    @GetMapping(path = "/analytics/totalSpent/{year}")
-    public List<Object> getTotalSpentByMonth(@PathVariable("year") String year){
-        return transactionDetailsService.getMonthlyCosts(year);
+    @GetMapping(path = "/analytics/totalSpent/year/{year}")
+    public List<Object> getTotalSpentByMonth(@PathVariable("year") int year){
+        return transactionDetailsService.getYearTotals(year);
+
+    }
+
+    @GetMapping(path = "/analytics/totalSpent/year/{year}/month/{month}")
+    public List<Object> getMonthTotals(@PathVariable("year") int year, @PathVariable("month")int month){
+        return transactionDetailsService.getMonthTotals(year, month);
 
     }
 

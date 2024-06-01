@@ -37,18 +37,17 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
-//    @Query("SELECT " +
-//            "TO_CHAR(DATE_TRUNC('month', t.date), 'Month'), " +
-//            "COALESCE(SUM(td.price * td.quantity), 0) " +
-//            "FROM TransactionDetails td " +
-//            "INNER JOIN td.transaction t " +
-//            "WHERE TO_CHAR(t.date, 'YYYY') = :year " +
-//            "GROUP BY DATE_TRUNC('month', t.date) " +
-//            "ORDER BY DATE_TRUNC('month', t.date)")
-//    List<Object> getYearlyCosts(@Param("year") String year);
 
-    @Query(value = "SELECT * from get_monthly_costs(:year)", nativeQuery = true)
-    List<Object> getMonthlyCosts(@Param("year") String year);
+
+    @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
+    List<Object> getYearTotals(@Param("year") int year);
+
+
+
+    @Query(value = "SELECT * from get_monthly_costs(:year, :month)", nativeQuery = true)
+    List<Object> getMonthTotals(@Param("year") int year, @Param("month") int month);
+
+
 
 
 

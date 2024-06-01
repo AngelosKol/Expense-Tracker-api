@@ -26,5 +26,10 @@ public interface TransactionDetailsService {
     List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate);
 
 
-    List<Object> getMonthlyCosts(String year);
+    List<Object> getYearTotals(int year);
+
+    List<Object> getMonthTotals(int year, int month);
+
+
+
 }
