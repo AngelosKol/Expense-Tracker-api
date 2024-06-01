@@ -39,8 +39,14 @@ public class AnalyticsController {
     }
 
     @GetMapping(path = "/analytics/totalSpent/year/{year}/month/{month}")
-    public List<Object> getMonthTotals(@PathVariable("year") int year, @PathVariable("month")int month){
+    public List<Object> getMonthTotals(@PathVariable("year") String year, @PathVariable("month")String month){
         return transactionDetailsService.getMonthTotals(year, month);
+
+    }
+
+    @GetMapping(path = "/analytics/totalSpent/year/{year}/month/{month}")
+    public List<Object> getMonthTotalsWithShop(@PathVariable("year") String year, @PathVariable("month")String month){
+        return transactionDetailsService.getMonthTotalsWithShop(year, month);
 
     }
 

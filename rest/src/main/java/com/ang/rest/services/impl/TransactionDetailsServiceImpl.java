@@ -58,9 +58,15 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public List<Object> getMonthTotals(int year, int month){
+    public List<Object> getMonthTotals(String year, String month){
         return transactionDetailsRepository.getMonthTotals(year, month);
     }
+
+    @Override
+    public List<Object> getMonthTotalsWithShop(String year, String month){
+        return transactionDetailsRepository.getMonthTotalWithShop(year, month);
+    }
+
 
 
 

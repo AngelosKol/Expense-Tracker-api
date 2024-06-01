@@ -1,7 +1,6 @@
 package com.ang.rest.services;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +27,8 @@ public interface TransactionDetailsService {
 
     List<Object> getYearTotals(int year);
 
-    List<Object> getMonthTotals(int year, int month);
+    List<Object> getMonthTotals(String year, String month);
 
 
-
+    List<Object> getMonthTotalsWithShop(String year, String month);
 }

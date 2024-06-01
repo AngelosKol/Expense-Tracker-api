@@ -1,6 +1,7 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.DailyCostDto;
 import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,8 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
+ @Query(value = "SELECT day, shop_name, totalspent FROM get_daily_costs_with_shop(:yearParam, :monthParam)", nativeQuery = true)
+ List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") String monthParam);
 
 
     @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
@@ -44,8 +47,8 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
 
 
 
-    @Query(value = "SELECT * from get_monthly_costs(:year, :month)", nativeQuery = true)
-    List<Object> getMonthTotals(@Param("year") int year, @Param("month") int month);
+    @Query(value = "SELECT * from get_daily_costs(:year, :month)", nativeQuery = true)
+    List<Object> getMonthTotals(@Param("year") String year, @Param("month") String month);
 
 
 
