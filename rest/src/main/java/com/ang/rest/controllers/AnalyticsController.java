@@ -44,7 +44,7 @@ public class AnalyticsController {
 
     }
 
-    @GetMapping(path = "/analytics/totalSpent/year/{year}/month/{month}")
+    @GetMapping(path = "/analytics/totalSpentWithShop/year/{year}/month/{month}")
     public List<Object> getMonthTotalsWithShop(@PathVariable("year") String year, @PathVariable("month")String month){
         return transactionDetailsService.getMonthTotalsWithShop(year, month);
 

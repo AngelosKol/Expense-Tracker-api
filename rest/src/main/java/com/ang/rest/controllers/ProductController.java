@@ -35,6 +35,7 @@ public class ProductController {
     @PostMapping(path = "/products")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws ChangeSetPersister.NotFoundException {
         Product product = productMapper.mapFrom(productDto);
+
         Product savedProduct = productService.createProduct(product);
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
     }

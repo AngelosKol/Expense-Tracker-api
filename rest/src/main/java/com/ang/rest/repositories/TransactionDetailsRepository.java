@@ -1,7 +1,6 @@
 package com.ang.rest.repositories;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.DailyCostDto;
 import com.ang.rest.domain.dto.YearlyCostDto;
 import com.ang.rest.domain.entities.TransactionDetails;
 import jakarta.transaction.Transactional;
@@ -19,6 +18,9 @@ import java.util.Optional;
 
 public interface TransactionDetailsRepository extends CrudRepository<TransactionDetails, Long>,
         PagingAndSortingRepository<TransactionDetails, Long> {
+
+    @Transactional
+    void deleteByTransactionId(Long transactionId);
     Optional<List<TransactionDetails>> findByTransactionId(Long transactionId);
 
    Page<TransactionDetails> findByTransactionId(Long transactionId, Pageable pageable);

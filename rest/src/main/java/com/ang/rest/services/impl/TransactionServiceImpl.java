@@ -68,6 +68,7 @@ public  class TransactionServiceImpl implements TransactionService {
     public void delete(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Not found"));
+        tDetailsRepository.deleteByTransactionId(id);
         transactionRepository.deleteById(id);
     }
 

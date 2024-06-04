@@ -51,7 +51,6 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
 
-
     @Override
     public List<Object> getYearTotals(int year){
         return transactionDetailsRepository.getYearTotals(year);
