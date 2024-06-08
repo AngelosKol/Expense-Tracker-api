@@ -40,7 +40,7 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
- @Query(value = "SELECT day, shop_name, totalspent FROM get_daily_costs_with_shop(:yearParam, :monthParam)", nativeQuery = true)
+ @Query(value = "SELECT day_and_month, shop_name, totalspent FROM get_daily_costs_with_shop(:yearParam, :monthParam)", nativeQuery = true)
  List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") String monthParam);
 
 
