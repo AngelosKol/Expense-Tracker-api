@@ -1,11 +1,11 @@
 package com.ang.rest.domain.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
+import org.springframework.context.annotation.Bean;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +14,4 @@ import java.util.Set;
 public class ProductDto {
     private Long id;
     private String name;
-
 }
