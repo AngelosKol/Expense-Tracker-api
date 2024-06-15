@@ -1,6 +1,6 @@
 package com.ang.rest.services.impl;
 
-import com.ang.rest.domain.dto.ProductRequest;
+
 import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
@@ -11,6 +11,8 @@ import com.ang.rest.repositories.TransactionRepository;
 import com.ang.rest.services.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -36,6 +38,12 @@ public  class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public boolean isExists(Long id) {
+        return transactionRepository.existsById(id);
+    }
+
+
+    @Override
     public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
@@ -50,6 +58,11 @@ public  class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public Page<Transaction> findAll(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
+    }
+
+    @Override
     public Optional<Transaction> findOne(Long id) {
         return transactionRepository.findById(id);
     }
@@ -58,10 +71,6 @@ public  class TransactionServiceImpl implements TransactionService {
         return tDetailsRepository.findByTransactionId(transactionId);
     }
 
-    @Override
-    public boolean isExists(Long id) {
-        return transactionRepository.existsById(id);
-    }
 
     @Override
     @Transactional

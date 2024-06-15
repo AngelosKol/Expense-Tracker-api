@@ -16,7 +16,7 @@ public class TestData {
     public static Shop createTestShopA(){
         return Shop.builder()
                 .id(1L)
-                .name("Masoutis")
+//                .name("Masoutis")
                 .build();
     }
 
@@ -24,21 +24,21 @@ public class TestData {
         return Transaction.builder()
                 .id(1L)
                 .shop(createTestShopA())
-                .date("22/2/2024")
+//                .date("22/2/2024")
                 .build();
     }
     public static Transaction createTestTransactionB(){
         return Transaction.builder()
                 .id(2L)
                 .shop(createTestShopA())
-                .date("26/03/2024")
+//                .date("26/03/2024")
                 .build();
     }
     public static Transaction createTestTransactionC(){
         return Transaction.builder()
                 .id(3L)
                 .shop(createTestShopA())
-                .date("03/03/2024")
+//                .date("03/03/2024")
                 .build();
     }
 

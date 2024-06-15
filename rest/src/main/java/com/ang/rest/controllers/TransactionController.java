@@ -12,8 +12,11 @@ import com.ang.rest.services.ProductService;
 import com.ang.rest.services.ShopService;
 import com.ang.rest.services.TransactionDetailsService;
 import com.ang.rest.services.TransactionService;
-import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.action.internal.EntityActionVetoException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -51,22 +54,23 @@ public class TransactionController {
         this.transactionDetailsMapper = transactionDetailsMapper;
     }
 
-
+    @Operation(summary = "Create a transaction", description = "Create a transaction")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = String.class)))
     @PostMapping(path = "/transactions")
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto){
         Transaction transaction = transactionMapper.mapFrom(transactionDto);
         Optional<Shop> shopOptional = shopService.findByName(transactionDto.getShopName());
-        System.out.println("Shop is : "+ shopOptional);
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
-
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
         return new ResponseEntity<>(transactionMapper.mapTo(savedTransaction), HttpStatus.CREATED);
     }
 
 
-    @GetMapping(path = "/transactions")
-    public List<TransactionDto> getTransactions(){
+    @GetMapping(path = "/transactions/all")
+    public List<TransactionDto> getAllTransactions(){
         List<Transaction> transactions = transactionService.findAll();
         return transactions.stream()
                 .map(transaction ->{
@@ -76,6 +80,12 @@ public class TransactionController {
                         })
                 .collect(Collectors.toList());
 
+    }
+
+    @GetMapping(path = "/transactions")
+    public Page<TransactionDto> getTransactions(Pageable pageable){
+        Page<Transaction> transactions = transactionService.findAll(pageable);
+        return transactions.map(transaction -> transactionMapper.mapTo(transaction));
     }
 
     @GetMapping(path = "/transactions/{id}")
@@ -102,6 +112,7 @@ public class TransactionController {
     /**
      *
      * Transaction Details methods
+     *
      */
 
 
@@ -109,9 +120,6 @@ public class TransactionController {
     public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(
             @PathVariable Long id) {
         List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
-
-
-
         List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream()
                 .map((transactionDetailItem)-> transactionDetailsMapper.mapTo(transactionDetailItem))
                 .toList();
