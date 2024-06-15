@@ -1,6 +1,7 @@
 package com.ang.rest.services.impl;
 
 
+import com.ang.rest.Exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.dto.TransactionDetailsDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +68,12 @@ public  class TransactionServiceImpl implements TransactionService {
     public Optional<Transaction> findOne(Long id) {
         return transactionRepository.findById(id);
     }
+
+//    @Override
+//    public Transaction findOne(Long id) {
+//        return transactionRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+//    }
 
     public Optional<List<TransactionDetails>> getTransactionDetailsByTransactionId(Long transactionId) {
         return tDetailsRepository.findByTransactionId(transactionId);

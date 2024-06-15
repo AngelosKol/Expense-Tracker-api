@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -54,12 +55,15 @@ public class TransactionController {
         this.transactionDetailsMapper = transactionDetailsMapper;
     }
 
-    @Operation(summary = "Create a transaction", description = "Create a transaction")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = String.class)))
+
+
+    @Operation(summary = "Create a transaction", description = "Create a new transaction with associated shop")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
+
+    })
     @PostMapping(path = "/transactions")
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto){
+    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
         Transaction transaction = transactionMapper.mapFrom(transactionDto);
         Optional<Shop> shopOptional = shopService.findByName(transactionDto.getShopName());
         Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
@@ -68,83 +72,98 @@ public class TransactionController {
         return new ResponseEntity<>(transactionMapper.mapTo(savedTransaction), HttpStatus.CREATED);
     }
 
-
+    @Operation(summary = "Get all transactions", description = "Retrieve all transactions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class)))
+    })
     @GetMapping(path = "/transactions/all")
-    public List<TransactionDto> getAllTransactions(){
+    public List<TransactionDto> getAllTransactions() {
         List<Transaction> transactions = transactionService.findAll();
         return transactions.stream()
-                .map(transaction ->{
+                .map(transaction -> {
                     TransactionDto transactionDto = transactionMapper.mapTo(transaction);
-                transactionDto.setShopName(transaction.getShop().getName());
-                  return transactionDto;
-                        })
+                    transactionDto.setShopName(transaction.getShop().getName());
+                    return transactionDto;
+                })
                 .collect(Collectors.toList());
-
     }
 
+    @Operation(summary = "Get transactions by page", description = "Retrieve transactions in a paginated format")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class)))
+    })
     @GetMapping(path = "/transactions")
-    public Page<TransactionDto> getTransactions(Pageable pageable){
+    public Page<TransactionDto> getTransactions(Pageable pageable) {
         Page<Transaction> transactions = transactionService.findAll(pageable);
         return transactions.map(transaction -> transactionMapper.mapTo(transaction));
     }
 
+    @Operation(summary = "Get a specific transaction", description = "Retrieve a transaction by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
+            @ApiResponse(responseCode = "404", description = "Transaction not found")
+    })
     @GetMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id")Long id){
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
         Optional<Transaction> foundTransaction = transactionService.findOne(id);
         return foundTransaction.map(t -> {
-                    TransactionDto transactionDto = transactionMapper.mapTo(t);
-
-            return new ResponseEntity<>(transactionDto,HttpStatus.OK);})
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-
+            TransactionDto transactionDto = transactionMapper.mapTo(t);
+            return new ResponseEntity<>(transactionDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
+    @Operation(summary = "Delete a transaction", description = "Delete a transaction by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Transaction deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Transaction not found")
+    })
     @DeleteMapping(path = "/transactions/{id}")
-    public ResponseEntity deleteTransaction(@PathVariable("id")Long id){
-        if(!transactionService.isExists(id)){
+    public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
+        if (!transactionService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         transactionService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /**
-     *
-     * Transaction Details methods
-     *
-     */
-
-
+    @Operation(summary = "Get all transaction details", description = "Retrieve all details for a specific transaction")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
+            @ApiResponse(responseCode = "404", description = "Transaction not found")
+    })
     @GetMapping("/transactions/{id}/details/all")
-    public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(
-            @PathVariable Long id) {
+    public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id) {
         List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
         List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream()
-                .map((transactionDetailItem)-> transactionDetailsMapper.mapTo(transactionDetailItem))
-                .toList();
-        return  ResponseEntity.ok(transactionDetailsDtos);
+                .map(transactionDetailsMapper::mapTo)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(transactionDetailsDtos);
     }
 
+    @Operation(summary = "Get paginated transaction details", description = "Retrieve paginated details for a specific transaction")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
+            @ApiResponse(responseCode = "404", description = "Transaction not found")
+    })
     @GetMapping("/transactions/{id}/details")
-    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(
-            @PathVariable Long id, Pageable pageable) {
-        Page<TransactionDetails> transactionDetails =
-                transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
-
-        return transactionDetails.map(transactionDetail ->
-                transactionDetailsMapper.mapTo(transactionDetail));
+    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
+        Page<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
+        return transactionDetails.map(transactionDetailsMapper::mapTo);
     }
 
+    @Operation(summary = "Add product to transaction", description = "Add a product to an existing transaction")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Product added to transaction successfully"),
+            @ApiResponse(responseCode = "404", description = "Transaction or product not found")
+    })
     @PostMapping("transactions/{id}/product")
-    public ResponseEntity addProductToTransaction(@PathVariable Long id,
-                                                  @RequestBody ProductDetailsDto productDetailsDto){
+    public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
         Optional<Transaction> transaction = transactionService.findOne(id);
-        if(transaction.isEmpty()){
+        if (transaction.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Optional<Product> product = productService.findOne(productDetailsDto.getProductId());
-        if(product.isEmpty()){
+        if (product.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -157,24 +176,17 @@ public class TransactionController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
-
+    @Operation(summary = "Delete product from transaction", description = "Delete a product from an existing transaction by product name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Product removed from transaction successfully"),
+            @ApiResponse(responseCode = "404", description = "Transaction or product not found")
+    })
     @DeleteMapping(path = "/transactions/{id}/product/{productName}")
-    public ResponseEntity deleteProductFromTransaction(@PathVariable("id")Long transactionId, @PathVariable("productName") String productName){
-        if(!transactionService.isExists(transactionId)){
+    public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
+        if (!transactionService.isExists(transactionId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        if(!productService.isExists(productId)){
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
         transactionDetailsService.deleteProduct(transactionId, productName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-
-
-
-
-
 }

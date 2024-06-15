@@ -19,6 +19,7 @@ public interface TransactionService {
     Page<Transaction> findAll(Pageable pageable);
 
     Optional<Transaction> findOne(Long id);
+//    Transaction findOne(Long id);
 
     boolean isExists(Long id);
 
