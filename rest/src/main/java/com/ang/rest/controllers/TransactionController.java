@@ -60,13 +60,13 @@ public class TransactionController {
     @Operation(summary = "Create a transaction", description = "Create a new transaction with associated shop")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
+            @ApiResponse(responseCode = "404", description = "Shop not found", content = @Content(mediaType = "application/json")),
 
     })
     @PostMapping(path = "/transactions")
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
         Transaction transaction = transactionMapper.mapFrom(transactionDto);
-        Optional<Shop> shopOptional = shopService.findByName(transactionDto.getShopName());
-        Shop shop = shopOptional.orElseThrow(() -> new IllegalArgumentException("Shop not found"));
+        Shop shop = shopService.findByName(transactionDto.getShopName());
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
         return new ResponseEntity<>(transactionMapper.mapTo(savedTransaction), HttpStatus.CREATED);

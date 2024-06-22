@@ -11,6 +11,6 @@ public interface ShopRepository extends CrudRepository<Shop, Long>,
         PagingAndSortingRepository<Shop, Long> {
 
 
-    Optional<Shop> findByName(String name);
+   Optional<Shop>  findByName(String name);
 
 }

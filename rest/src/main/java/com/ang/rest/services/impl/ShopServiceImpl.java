@@ -1,15 +1,13 @@
 package com.ang.rest.services.impl;
 
+import com.ang.rest.Exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.repositories.ShopRepository;
 import com.ang.rest.services.ShopService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -40,13 +38,17 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Optional<Shop> findOne(Long id) {
-        return shopRepository.findById(id);
+    public Shop findOne(Long id) {
+        return shopRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
     }
 
     @Override
-    public Optional<Shop> findByName(String name) {
-        return shopRepository.findByName(name);
+    public Shop findByName(String name) {
+        return shopRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop  not found"));
+
+
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void delete(Long id) {
         Shop shop = shopRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
 
         shopRepository.deleteById(id);
     }

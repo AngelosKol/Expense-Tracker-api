@@ -17,9 +17,9 @@ public interface ShopService {
 
     Page<Shop> findAll(Pageable pageable);
 
-    Optional<Shop> findOne(Long id);
+    Shop findOne(Long id);
 
-    Optional<Shop> findByName(String name);
+    Shop findByName(String name);
     boolean isExists(Long id);
 
     void delete(Long id);

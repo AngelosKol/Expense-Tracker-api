@@ -26,6 +26,13 @@ public class ShopController {
     }
 
 
+    @GetMapping(path = "/shops/{id}")
+    public ResponseEntity<Shop> getShop(@PathVariable Long id){
+        Shop shop = shopService.findOne(id);
+        return ResponseEntity.ok(shop);
+    }
+
+
     @GetMapping(path = "/shops")
     public Page<ShopDto> getShops(Pageable pageable){
         Page<Shop> shops = shopService.findAll(pageable);
@@ -61,13 +68,10 @@ public class ShopController {
 
 
     @DeleteMapping(path = "/shops/{id}")
-    public ResponseEntity deleteShop(@PathVariable Long id){
-        if(!shopService.isExists(id)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Void> deleteShop(@PathVariable Long id){
+
         shopService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
 }
