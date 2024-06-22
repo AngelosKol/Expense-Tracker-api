@@ -2,25 +2,19 @@ package com.ang.rest.services.impl;
 
 
 import com.ang.rest.Exceptions.ResourceNotFoundException;
-import com.ang.rest.domain.dto.TransactionDetailsDto;
-import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Transaction;
 import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.ProductRepository;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.repositories.TransactionRepository;
 import com.ang.rest.services.TransactionService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.ReadOnlyFileSystemException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -64,16 +58,16 @@ public  class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findAll(pageable);
     }
 
-    @Override
-    public Optional<Transaction> findOne(Long id) {
-        return transactionRepository.findById(id);
-    }
-
 //    @Override
-//    public Transaction findOne(Long id) {
-//        return transactionRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+//    public Optional<Transaction> findOne(Long id) {
+//        return transactionRepository.findById(id);
 //    }
+
+    @Override
+    public Transaction findOne(Long id) {
+        return transactionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+    }
 
     public Optional<List<TransactionDetails>> getTransactionDetailsByTransactionId(Long transactionId) {
         return tDetailsRepository.findByTransactionId(transactionId);
