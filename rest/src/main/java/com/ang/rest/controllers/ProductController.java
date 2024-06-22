@@ -35,7 +35,6 @@ public class ProductController {
     @PostMapping(path = "/products")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws ChangeSetPersister.NotFoundException {
         Product product = productMapper.mapFrom(productDto);
-
         Product savedProduct = productService.createProduct(product);
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
     }
@@ -53,13 +52,18 @@ public class ProductController {
         return products.map(productEntity -> productMapper.mapTo(productEntity));
     }
 
-    @PutMapping(path = "/products/{id}")
+    @GetMapping(path = "/products/id/{id}")
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id){
+        Product product = productService.findOne(id);
+        ProductDto productDto = productMapper.mapTo(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/products/id/{id}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable("id") Long id,
             @RequestBody ProductDto productDto) {
-        if (!productService.isExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Product existingProduct = productService.findOne(id);
         productDto.setId(id);
         Product product = productMapper.mapFrom(productDto);
         Product savedProduct = productService.createProduct(product);
@@ -69,12 +73,9 @@ public class ProductController {
         );
     }
 
-    @DeleteMapping(path = "/products/{id}")
+    @DeleteMapping(path = "/products/id/{id}")
     public ResponseEntity deleteProduct(@PathVariable("id")Long id){
-        if (!productService.isExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        productService.deleteProduct(id);
+        productService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

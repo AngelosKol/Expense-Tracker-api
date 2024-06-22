@@ -26,7 +26,7 @@ public class ShopController {
     }
 
 
-    @GetMapping(path = "/shops/{id}")
+    @GetMapping(path = "/shops/id/{id}")
     public ResponseEntity<Shop> getShop(@PathVariable Long id){
         Shop shop = shopService.findOne(id);
         return ResponseEntity.ok(shop);
@@ -54,7 +54,7 @@ public class ShopController {
         return new ResponseEntity<>(shopMapper.mapTo(savedShop), HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/shops/{id}")
+    @PutMapping(path = "/shops/id/{id}")
     public ResponseEntity<ShopDto> updateShop(@PathVariable Long id ,@RequestBody ShopDto shopDto){
         Shop existingShop = shopService.findOne(id);
         shopDto.setId(id);
@@ -65,9 +65,8 @@ public class ShopController {
     }
 
 
-    @DeleteMapping(path = "/shops/{id}")
+    @DeleteMapping(path = "/shops/id/{id}")
     public ResponseEntity<Void> deleteShop(@PathVariable Long id){
-
         shopService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

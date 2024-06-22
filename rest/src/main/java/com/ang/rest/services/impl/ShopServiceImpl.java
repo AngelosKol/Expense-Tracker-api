@@ -58,9 +58,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void delete(Long id) {
-        Shop shop = shopRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
-
+        Shop shop = findOne(id);
         shopRepository.deleteById(id);
     }
 }

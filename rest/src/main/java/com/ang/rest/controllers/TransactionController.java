@@ -105,11 +105,9 @@ public class TransactionController {
     })
     @GetMapping(path = "/transactions/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
-        Optional<Transaction> foundTransaction = transactionService.findOne(id);
-        return foundTransaction.map(t -> {
-            TransactionDto transactionDto = transactionMapper.mapTo(t);
-            return new ResponseEntity<>(transactionDto, HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Transaction transaction = transactionService.findOne(id);
+        TransactionDto transactionDto = transactionMapper.mapTo(transaction);
+        return new ResponseEntity<>(transactionDto, HttpStatus.OK);
     }
 
     @Operation(summary = "Delete a transaction", description = "Delete a transaction by its ID")
@@ -156,18 +154,12 @@ public class TransactionController {
     })
     @PostMapping("transactions/{id}/product")
     public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
-        Optional<Transaction> transaction = transactionService.findOne(id);
-        if (transaction.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Optional<Product> product = productService.findOne(productDetailsDto.getProductId());
-        if (product.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Transaction transaction = transactionService.findOne(id);
+        Product product = productService.findOne(productDetailsDto.getProductId());
 
         TransactionDetails transactionDetails = new TransactionDetails();
-        transactionDetails.setTransaction(transaction.get());
-        transactionDetails.setProduct(product.get());
+        transactionDetails.setTransaction(transaction);
+        transactionDetails.setProduct(product);
         transactionDetails.setPrice(productDetailsDto.getPrice());
         transactionDetails.setQuantity(productDetailsDto.getQuantity());
         transactionDetailsService.save(transactionDetails);
