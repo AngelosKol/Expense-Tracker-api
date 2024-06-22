@@ -119,9 +119,7 @@ public class TransactionController {
     })
     @DeleteMapping(path = "/transactions/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
-        if (!transactionService.isExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
         transactionService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
