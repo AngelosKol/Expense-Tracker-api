@@ -56,9 +56,7 @@ public class ShopController {
 
     @PutMapping(path = "/shops/{id}")
     public ResponseEntity<ShopDto> updateShop(@PathVariable Long id ,@RequestBody ShopDto shopDto){
-        if(!shopService.isExists(id)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Shop existingShop = shopService.findOne(id);
         shopDto.setId(id);
         Shop shop = shopMapper.mapFrom(shopDto);
         Shop savedShop = shopService.save(shop);
