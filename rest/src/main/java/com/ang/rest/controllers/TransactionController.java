@@ -103,7 +103,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @GetMapping(path = "/transactions/{id}")
+    @GetMapping(path = "/transactions/id/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
         Transaction transaction = transactionService.findOne(id);
         TransactionDto transactionDto = transactionMapper.mapTo(transaction);
@@ -115,7 +115,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "204", description = "Transaction deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @DeleteMapping(path = "/transactions/{id}")
+    @DeleteMapping(path = "/transactions/id/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
 
         transactionService.delete(id);
@@ -127,7 +127,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @GetMapping("/transactions/{id}/details/all")
+    @GetMapping("/transactions/id/{id}/details/all")
     public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id) {
         List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
         List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream()
@@ -141,7 +141,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @GetMapping("/transactions/{id}/details")
+    @GetMapping("/transactions/id/{id}/details")
     public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
         Page<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
         return transactionDetails.map(transactionDetailsMapper::mapTo);
@@ -152,7 +152,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "201", description = "Product added to transaction successfully"),
             @ApiResponse(responseCode = "404", description = "Transaction or product not found")
     })
-    @PostMapping("transactions/{id}/product")
+    @PostMapping("transactions/id/{id}/product")
     public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
         Transaction transaction = transactionService.findOne(id);
         Product product = productService.findOne(productDetailsDto.getProductId());
@@ -171,7 +171,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "204", description = "Product removed from transaction successfully"),
             @ApiResponse(responseCode = "404", description = "Transaction or product not found")
     })
-    @DeleteMapping(path = "/transactions/{id}/product/{productName}")
+    @DeleteMapping(path = "/transactions/id/{id}/product/{productName}")
     public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
         if (!transactionService.isExists(transactionId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
