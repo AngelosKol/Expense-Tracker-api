@@ -5,6 +5,7 @@ import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.TransactionDetailsService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,15 +57,29 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
         return transactionDetailsRepository.getYearTotals(year);
     }
 
-    @Override
-    public List<Object> getMonthTotals(String year, String month){
-        return transactionDetailsRepository.getMonthTotals(year, month);
-    }
+
 
     @Override
     public List<Object> getMonthTotalsWithShop(String year, String month){
         return transactionDetailsRepository.getMonthTotalWithShop(year, month);
     }
+
+    @Override
+    public boolean checkIfProductExists(Long productId){
+        return transactionDetailsRepository.existsByProduct_id(productId);
+    }
+
+    @Override
+    public void ensureProductNotInTransaction(Long productId)throws DataIntegrityViolationException {
+        if (transactionDetailsRepository.existsByProduct_id(productId)) {
+            throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first" );
+        }
+    }
+
+//    @Override
+//    public List<Object> getMonthTotals(String year, String month){
+//        return transactionDetailsRepository.getMonthTotals(year, month);
+//    }
 
 
 

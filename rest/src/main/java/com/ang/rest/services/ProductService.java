@@ -1,5 +1,6 @@
 package com.ang.rest.services;
 import com.ang.rest.domain.entities.Product;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,5 +25,5 @@ public interface ProductService {
 
 
 
-    void delete(Long productId);
+    void delete(Long productId) throws DataIntegrityViolationException;
 }

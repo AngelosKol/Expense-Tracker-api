@@ -6,6 +6,7 @@ import com.ang.rest.domain.entities.Product;
 import com.ang.rest.mappers.impl.ProductMapper;
 import com.ang.rest.services.ProductService;
 import com.ang.rest.services.TransactionService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,9 @@ public class ProductController {
 
 
     @PostMapping(path = "/products")
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto)
+//            throws ChangeSetPersister.NotFoundException
+         {
         Product product = productMapper.mapFrom(productDto);
         Product savedProduct = productService.createProduct(product);
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
@@ -74,7 +77,7 @@ public class ProductController {
     }
 
     @DeleteMapping(path = "/products/id/{id}")
-    public ResponseEntity deleteProduct(@PathVariable("id")Long id){
+    public ResponseEntity deleteProduct(@PathVariable("id")Long id) throws DataIntegrityViolationException {
         productService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

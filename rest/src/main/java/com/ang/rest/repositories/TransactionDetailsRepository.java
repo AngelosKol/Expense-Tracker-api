@@ -25,6 +25,8 @@ public interface TransactionDetailsRepository extends CrudRepository<Transaction
 
    Page<TransactionDetails> findByTransactionId(Long transactionId, Pageable pageable);
 
+   boolean existsByProduct_id(Long id);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id IN (SELECT p.id FROM Product p WHERE p.name = :name)")
