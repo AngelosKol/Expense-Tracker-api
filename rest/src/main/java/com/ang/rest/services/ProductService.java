@@ -8,8 +8,6 @@ import java.util.List;
 public interface ProductService {
 
 
-    boolean existsByName(String name);
-
     Product save(Product product);
 
     List<Product> findAll();

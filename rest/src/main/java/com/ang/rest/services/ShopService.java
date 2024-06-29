@@ -24,4 +24,6 @@ public interface ShopService {
     boolean isExists(Long id);
 
     void delete(Long id)throws DataIntegrityViolationException;
+
+    void ensureShopNameNotExists(String name);
 }

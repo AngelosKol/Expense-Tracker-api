@@ -25,6 +25,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public Shop save(Shop shop) {
+        ensureShopNameNotExists(shop.getName());
         return shopRepository.save(shop);
     }
 
@@ -51,7 +52,6 @@ public class ShopServiceImpl implements ShopService {
         return shopRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Shop  not found."));
 
-
     }
 
     @Override
@@ -59,11 +59,19 @@ public class ShopServiceImpl implements ShopService {
         return shopRepository.existsById(id);
     }
 
+
     @Override
     public void delete(Long id) {
         Shop shop = findOne(id);
         transactionService.ensureShopNotInTransaction(id);
         shopRepository.deleteById(id);
+    }
+
+    @Override
+    public void ensureShopNameNotExists(String name){
+        if(shopRepository.existsByName(name)){
+            throw new DataIntegrityViolationException("A shop with this name already exists.");
+        }
     }
 
 

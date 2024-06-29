@@ -13,4 +13,7 @@ public interface ShopRepository extends CrudRepository<Shop, Long>,
 
    Optional<Shop>  findByName(String name);
 
+
+   boolean existsByName(String name);
+
 }
