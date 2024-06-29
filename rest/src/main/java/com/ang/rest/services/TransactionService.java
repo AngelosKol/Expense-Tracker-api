@@ -21,4 +21,5 @@ public interface TransactionService {
     void delete(Long id);
 
 
+    void ensureShopNotInTransaction(Long shopId);
 }

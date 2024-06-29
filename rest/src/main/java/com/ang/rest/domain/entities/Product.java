@@ -19,6 +19,7 @@ public class Product {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
 

@@ -1,6 +1,5 @@
 package com.ang.rest.services;
 import com.ang.rest.domain.entities.Product;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +10,7 @@ public interface ProductService {
 
     boolean existsByName(String name);
 
-    Product createProduct(Product product);
+    Product save(Product product);
 
     List<Product> findAll();
 
@@ -24,6 +23,7 @@ public interface ProductService {
     boolean isExists(Long id);
 
 
+    void delete(Long productId) ;
 
-    void delete(Long productId) throws DataIntegrityViolationException;
+    void ensureProductNameNotExists(String name);
 }

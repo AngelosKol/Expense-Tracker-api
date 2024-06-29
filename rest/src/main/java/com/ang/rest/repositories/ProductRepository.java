@@ -15,7 +15,6 @@ public interface ProductRepository extends CrudRepository<Product, Long>,
         PagingAndSortingRepository<Product,Long> {
 
 
-    @Query("SELECT 1 FROM Product p WHERE p.name = :name")
-    boolean findByCustomCriteria(@Param("name") String name);
+    boolean existsByName(String name);
 
 }

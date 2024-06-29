@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface TransactionRepository extends CrudRepository<Transaction, Long>,
         PagingAndSortingRepository<Transaction, Long> {
 
-
+boolean existsByShop_id(Long id);
 
 
 }

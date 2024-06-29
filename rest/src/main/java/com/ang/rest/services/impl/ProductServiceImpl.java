@@ -3,7 +3,6 @@ package com.ang.rest.services.impl;
 import com.ang.rest.Exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.repositories.ProductRepository;
-import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.ProductService;
 import com.ang.rest.services.TransactionDetailsService;
 import jakarta.transaction.Transactional;
@@ -34,11 +33,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean existsByName(String name){
-        return productRepository.findByCustomCriteria(name);
+        return productRepository.existsByName(name);
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product save(Product product) {
+        ensureProductNameNotExists(product.getName());
         return productRepository.save(product);
     }
 
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void delete(Long productId) throws DataIntegrityViolationException {
+    public void delete(Long productId)  {
         Product product = findOne(productId);
         transactionDetailsService.ensureProductNotInTransaction(productId);
         productRepository.deleteById(productId);
@@ -72,6 +72,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findOne(Long id){
         return productRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Product with id " + id + " not found."));
+    }
+
+
+    @Override
+    public void ensureProductNameNotExists(String name){
+        if(productRepository.existsByName(name)){
+            throw new DataIntegrityViolationException("A product with this name already exists.");
+        }
     }
 
 

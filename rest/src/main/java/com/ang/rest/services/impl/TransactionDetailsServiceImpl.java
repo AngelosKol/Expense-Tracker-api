@@ -72,14 +72,10 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Override
     public void ensureProductNotInTransaction(Long productId)throws DataIntegrityViolationException {
         if (transactionDetailsRepository.existsByProduct_id(productId)) {
-            throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first" );
+            throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first." );
         }
     }
 
-//    @Override
-//    public List<Object> getMonthTotals(String year, String month){
-//        return transactionDetailsRepository.getMonthTotals(year, month);
-//    }
 
 
 

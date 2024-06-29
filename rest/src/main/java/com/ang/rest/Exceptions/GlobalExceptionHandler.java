@@ -28,18 +28,13 @@ public class GlobalExceptionHandler {
     }
 
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
-//        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-//        return createJsonResponse(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     private ResponseEntity<String> createJsonResponse(ErrorResponse errorResponse, HttpStatus status) {
         try {
             String json = objectMapper.writeValueAsString(errorResponse);
             return new ResponseEntity<>(json, status);
         } catch (Exception e) {
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("unhandled exception", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

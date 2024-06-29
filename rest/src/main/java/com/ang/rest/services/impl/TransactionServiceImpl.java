@@ -9,6 +9,7 @@ import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.repositories.TransactionRepository;
 import com.ang.rest.services.TransactionService;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,10 +59,7 @@ public  class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findAll(pageable);
     }
 
-//    @Override
-//    public Optional<Transaction> findOne(Long id) {
-//        return transactionRepository.findById(id);
-//    }
+
 
     @Override
     public Transaction findOne(Long id) {
@@ -79,9 +77,17 @@ public  class TransactionServiceImpl implements TransactionService {
     public void delete(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(" Transaction with id " + id + " Not found"));
+
         tDetailsRepository.deleteByTransactionId(id);
         transactionRepository.deleteById(id);
     }
+
+
+    @Override
+    public void ensureShopNotInTransaction(Long shopId){
+        if (transactionRepository.existsByShop_id(shopId)) {
+            throw new DataIntegrityViolationException("There is a transaction related with this shop. Please delete the associated transaction in order to delete this shop.");
+        }    }
 
 
 
