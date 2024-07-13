@@ -1,3 +1,4 @@
+#In case backend container runs seperate we need the postgres container
 version: '3.1'
 
 services:

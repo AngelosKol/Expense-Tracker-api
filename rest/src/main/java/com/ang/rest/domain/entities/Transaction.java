@@ -19,7 +19,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
 
     private Date date;
 

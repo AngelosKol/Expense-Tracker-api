@@ -10,6 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class TransactionDetailsId implements Serializable {
-    private Integer transaction;
-    private Integer product;
+    private Long transaction;
+    private Long product;
 }

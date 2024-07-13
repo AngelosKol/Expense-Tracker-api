@@ -16,7 +16,7 @@ public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
 
     @Column(unique = true)
     private String name;
