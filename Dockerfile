@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-alpine
 
-COPY rest/target/*.jar app.jar
+COPY target/*.jar app.jar
 
 
 
