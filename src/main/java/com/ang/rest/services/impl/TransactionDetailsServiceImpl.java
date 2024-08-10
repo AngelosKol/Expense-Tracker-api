@@ -69,7 +69,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public void ensureProductNotInTransaction(Long productId) throws DataIntegrityViolationException {
+    public void ensureProductNotInTransaction(Long productId)  {
         if (transactionDetailsRepository.existsByProduct_id(productId)) {
             throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
         }

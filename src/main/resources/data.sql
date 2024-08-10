@@ -9,7 +9,8 @@ VALUES
 
 -- Insert multiple rows into the Products table
 INSERT INTO product (id,name)
-VALUES 
+VALUES
+(0,'Cheese'),
 (1,'Milk'),
 (2,'Bread'),
 (3,'Coffee'),
@@ -18,8 +19,8 @@ VALUES
 (6,'Meat'),
 (7,'Mustard'),
 (8,'Vegetables'),
-(9,'Fruits'),
-(0,'Cheese');
+(9,'Fruits');
+
 insert into "transaction" (id,date,shop_id) values (102,'2024-07-02',1);
 insert into "transaction" (id,date,shop_id) values (103,'2024-06-02',1);
 insert into "transaction" (id,date,shop_id) values (104,'2024-03-02',1);

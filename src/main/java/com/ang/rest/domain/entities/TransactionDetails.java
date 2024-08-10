@@ -6,12 +6,12 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "transaction_details")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
 @IdClass(TransactionDetailsId.class)
 
 public class TransactionDetails {
@@ -30,4 +30,20 @@ public class TransactionDetails {
     private int quantity;
     private BigDecimal price;
 
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof TransactionDetails)) return false;
+        final TransactionDetails other = (TransactionDetails) o;
+        if (!other.canEqual((Object) this)) return false;
+        return true;
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof TransactionDetails;
+    }
+
+    public int hashCode() {
+        int result = 1;
+        return result;
+    }
 }
