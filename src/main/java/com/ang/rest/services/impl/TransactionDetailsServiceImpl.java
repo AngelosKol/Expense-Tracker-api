@@ -5,6 +5,7 @@ import com.ang.rest.domain.entities.TransactionDetails;
 import com.ang.rest.repositories.TransactionDetailsRepository;
 import com.ang.rest.services.TransactionDetailsService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long transactionId, String productName) {
         transactionDetailsRepository.removeProductFromTransaction(transactionId, productName);
     }
@@ -69,6 +71,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
+    @Transactional
     public void ensureProductNotInTransaction(Long productId)  {
         if (transactionDetailsRepository.existsByProduct_id(productId)) {
             throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
