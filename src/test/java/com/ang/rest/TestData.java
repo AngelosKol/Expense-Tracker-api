@@ -2,7 +2,6 @@ package com.ang.rest;
 
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.dto.TransactionPostDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.domain.entities.Transaction;

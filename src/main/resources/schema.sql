@@ -2,17 +2,28 @@ DROP TABLE IF EXISTS TRANSACTION_DETAILS;
 DROP TABLE IF EXISTS TRANSACTION;
 DROP TABLE IF EXISTS SHOP;
 DROP TABLE IF EXISTS PRODUCT;
+DROP TABLE IF EXISTS USERs;
 
 CREATE TABLE IF NOT EXISTS shop (
     id INT PRIMARY KEY,
     name VARCHAR(255) UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS  _user (
+    id INT PRIMARY KEY,
+    firstname VARCHAR(255)  NOT NULL,
+    lastname VARCHAR(255)  NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS transaction (
     id INT PRIMARY KEY,
     date DATE,
     shop_id INT,
-    FOREIGN KEY (shop_id) REFERENCES shop(id)
+    user_id INT,
+    FOREIGN KEY (shop_id) REFERENCES shop(id),
+    FOREIGN KEY (user_id) REFERENCES _user(id)
 );
 
 CREATE TABLE IF NOT EXISTS product (
@@ -29,4 +40,5 @@ CREATE TABLE IF NOT EXISTS transaction_details (
     FOREIGN KEY (transaction_id) REFERENCES transaction(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
 
