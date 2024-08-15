@@ -14,7 +14,7 @@ import lombok.*;
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
-    private Long id;
+    private Integer id;
 
     @Column(unique = true)
     private String name;
