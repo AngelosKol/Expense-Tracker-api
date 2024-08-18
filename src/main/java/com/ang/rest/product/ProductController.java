@@ -1,7 +1,7 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.exceptions.ErrorResponse;
+import com.ang.rest.domain.dto.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

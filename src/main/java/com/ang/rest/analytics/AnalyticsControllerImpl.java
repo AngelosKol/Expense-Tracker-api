@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/auth/analytics")
+@RequestMapping("api/v1/analytics")
 public class AnalyticsControllerImpl  {
     private final TransactionDetailsService transactionDetailsService;
 

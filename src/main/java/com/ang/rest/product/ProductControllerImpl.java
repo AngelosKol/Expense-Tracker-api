@@ -1,6 +1,6 @@
 package com.ang.rest.product;
 
-import com.ang.rest.exceptions.ErrorResponse;
+import com.ang.rest.domain.dto.ErrorResponse;
 import com.ang.rest.domain.dto.ProductDto;
 import com.ang.rest.domain.entities.Product;
 import com.ang.rest.mappers.impl.ProductMapper;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/auth/products")
+@RequestMapping("api/v1/products")
 public class ProductControllerImpl {
 
     private final ProductService productService;

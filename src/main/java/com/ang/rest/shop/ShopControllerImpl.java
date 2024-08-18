@@ -1,6 +1,6 @@
 package com.ang.rest.shop;
 
-import com.ang.rest.exceptions.ErrorResponse;
+import com.ang.rest.domain.dto.ErrorResponse;
 import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.domain.entities.Shop;
 import com.ang.rest.mappers.impl.ShopMapper;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/auth/shops")
+@RequestMapping("api/v1/shops")
 public class ShopControllerImpl {
 
     private final ShopService shopService;
