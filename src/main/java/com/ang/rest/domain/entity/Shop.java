@@ -1,7 +1,8 @@
-package com.ang.rest.domain.entities;
+package com.ang.rest.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 
 @Getter
 @Setter
@@ -9,26 +10,20 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "product")
-public class Product {
-
+@Table(name = "shop")
+public class Shop {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
+    private Long id;
 
     @Column(unique = true)
     private String name;
 
 
-    @Override
-    public String toString() {
-        return "Product{" + "id=" + id + ", name='" + name + '\'' + '}';
-    }
-
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if (!(o instanceof Product)) return false;
-        final Product other = (Product) o;
+        if (!(o instanceof Shop)) return false;
+        final Shop other = (Shop) o;
         if (!other.canEqual((Object) this)) return false;
         final Object this$id = this.getId();
         final Object other$id = other.getId();
@@ -37,7 +32,7 @@ public class Product {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Product;
+        return other instanceof Shop;
     }
 
     public int hashCode() {

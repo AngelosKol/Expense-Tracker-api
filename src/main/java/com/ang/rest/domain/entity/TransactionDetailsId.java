@@ -1,4 +1,4 @@
-package com.ang.rest.domain.entities;
+package com.ang.rest.domain.entity;
 
 
 import lombok.*;
@@ -8,6 +8,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionDetailsId implements Serializable {
-    private Integer transaction;
-    private Integer product;
+    private Long transaction;
+    private Long product;
 }

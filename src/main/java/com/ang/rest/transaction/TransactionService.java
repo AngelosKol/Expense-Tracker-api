@@ -1,6 +1,6 @@
 package com.ang.rest.transaction;
 
-import com.ang.rest.domain.entities.Transaction;
+import com.ang.rest.domain.entity.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

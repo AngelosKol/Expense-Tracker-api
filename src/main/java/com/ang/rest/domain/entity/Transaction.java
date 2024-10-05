@@ -1,9 +1,9 @@
-package com.ang.rest.domain.entities;
+package com.ang.rest.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 
 @Setter
@@ -18,10 +18,9 @@ public class
 Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
-    private Integer id;
+    private Long id;
 
-    private Date date;
-
+    private LocalDate date;
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;

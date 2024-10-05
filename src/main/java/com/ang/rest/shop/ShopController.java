@@ -1,7 +1,7 @@
 package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDto;
-import com.ang.rest.domain.entities.Shop;
+import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.domain.dto.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,7 +1,7 @@
 package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDto;
-import com.ang.rest.domain.entities.Shop;
+import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mappers.impl.ShopMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,29 +34,29 @@ public class ShopControllerImpl {
     @GetMapping
     public Page<ShopDto> getShops(Pageable pageable) {
         Page<Shop> shops = shopService.findAll(pageable);
-        return shops.map(shop -> shopMapper.mapTo(shop));
+        return shops.map(shop -> shopMapper.mapToDto(shop));
     }
 
     @GetMapping(path = "/all")
     public List<ShopDto> getShops() {
         List<Shop> shops = shopService.findAll();
-        return shops.stream().map(shop -> shopMapper.mapTo(shop)).collect(Collectors.toList());
+        return shops.stream().map(shop -> shopMapper.mapToDto(shop)).collect(Collectors.toList());
     }
 
     @PostMapping
     public ResponseEntity<ShopDto> createShop(@RequestBody ShopDto shopDto) {
-        Shop shop = shopMapper.mapFrom(shopDto);
+        Shop shop = shopMapper.mapToEntity(shopDto);
         Shop savedShop = shopService.save(shop);
-        return new ResponseEntity<>(shopMapper.mapTo(savedShop), HttpStatus.CREATED);
+        return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/id/{id}")
     public ResponseEntity<ShopDto> updateShop(@PathVariable Long id, @RequestBody ShopDto shopDto) {
         Shop existingShop = shopService.findOne(id);
         shopDto.setId(id);
-        Shop shop = shopMapper.mapFrom(shopDto);
+        Shop shop = shopMapper.mapToEntity(shopDto);
         Shop savedShop = shopService.save(shop);
-        return new ResponseEntity<>(shopMapper.mapTo(savedShop), HttpStatus.OK);
+        return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/id/{id}")

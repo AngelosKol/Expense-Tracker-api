@@ -1,15 +1,9 @@
 package com.ang.rest.product;
 
-import com.ang.rest.domain.dto.ErrorResponse;
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.domain.entities.Product;
+import com.ang.rest.domain.entity.Product;
 import com.ang.rest.mappers.impl.ProductMapper;
 import com.ang.rest.transaction.TransactionService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,30 +28,30 @@ public class ProductControllerImpl {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
-        Product product = productMapper.mapFrom(productDto);
+        Product product = productMapper.mapToEntity(productDto);
         Product savedProduct = productService.save(product);
-        return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
+        return new ResponseEntity<>(productMapper.mapToDto(savedProduct), HttpStatus.CREATED);
     }
 
 
     @GetMapping(path = "/all")
     public List<ProductDto> getAllProducts() {
         List<Product> products = productService.findAll();
-        return products.stream().map(product -> productMapper.mapTo(product)).collect(Collectors.toList());
+        return products.stream().map(product -> productMapper.mapToDto(product)).collect(Collectors.toList());
     }
 
 
     @GetMapping
     public Page<ProductDto> getProducts(Pageable pageable) {
         Page<Product> products = productService.findAll(pageable);
-        return products.map(productEntity -> productMapper.mapTo(productEntity));
+        return products.map(productEntity -> productMapper.mapToDto(productEntity));
     }
 
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         Product product = productService.findOne(id);
-        ProductDto productDto = productMapper.mapTo(product);
+        ProductDto productDto = productMapper.mapToDto(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
@@ -66,9 +60,9 @@ public class ProductControllerImpl {
         Product existingProduct = productService.findOne(id);
 
         productDto.setId(id);
-        Product product = productMapper.mapFrom(productDto);
+        Product product = productMapper.mapToEntity(productDto);
         Product savedProduct = productService.save(product);
-        return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.OK);
+        return new ResponseEntity<>(productMapper.mapToDto(savedProduct), HttpStatus.OK);
     }
 
 
