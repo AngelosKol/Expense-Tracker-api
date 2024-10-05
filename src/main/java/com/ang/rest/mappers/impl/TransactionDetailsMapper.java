@@ -1,28 +1,23 @@
 package com.ang.rest.mappers.impl;
 
 import com.ang.rest.domain.dto.TransactionDetailsDto;
-import com.ang.rest.domain.entities.TransactionDetails;
-import com.ang.rest.mappers.Mapper;
-import org.modelmapper.ModelMapper;
+import com.ang.rest.domain.entity.TransactionDetails;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionDetailsMapper implements Mapper<TransactionDetails, TransactionDetailsDto> {
+public class TransactionDetailsMapper  {
 
-    private ModelMapper modelMapper;
-
-    public TransactionDetailsMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    @Override
-    public TransactionDetailsDto mapTo(TransactionDetails transactionDetails) {
-        return modelMapper.map(transactionDetails, TransactionDetailsDto.class);
+    public TransactionDetailsDto mapToDto(TransactionDetails transactionDetails) {
+        return TransactionDetailsDto.builder()
+                .name(transactionDetails.getProduct().getName())
+                .price(transactionDetails.getPrice())
+                .quantity(transactionDetails.getQuantity())
+                .build();
 
     }
 
-    @Override
-    public TransactionDetails mapFrom(TransactionDetailsDto transactionDetailsDto) {
-        return modelMapper.map(transactionDetailsDto, TransactionDetails.class);
-    }
+
+
+
 }

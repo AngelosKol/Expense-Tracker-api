@@ -1,12 +1,12 @@
 package com.ang.rest.transaction;
 
 import com.ang.rest.domain.dto.*;
-import com.ang.rest.domain.entities.Product;
-import com.ang.rest.domain.entities.Shop;
-import com.ang.rest.domain.entities.Transaction;
-import com.ang.rest.domain.entities.TransactionDetails;
-import com.ang.rest.mappers.Mapper;
+import com.ang.rest.domain.entity.Product;
+import com.ang.rest.domain.entity.Shop;
+import com.ang.rest.domain.entity.Transaction;
+import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.mappers.impl.TransactionDetailsMapper;
+import com.ang.rest.mappers.impl.TransactionMapper;
 import com.ang.rest.product.ProductService;
 import com.ang.rest.shop.ShopService;
 
@@ -30,7 +30,7 @@ public class TransactionControllerImpl implements TransactionController {
     private final ProductService productService;
     private final TransactionDetailsService transactionDetailsService;
     private final ShopService shopService;
-    private final Mapper<Transaction, TransactionDto> transactionMapper;
+    private final TransactionMapper transactionMapper;
     private final TransactionDetailsMapper transactionDetailsMapper;
 
 
@@ -39,18 +39,18 @@ public class TransactionControllerImpl implements TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
-        Transaction transaction = transactionMapper.mapFrom(transactionDto);
+        Transaction transaction = transactionMapper.mapToEntity(transactionDto);
         Shop shop = shopService.findByName(transactionDto.getShopName());
         transaction.setShop(shop);
         Transaction savedTransaction = transactionService.save(transaction);
-        return new ResponseEntity<>(transactionMapper.mapTo(savedTransaction), HttpStatus.CREATED);
+        return new ResponseEntity<>(transactionMapper.mapToDto(savedTransaction), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/all")
     public List<TransactionDto> getAllTransactions() {
         List<Transaction> transactions = transactionService.findAll();
         return transactions.stream().map(transaction -> {
-            TransactionDto transactionDto = transactionMapper.mapTo(transaction);
+            TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
             transactionDto.setShopName(transaction.getShop().getName());
             return transactionDto;
         }).collect(Collectors.toList());
@@ -59,13 +59,13 @@ public class TransactionControllerImpl implements TransactionController {
     @GetMapping
     public Page<TransactionDto> getTransactions(Pageable pageable) {
         Page<Transaction> transactions = transactionService.findAll(pageable);
-        return transactions.map(transaction -> transactionMapper.mapTo(transaction));
+        return transactions.map(transaction -> transactionMapper.mapToDto(transaction));
     }
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
         Transaction transaction = transactionService.findOne(id);
-        TransactionDto transactionDto = transactionMapper.mapTo(transaction);
+        TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
         return new ResponseEntity<>(transactionDto, HttpStatus.OK);
     }
 
@@ -79,14 +79,14 @@ public class TransactionControllerImpl implements TransactionController {
     @GetMapping("/id/{id}/details/all")
     public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id) {
         List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
-        List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream().map(transactionDetailsMapper::mapTo).collect(Collectors.toList());
+        List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream().map(transactionDetailsMapper::mapToDto).collect(Collectors.toList());
         return ResponseEntity.ok(transactionDetailsDtos);
     }
 
     @GetMapping("/id/{id}/details")
     public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
         Page<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
-        return transactionDetails.map(transactionDetailsMapper::mapTo);
+        return transactionDetails.map(transactionDetailsMapper::mapToDto);
     }
 
     @PostMapping("/id/{id}/product")

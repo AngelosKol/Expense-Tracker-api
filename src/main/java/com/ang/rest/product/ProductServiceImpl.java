@@ -1,7 +1,7 @@
 package com.ang.rest.product;
 
 import com.ang.rest.exceptions.ResourceNotFoundException;
-import com.ang.rest.domain.entities.Product;
+import com.ang.rest.domain.entity.Product;
 import com.ang.rest.transaction_details.TransactionDetailsService;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -38,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
-        return StreamSupport.stream(productRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return productRepository.findAll().stream().collect(Collectors.toList());
     }
 
 

@@ -1,6 +1,6 @@
 package com.ang.rest.shop;
 
-import com.ang.rest.domain.entities.Shop;
+import com.ang.rest.domain.entity.Shop;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

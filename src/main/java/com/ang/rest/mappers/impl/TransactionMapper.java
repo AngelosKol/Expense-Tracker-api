@@ -1,26 +1,32 @@
 package com.ang.rest.mappers.impl;
 
 import com.ang.rest.domain.dto.TransactionDto;
-import com.ang.rest.domain.entities.Transaction;
-import com.ang.rest.mappers.Mapper;
-import org.modelmapper.ModelMapper;
+import com.ang.rest.domain.entity.Shop;
+import com.ang.rest.domain.entity.Transaction;
+import com.ang.rest.shop.ShopServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionMapper implements Mapper<Transaction, TransactionDto> {
+@AllArgsConstructor
+public class TransactionMapper  {
 
-    private ModelMapper modelMapper;
+private final ShopServiceImpl shopService;
 
-    public TransactionMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
+    public TransactionDto mapToDto(Transaction transaction) {
+        return TransactionDto.builder()
+                .id(transaction.getId())
+                .shopName(transaction.getShop().getName())
+                .date(transaction.getDate())
+                .build();
+        }
 
-    public TransactionDto mapTo(Transaction transaction) {
-        return modelMapper.map(transaction, TransactionDto.class);
-
-    }
-
-    public Transaction mapFrom(TransactionDto transactionDto) {
-        return modelMapper.map(transactionDto, Transaction.class);
+    public Transaction mapToEntity(TransactionDto transactionDto)  {
+        Shop shop = shopService.findByName(transactionDto.getShopName());
+        return Transaction.builder()
+                .id(transactionDto.getId())
+                .shop(shop)
+                .date(transactionDto.getDate())
+                .build();
     }
 }

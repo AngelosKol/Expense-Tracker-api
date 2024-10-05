@@ -1,7 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.entities.TransactionDetails;
+import com.ang.rest.domain.entity.TransactionDetails;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;

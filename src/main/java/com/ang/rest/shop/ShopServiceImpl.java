@@ -1,7 +1,7 @@
 package com.ang.rest.shop;
 
 import com.ang.rest.exceptions.ResourceNotFoundException;
-import com.ang.rest.domain.entities.Shop;
+import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.transaction.TransactionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

@@ -2,8 +2,8 @@ package com.ang.rest.transaction;
 
 
 import com.ang.rest.exceptions.ResourceNotFoundException;
-import com.ang.rest.domain.entities.Transaction;
-import com.ang.rest.domain.entities.TransactionDetails;
+import com.ang.rest.domain.entity.Transaction;
+import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.transaction_details.TransactionDetailsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;

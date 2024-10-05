@@ -1,6 +1,6 @@
 package com.ang.rest.shop;
 
-import com.ang.rest.domain.entities.Shop;
+import com.ang.rest.domain.entity.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
