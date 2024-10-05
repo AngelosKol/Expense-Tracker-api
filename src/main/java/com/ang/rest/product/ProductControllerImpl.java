@@ -31,8 +31,7 @@ public class ProductControllerImpl {
         this.productMapper = productMapper;
     }
 
-    @Operation(summary = "Create a new product")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Product created", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))})})
+
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         Product product = productMapper.mapFrom(productDto);
@@ -40,24 +39,21 @@ public class ProductControllerImpl {
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get all products")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of products", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))})})
+
     @GetMapping(path = "/all")
     public List<ProductDto> getAllProducts() {
         List<Product> products = productService.findAll();
         return products.stream().map(product -> productMapper.mapTo(product)).collect(Collectors.toList());
     }
 
-    @Operation(summary = "Get products with pagination")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Paginated list of products", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))})})
+
     @GetMapping
     public Page<ProductDto> getProducts(Pageable pageable) {
         Page<Product> products = productService.findAll(pageable);
         return products.map(productEntity -> productMapper.mapTo(productEntity));
     }
 
-    @Operation(summary = "Get a product by ID")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Product found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))}), @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         Product product = productService.findOne(id);
@@ -65,8 +61,6 @@ public class ProductControllerImpl {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "Update a product by ID")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Product updated", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))}), @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PutMapping(path = "/id/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
         Product existingProduct = productService.findOne(id);
@@ -77,8 +71,7 @@ public class ProductControllerImpl {
         return new ResponseEntity<>(productMapper.mapTo(savedProduct), HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete a product by ID")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Product deleted", content = @Content), @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+
     @DeleteMapping(path = "/id/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.delete(id);
