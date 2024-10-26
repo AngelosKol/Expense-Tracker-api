@@ -33,7 +33,7 @@ public interface TransactionDetailsService {
 
 
 
-    List<Object> getMonthTotalsWithShop(String year, String month);
+    List<Object> getMonthTotalsWithShop(String year, int month);
 
 //    List<Object> getMonthTotals(String year, String month);
 

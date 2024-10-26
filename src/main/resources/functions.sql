@@ -1,45 +1,28 @@
--- DROP FUNCTION public.get_daily_costs_with_shop(varchar, varchar);
-
-CREATE OR REPLACE FUNCTION public.get_daily_costs_with_shop(year_param character varying, month_param character varying)
- RETURNS TABLE(day_and_month character varying, shop_name character varying, totalspent integer)
- LANGUAGE plpgsql
+-- DROP FUNCTION public.get_daily_costs_with_shop(varchar, integer);
+CREATE OR REPLACE FUNCTION public.get_daily_costs_with_shop(
+    year_param VARCHAR,
+    month_param INTEGER
+)
+RETURNS TABLE(
+    day_and_month VARCHAR,
+    shop_name VARCHAR,
+    totalspent INTEGER
+)
+LANGUAGE plpgsql
 AS $function$
-DECLARE
-    month_number VARCHAR;
 BEGIN
-    -- Convert month name or abbreviation to month number
-    SELECT CASE
-        WHEN month_param ILIKE 'January'  THEN '01'
-        WHEN month_param ILIKE 'February'  THEN '02'
-        WHEN month_param ILIKE 'March'  THEN '03'
-        WHEN month_param ILIKE 'April' THEN '04'
-        WHEN month_param ILIKE 'May' THEN '05'
-        WHEN month_param ILIKE 'June'  THEN '06'
-        WHEN month_param ILIKE 'July'  THEN '07'
-        WHEN month_param ILIKE 'August' THEN '08'
-        WHEN month_param ILIKE 'September'  THEN '09'
-        WHEN month_param ILIKE 'October'  THEN '10'
-        WHEN month_param ILIKE 'November'  THEN '11'
-        WHEN month_param ILIKE 'December'  THEN '12'
-        ELSE NULL
-    END INTO month_number;
-
-    IF month_number IS NULL THEN
-        RAISE EXCEPTION 'Invalid month name: %', month_param;
-    END IF;
-
     RETURN QUERY
     WITH days_in_month AS (
         SELECT generate_series(
-            TO_DATE(year_param || '-' || month_number || '-01', 'YYYY-MM-DD'),
-            TO_DATE(year_param || '-' || month_number || '-01', 'YYYY-MM-DD') + INTERVAL '1 month' - INTERVAL '1 day',
+            TO_DATE(year_param || '-' || month_param || '-01', 'YYYY-MM-DD'),
+            TO_DATE(year_param || '-' || month_param || '-01', 'YYYY-MM-DD') + INTERVAL '1 month' - INTERVAL '1 day',
             INTERVAL '1 day'
         ) AS day
     )
     SELECT
-        TO_CHAR(days_in_month.day, 'DD Mon')::character varying AS day_and_month,
+        TO_CHAR(days_in_month.day, 'DD Mon')::VARCHAR AS day_and_month,
         s.name AS shop_name,
-        COALESCE(SUM(td.price * td.quantity), 0)::INT AS totalSpent
+        COALESCE(SUM(td.price * td.quantity), 0)::INT AS totalspent
     FROM
         days_in_month
     LEFT JOIN
@@ -53,11 +36,11 @@ BEGIN
     ORDER BY
         days_in_month.day, s.name;
 END;
-$function$
-;
+$function$;
+
+
 
 -- DROP FUNCTION public.get_daily_costs(varchar, varchar);
-
 CREATE OR REPLACE FUNCTION public.get_daily_costs(year_param character varying, month_param character varying)
  RETURNS TABLE(day integer, totalspent integer)
  LANGUAGE plpgsql

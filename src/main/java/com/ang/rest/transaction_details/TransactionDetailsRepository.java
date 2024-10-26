@@ -38,7 +38,7 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
 
 
     @Query(value = "SELECT day_and_month, shop_name, totalspent FROM get_daily_costs_with_shop(:yearParam, :monthParam)", nativeQuery = true)
-    List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") String monthParam);
+    List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") int monthParam);
 
 
     @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
