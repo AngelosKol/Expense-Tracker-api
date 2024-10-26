@@ -1,6 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -55,6 +56,10 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Override
     public List<Object> getYearTotals(int year) {
         return transactionDetailsRepository.getYearTotals(year);
+    }
+    @Override
+    public List<YearCostsDto> getYearTotals_(int year) {
+        return transactionDetailsRepository.getYearsTotals_(year);
     }
 
 

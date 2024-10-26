@@ -1,6 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,9 @@ public interface TransactionDetailsService {
 
 
     List<Object> getYearTotals(int year);
+
+    List<YearCostsDto> getYearTotals_(int year);
+
 
 
     List<Object> getMonthTotalsWithShop(String year, String month);

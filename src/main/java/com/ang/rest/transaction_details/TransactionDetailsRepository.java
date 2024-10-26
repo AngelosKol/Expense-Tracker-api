@@ -1,6 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,14 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
 
     @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
     List<Object> getYearTotals(@Param("year") int year);
+
+
+    @Query("SELECT new com.ang.rest.domain.dto.YearCostsDto(MONTH(t.date), COALESCE(SUM(td.price * td.quantity), 0)) " +
+            "FROM TransactionDetails td " +
+            "JOIN td.transaction t " +
+            "WHERE YEAR(t.date) = :year " +
+            "GROUP BY MONTH(t.date)")
+    List<YearCostsDto> getYearsTotals_(@Param("year") int year);
 
 
     @Query(value = "SELECT * from get_daily_costs(:year, :month)", nativeQuery = true)
