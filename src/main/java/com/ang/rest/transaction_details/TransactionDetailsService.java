@@ -1,12 +1,14 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +37,9 @@ public interface TransactionDetailsService {
 
     List<Object> getMonthTotalsWithShop(String year, int month);
 
-//    List<Object> getMonthTotals(String year, String month);
 
+
+    List<MonthCostDto> getMonthTotalsWithShop_(int year, int month);
 
     boolean checkIfProductExists(Long productId);
 

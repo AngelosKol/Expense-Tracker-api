@@ -1,6 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +69,13 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Override
     public List<Object> getMonthTotalsWithShop(String year, int month) {
         return transactionDetailsRepository.getMonthTotalWithShop(year, month);
+    }
+
+    @Override
+    public List<MonthCostDto> getMonthTotalsWithShop_(int year, int month) {
+        LocalDate fromDate = LocalDate.of(year, month, 1);
+        LocalDate toDate = YearMonth.from(fromDate).atEndOfMonth();
+        return transactionDetailsRepository.getMonthTotalWithShop_(fromDate, toDate);
     }
 
     @Override

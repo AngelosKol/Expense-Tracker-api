@@ -2,14 +2,15 @@ package com.ang.rest.analytics;
 
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.transaction_details.TransactionDetailsService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class AnalyticsControllerImpl  {
 
 
     @GetMapping(path = "api/v1/analytics/{fromDate}/to/{toDate}")
-    public List<AnalyticsDto> getTotalSpentByDate(@PathVariable("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @PathVariable("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+    public List<AnalyticsDto> getTotalSpentByDate(@PathVariable("fromDate") Date fromDate, @PathVariable("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         return transactionDetailsService.getTotalSpentByDate(fromDate, toDate);
     }
 
@@ -42,6 +43,11 @@ public class AnalyticsControllerImpl  {
     @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}/month/{month}")
     public List<Object> getMonthTotalsWithShop(@PathVariable("year") String year, @PathVariable("month") int month) {
         return transactionDetailsService.getMonthTotalsWithShop(year, month);
+
+    }
+    @GetMapping(path = "api/v2/analytics/totalSpent/year/{year}/month/{month}")
+    public List<MonthCostDto> getMonthTotalsWithShop_(@PathVariable("year") int year, @PathVariable("month") int month) {
+        return transactionDetailsService.getMonthTotalsWithShop_(year, month);
 
     }
 

@@ -1,6 +1,7 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.domain.dto.AnalyticsDto;
+import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,16 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
     List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") int monthParam);
 
 
+    @Query("SELECT new com.ang.rest.domain.dto.MonthCostDto(t.date, s.name, SUM(td.quantity * td.price)) " +
+            "FROM TransactionDetails td " +
+            "JOIN td.transaction t " +
+            "JOIN td.product p " +
+            "JOIN t.shop s " +
+            "WHERE t.date BETWEEN :fromDate AND :toDate " +
+            "GROUP BY t.date, s.name")
+    List<MonthCostDto> getMonthTotalWithShop_(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+
     @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
     List<Object> getYearTotals(@Param("year") int year);
 
@@ -55,6 +67,7 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
 
     @Query(value = "SELECT * from get_daily_costs(:year, :month)", nativeQuery = true)
     List<Object> getMonthTotals(@Param("year") String year, @Param("month") String month);
+
 
 
 }
