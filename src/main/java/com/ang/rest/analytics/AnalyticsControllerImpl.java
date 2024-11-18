@@ -29,25 +29,17 @@ public class AnalyticsControllerImpl  {
         return transactionDetailsService.getTotalSpentByDate(fromDate, toDate);
     }
 
-    @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}")
-    public List<Object> getTotalSpentByMonth(@PathVariable("year") int year) {
-        return transactionDetailsService.getYearTotals(year);
 
+    @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}")
+    public List<YearCostsDto> getTotalSpentByMonth(@PathVariable("year") int year) {
+        return transactionDetailsService.getYearTotals(year);
     }
-    @GetMapping(path = "api/v2/analytics/totalSpent/year/{year}")
-    public List<YearCostsDto> getTotalSpentByMonth_(@PathVariable("year") int year) {
-        return transactionDetailsService.getYearTotals_(year);
-    }
+
 
 
     @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}/month/{month}")
-    public List<Object> getMonthTotalsWithShop(@PathVariable("year") String year, @PathVariable("month") int month) {
+    public List<MonthCostDto> getMonthTotalsWithShop(@PathVariable("year") int year, @PathVariable("month") int month) {
         return transactionDetailsService.getMonthTotalsWithShop(year, month);
-
-    }
-    @GetMapping(path = "api/v2/analytics/totalSpent/year/{year}/month/{month}")
-    public List<MonthCostDto> getMonthTotalsWithShop_(@PathVariable("year") int year, @PathVariable("month") int month) {
-        return transactionDetailsService.getMonthTotalsWithShop_(year, month);
 
     }
 

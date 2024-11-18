@@ -39,10 +39,6 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
-    @Query(value = "SELECT day_and_month, shop_name, totalspent FROM get_daily_costs_with_shop(:yearParam, :monthParam)", nativeQuery = true)
-    List<Object> getMonthTotalWithShop(@Param("yearParam") String yearParam, @Param("monthParam") int monthParam);
-
-
     @Query("SELECT new com.ang.rest.domain.dto.MonthCostDto(t.date, s.name, SUM(td.quantity * td.price)) " +
             "FROM TransactionDetails td " +
             "JOIN td.transaction t " +
@@ -50,11 +46,8 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
             "JOIN t.shop s " +
             "WHERE t.date BETWEEN :fromDate AND :toDate " +
             "GROUP BY t.date, s.name")
-    List<MonthCostDto> getMonthTotalWithShop_(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+    List<MonthCostDto> getMonthTotalWithShop(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
 
-
-    @Query(value = "SELECT * from get_year_costs(:year)", nativeQuery = true)
-    List<Object> getYearTotals(@Param("year") int year);
 
 
     @Query("SELECT new com.ang.rest.domain.dto.YearCostsDto(MONTH(t.date), COALESCE(SUM(td.price * td.quantity), 0)) " +
@@ -62,11 +55,8 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
             "JOIN td.transaction t " +
             "WHERE YEAR(t.date) = :year " +
             "GROUP BY MONTH(t.date)")
-    List<YearCostsDto> getYearsTotals_(@Param("year") int year);
+    List<YearCostsDto> getYearsTotals(@Param("year") int year);
 
-
-    @Query(value = "SELECT * from get_daily_costs(:year, :month)", nativeQuery = true)
-    List<Object> getMonthTotals(@Param("year") String year, @Param("month") String month);
 
 
 

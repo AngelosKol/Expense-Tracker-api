@@ -57,25 +57,18 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
 
     @Override
-    public List<Object> getYearTotals(int year) {
-        return transactionDetailsRepository.getYearTotals(year);
-    }
-    @Override
-    public List<YearCostsDto> getYearTotals_(int year) {
-        return transactionDetailsRepository.getYearsTotals_(year);
+    public List<YearCostsDto> getYearTotals(int year) {
+        return transactionDetailsRepository.getYearsTotals(year);
     }
 
 
-    @Override
-    public List<Object> getMonthTotalsWithShop(String year, int month) {
-        return transactionDetailsRepository.getMonthTotalWithShop(year, month);
-    }
+
 
     @Override
-    public List<MonthCostDto> getMonthTotalsWithShop_(int year, int month) {
+    public List<MonthCostDto> getMonthTotalsWithShop(int year, int month) {
         LocalDate fromDate = LocalDate.of(year, month, 1);
         LocalDate toDate = YearMonth.from(fromDate).atEndOfMonth();
-        return transactionDetailsRepository.getMonthTotalWithShop_(fromDate, toDate);
+        return transactionDetailsRepository.getMonthTotalWithShop(fromDate, toDate);
     }
 
     @Override

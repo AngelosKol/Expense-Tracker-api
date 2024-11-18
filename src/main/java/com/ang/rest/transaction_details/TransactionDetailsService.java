@@ -17,29 +17,17 @@ public interface TransactionDetailsService {
 
     List<TransactionDetails> getTransactionDetailsByTransactionId(Long id);
 
-
     void save(TransactionDetails transactionDetails);
-
 
     void deleteProduct(Long transactionId, String productName);
 
     Page<TransactionDetails> getTransactionDetailsByTransactionId(Long id, Pageable pageable);
 
-
     List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate);
 
+    List<YearCostsDto> getYearTotals(int year);
 
-    List<Object> getYearTotals(int year);
-
-    List<YearCostsDto> getYearTotals_(int year);
-
-
-
-    List<Object> getMonthTotalsWithShop(String year, int month);
-
-
-
-    List<MonthCostDto> getMonthTotalsWithShop_(int year, int month);
+    List<MonthCostDto> getMonthTotalsWithShop(int year, int month);
 
     boolean checkIfProductExists(Long productId);
 
