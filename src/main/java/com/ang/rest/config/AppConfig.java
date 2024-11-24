@@ -22,20 +22,20 @@ public class AppConfig {
 
     private final UserRepository userRepository;
 
-
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-                return userRepository.findByEmail(email).orElseThrow( () -> new UsernameNotFoundException("User not found."));
+                return userRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found."));
             }
         };
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -54,24 +54,19 @@ public class AppConfig {
 
     }
 
-
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        String[] allowDomains = new String[2];
+        String[] allowDomains = new String[3];
         allowDomains[0] = "http://localhost:4200";
         allowDomains[1] = "http://localhost:8080";
+        allowDomains[2] = "http://localhost";
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(allowDomains).allowedMethods("GET", "POST", "PUT", "DELETE").allowedHeaders("*");
+                registry.addMapping("/**").allowedOrigins(allowDomains).allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedHeaders("*");
             }
         };
     }
-
-
-
-
-
 
 }
