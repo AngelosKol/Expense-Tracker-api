@@ -1,7 +1,7 @@
 package com.ang.rest.user;
 
 
-import com.ang.rest.token.Token;
+import com.ang.rest.domain.entity.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.ang.rest.token;
 
+import com.ang.rest.domain.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -5,7 +5,7 @@ import com.ang.rest.config.JwtService;
 import com.ang.rest.domain.dto.AuthenticationRequest;
 import com.ang.rest.domain.dto.AuthenticationResponse;
 import com.ang.rest.domain.dto.RegisterRequest;
-import com.ang.rest.token.Token;
+import com.ang.rest.domain.entity.Token;
 import com.ang.rest.token.TokenRepository;
 import com.ang.rest.token.TokenType;
 import com.ang.rest.user.User;
