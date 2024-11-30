@@ -1,5 +1,6 @@
 package com.ang.rest.user;
 
+import com.ang.rest.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

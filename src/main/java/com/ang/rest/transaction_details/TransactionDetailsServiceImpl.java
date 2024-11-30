@@ -4,11 +4,14 @@ import com.ang.rest.domain.dto.AnalyticsDto;
 import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
+import com.ang.rest.domain.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,17 +61,18 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
     @Override
     public List<YearCostsDto> getYearTotals(int year) {
-        return transactionDetailsRepository.getYearsTotals(year);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        return transactionDetailsRepository.getYearsTotals(year, authenticatedUser.getId());
     }
-
-
-
 
     @Override
     public List<MonthCostDto> getMonthTotalsWithShop(int year, int month) {
         LocalDate fromDate = LocalDate.of(year, month, 1);
         LocalDate toDate = YearMonth.from(fromDate).atEndOfMonth();
-        return transactionDetailsRepository.getMonthTotalWithShop(fromDate, toDate);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        return transactionDetailsRepository.getMonthTotalWithShop(fromDate, toDate, authenticatedUser.getId());
     }
 
     @Override

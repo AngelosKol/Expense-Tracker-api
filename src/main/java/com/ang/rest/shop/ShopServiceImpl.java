@@ -2,7 +2,9 @@ package com.ang.rest.shop;
 
 import com.ang.rest.exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Shop;
+import com.ang.rest.transaction.TransactionRepository;
 import com.ang.rest.transaction.TransactionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,15 +15,12 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@RequiredArgsConstructor
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
-    private final TransactionService transactionService;
 
-    public ShopServiceImpl(ShopRepository shopRepository, TransactionService transactionService) {
-        this.shopRepository = shopRepository;
-        this.transactionService = transactionService;
-    }
+    private final TransactionRepository transactionRepository;
 
     @Override
     public Shop save(Shop shop) {
@@ -59,7 +58,9 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void delete(Long id) {
         Shop shop = findOne(id);
-        transactionService.ensureShopNotInTransaction(id);
+        if (transactionRepository.existsByShop_id(id)) {
+            throw new DataIntegrityViolationException("There is a transaction related with this shop.");
+        }
         shopRepository.deleteById(id);
     }
 

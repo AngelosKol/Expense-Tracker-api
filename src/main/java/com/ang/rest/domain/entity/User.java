@@ -1,4 +1,4 @@
-package com.ang.rest.user;
+package com.ang.rest.domain.entity;
 
 
 import com.ang.rest.domain.entity.Token;
@@ -23,7 +23,7 @@ public class User  implements UserDetails {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String firstname;
     private String lastname;
     private String email;

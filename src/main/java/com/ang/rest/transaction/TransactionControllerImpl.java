@@ -1,10 +1,7 @@
 package com.ang.rest.transaction;
 
 import com.ang.rest.domain.dto.*;
-import com.ang.rest.domain.entity.Product;
-import com.ang.rest.domain.entity.Shop;
-import com.ang.rest.domain.entity.Transaction;
-import com.ang.rest.domain.entity.TransactionDetails;
+import com.ang.rest.domain.entity.*;
 import com.ang.rest.mappers.impl.TransactionDetailsMapper;
 import com.ang.rest.mappers.impl.TransactionMapper;
 import com.ang.rest.product.ProductService;
@@ -16,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,38 +32,36 @@ public class TransactionControllerImpl implements TransactionController {
     private final TransactionMapper transactionMapper;
     private final TransactionDetailsMapper transactionDetailsMapper;
 
-
-
-
-
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
         Transaction transaction = transactionMapper.mapToEntity(transactionDto);
         Shop shop = shopService.findByName(transactionDto.getShopName());
         transaction.setShop(shop);
+        transaction.setUser(authenticatedUser);
         Transaction savedTransaction = transactionService.save(transaction);
         return new ResponseEntity<>(transactionMapper.mapToDto(savedTransaction), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/all")
     public List<TransactionDto> getAllTransactions() {
-        List<Transaction> transactions = transactionService.findAll();
-        return transactions.stream().map(transaction -> {
-            TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
-            transactionDto.setShopName(transaction.getShop().getName());
-            return transactionDto;
-        }).collect(Collectors.toList());
+        return transactionService.findAll();
     }
 
     @GetMapping
     public Page<TransactionDto> getTransactions(Pageable pageable) {
-        Page<Transaction> transactions = transactionService.findAll(pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        Page<Transaction> transactions = transactionService.findAll(authenticatedUser.getId(),pageable);
         return transactions.map(transaction -> transactionMapper.mapToDto(transaction));
     }
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
-        Transaction transaction = transactionService.findOne(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
         TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
         return new ResponseEntity<>(transactionDto, HttpStatus.OK);
     }
@@ -91,7 +88,9 @@ public class TransactionControllerImpl implements TransactionController {
 
     @PostMapping("/id/{id}/product")
     public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
-        Transaction transaction = transactionService.findOne(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
         Product product = productService.findOne(productDetailsDto.getProductId());
 
         TransactionDetails transactionDetails = new TransactionDetails();
