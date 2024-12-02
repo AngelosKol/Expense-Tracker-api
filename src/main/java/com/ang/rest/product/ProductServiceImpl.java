@@ -1,43 +1,49 @@
 package com.ang.rest.product;
 
+import com.ang.rest.domain.dto.ProductDto;
 import com.ang.rest.exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Product;
+import com.ang.rest.mappers.impl.ProductMapper;
+import com.ang.rest.transaction_details.TransactionDetailsRepository;
 import com.ang.rest.transaction_details.TransactionDetailsService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final TransactionDetailsService transactionDetailsService;
-
-    public ProductServiceImpl(ProductRepository productRepository, TransactionDetailsService transactionDetailsService) {
-        this.productRepository = productRepository;
-        this.transactionDetailsService = transactionDetailsService;
-    }
-
-    @Override
-    public boolean isExists(Long id) {
-        return productRepository.existsById(id);
-    }
+    private final TransactionDetailsRepository transactionDetailsRepository;
+    private final ProductMapper productMapper;
 
 
     @Override
-    public Product save(Product product) {
+    public void validateExists(Long id) {
+        if(!productRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Product with id " + id + " not found.");
+        }
+    }
+
+
+    @Override
+    public Product save(ProductDto productDto) {
+        Product product = productMapper.mapToEntity(productDto);
         ensureProductNameNotExists(product.getName());
         return productRepository.save(product);
     }
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAll().stream().collect(Collectors.toList());
+        return new ArrayList<>(productRepository.findAll());
     }
 
 
@@ -50,8 +56,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(Long productId) {
-        Product product = findOne(productId);
-        transactionDetailsService.ensureProductNotInTransaction(productId);
+        validateExists(productId);
+        if (transactionDetailsRepository.existsByProduct_id(productId)) {
+            throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
+        }
         productRepository.deleteById(productId);
 
 
