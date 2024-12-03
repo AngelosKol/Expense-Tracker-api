@@ -34,9 +34,4 @@ jobs:
 
       - name: Push Backend Docker Image to GHCR
         run: docker push ghcr.io/angeloskol/expense-tracker-api:latest
-      - name: Trigger Frontend Workflow
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.PAT }}
-          repository: angeloskol/expense-tracker
-          event-type: trigger-frontend-build
+
