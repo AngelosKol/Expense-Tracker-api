@@ -1,5 +1,4 @@
 package com.ang.rest.config;
-
 import com.ang.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +27,7 @@ public class AppConfig {
             @Override
             public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-                return userRepository.findByEmail(email)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+                return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found."));
             }
         };
     }
@@ -63,8 +61,7 @@ public class AppConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(allowDomains).allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
+                registry.addMapping("/**").allowedOrigins(allowDomains).allowedMethods("GET", "POST", "PUT", "DELETE").allowedHeaders("*");
             }
         };
     }

@@ -1,22 +1,28 @@
 package com.ang.rest.transaction;
 
 
+import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.entity.User;
 import com.ang.rest.exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
+import com.ang.rest.mappers.impl.TransactionMapper;
 import com.ang.rest.transaction_details.TransactionDetailsRepository;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
 
@@ -24,10 +30,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionDetailsRepository tDetailsRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionDetailsRepository tDetailsRepository) {
-        this.transactionRepository = transactionRepository;
-        this.tDetailsRepository = tDetailsRepository;
-    }
+    private final TransactionMapper transactionMapper;
+
+
 
     @Override
     public boolean isExists(Long id) {
@@ -41,19 +46,27 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findAll() {
-        return StreamSupport.stream(transactionRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public List<TransactionDto> findAll() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        List<Transaction> transactions = transactionRepository.findAllByUserId(authenticatedUser.getId());
+        return transactions.stream().map( t -> {
+            TransactionDto transactionDto = transactionMapper.mapToDto(t);
+            transactionDto.setShopName(t.getShop().getName());
+            return transactionDto;
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public Page<Transaction> findAll(Pageable pageable) {
-        return transactionRepository.findAll(pageable);
+    public Page<Transaction> findAll(Long userId, Pageable pageable) {
+        return transactionRepository.findAllByUserId(userId, pageable);
     }
 
 
     @Override
-    public Transaction findOne(Long id) {
-        return transactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+    public Transaction findOne(Long transactionId, Long userId) {
+
+        return transactionRepository.findByIdAndUserId(transactionId, userId).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
     public Optional<List<TransactionDetails>> getTransactionDetailsByTransactionId(Long transactionId) {

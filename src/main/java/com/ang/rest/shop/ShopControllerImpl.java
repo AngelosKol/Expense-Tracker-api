@@ -3,6 +3,7 @@ package com.ang.rest.shop;
 import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mappers.impl.ShopMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,15 +15,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/shops")
+@RequiredArgsConstructor
 public class ShopControllerImpl {
 
     private final ShopService shopService;
     private final ShopMapper shopMapper;
 
-    public ShopControllerImpl(ShopService shopService, ShopMapper shopMapper) {
-        this.shopService = shopService;
-        this.shopMapper = shopMapper;
-    }
+
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<Shop> getShop(@PathVariable Long id) {
