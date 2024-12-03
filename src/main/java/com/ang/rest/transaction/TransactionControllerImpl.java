@@ -1,5 +1,6 @@
 package com.ang.rest.transaction;
 
+import com.ang.rest.auth.AuthenticatedUserUtil;
 import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entity.*;
 import com.ang.rest.mappers.impl.TransactionDetailsMapper;
@@ -31,11 +32,11 @@ public class TransactionControllerImpl implements TransactionController {
     private final ShopService shopService;
     private final TransactionMapper transactionMapper;
     private final TransactionDetailsMapper transactionDetailsMapper;
+    private final AuthenticatedUserUtil authenticatedUserUtil;
 
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Transaction transaction = transactionMapper.mapToEntity(transactionDto);
         Shop shop = shopService.findByName(transactionDto.getShopName());
         transaction.setShop(shop);
@@ -51,16 +52,14 @@ public class TransactionControllerImpl implements TransactionController {
 
     @GetMapping
     public Page<TransactionDto> getTransactions(Pageable pageable) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Page<Transaction> transactions = transactionService.findAll(authenticatedUser.getId(),pageable);
         return transactions.map(transaction -> transactionMapper.mapToDto(transaction));
     }
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
         TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
         return new ResponseEntity<>(transactionDto, HttpStatus.OK);
@@ -88,8 +87,7 @@ public class TransactionControllerImpl implements TransactionController {
 
     @PostMapping("/id/{id}/product")
     public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
         Product product = productService.findOne(productDetailsDto.getProductId());
 

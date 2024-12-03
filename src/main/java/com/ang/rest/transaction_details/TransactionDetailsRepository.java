@@ -4,7 +4,6 @@ import com.ang.rest.domain.dto.AnalyticsDto;
 import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 public interface TransactionDetailsRepository extends JpaRepository<TransactionDetails, Long>, PagingAndSortingRepository<TransactionDetails, Long> {
 
-    @Transactional
+
     void deleteByTransactionId(Long transactionId);
 
     Optional<List<TransactionDetails>> findByTransactionId(Long transactionId);
@@ -30,7 +29,6 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
     boolean existsByProduct_id(Long id);
 
     @Modifying
-    @Transactional
     @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id IN (SELECT p.id FROM Product p WHERE p.name = :name)")
     void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("name") String name);
 

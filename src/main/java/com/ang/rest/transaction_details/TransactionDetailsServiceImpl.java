@@ -1,18 +1,18 @@
 package com.ang.rest.transaction_details;
 
+import com.ang.rest.auth.AuthenticatedUserUtil;
 import com.ang.rest.domain.dto.AnalyticsDto;
 import com.ang.rest.domain.dto.MonthCostDto;
 import com.ang.rest.domain.dto.YearCostsDto;
 import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.domain.entity.User;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -21,14 +21,11 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class TransactionDetailsServiceImpl implements TransactionDetailsService {
 
     private final TransactionDetailsRepository transactionDetailsRepository;
-
-    public TransactionDetailsServiceImpl(TransactionDetailsRepository transactionDetailsRepository) {
-        this.transactionDetailsRepository = transactionDetailsRepository;
-    }
-
+    private final AuthenticatedUserUtil authenticatedUserUtil;
 
     @Override
     public void save(TransactionDetails transactionDetails) {
@@ -61,8 +58,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
     @Override
     public List<YearCostsDto> getYearTotals(int year) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         return transactionDetailsRepository.getYearsTotals(year, authenticatedUser.getId());
     }
 
@@ -70,8 +66,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     public List<MonthCostDto> getMonthTotalsWithShop(int year, int month) {
         LocalDate fromDate = LocalDate.of(year, month, 1);
         LocalDate toDate = YearMonth.from(fromDate).atEndOfMonth();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         return transactionDetailsRepository.getMonthTotalWithShop(fromDate, toDate, authenticatedUser.getId());
     }
 
