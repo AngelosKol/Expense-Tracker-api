@@ -1,5 +1,6 @@
 package com.ang.rest.shop;
 
+import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.domain.entity.Shop;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -9,8 +10,9 @@ import java.util.List;
 
 public interface ShopService {
 
-    Shop save(Shop shop);
+    void validateExists(Long id);
 
+    Shop save(ShopDto shopDto);
 
     List<Shop> findAll();
 

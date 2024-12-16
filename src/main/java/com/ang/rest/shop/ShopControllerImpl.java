@@ -44,17 +44,16 @@ public class ShopControllerImpl {
 
     @PostMapping
     public ResponseEntity<ShopDto> createShop(@RequestBody ShopDto shopDto) {
-        Shop shop = shopMapper.mapToEntity(shopDto);
-        Shop savedShop = shopService.save(shop);
-        return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.CREATED);
+        Shop shop = shopService.save(shopDto);
+        ShopDto savedShopDto = shopMapper.mapToDto(shop);
+        return new ResponseEntity<>(savedShopDto, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/id/{id}")
     public ResponseEntity<ShopDto> updateShop(@PathVariable Long id, @RequestBody ShopDto shopDto) {
-        Shop existingShop = shopService.findOne(id);
+        shopService.validateExists(id);
         shopDto.setId(id);
-        Shop shop = shopMapper.mapToEntity(shopDto);
-        Shop savedShop = shopService.save(shop);
+        Shop savedShop = shopService.save(shopDto);
         return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.OK);
     }
 

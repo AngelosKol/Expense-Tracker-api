@@ -1,9 +1,10 @@
 package com.ang.rest.shop;
 
+import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.exceptions.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Shop;
+import com.ang.rest.mappers.impl.ShopMapper;
 import com.ang.rest.transaction.TransactionRepository;
-import com.ang.rest.transaction.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -22,15 +23,25 @@ public class ShopServiceImpl implements ShopService {
 
     private final TransactionRepository transactionRepository;
 
+    private final ShopMapper shopMapper;
+
     @Override
-    public Shop save(Shop shop) {
+    public void validateExists(Long id) {
+        if(!shopRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Shop with id " + id + " not found.");
+        }
+    }
+
+    @Override
+    public Shop save(ShopDto shopDto) {
+        Shop shop = shopMapper.mapToEntity(shopDto);
         ensureShopNameNotExists(shop.getName());
         return shopRepository.save(shop);
     }
 
     @Override
     public List<Shop> findAll() {
-        return StreamSupport.stream(shopRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return shopRepository.findAll();
     }
 
     @Override
