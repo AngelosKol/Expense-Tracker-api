@@ -16,22 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: maven
-
-      - name: Build Backend with Maven
-        run: mvn -B package -DskipTests --file pom.xml
-
-      - name: Build Backend Docker Image
-        run: docker build . --file ./Dockerfile --tag ghcr.io/angeloskol/expense-tracker-api:latest
-
       - name: Log in to GHCR
         run: echo "${{ secrets.PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push Backend Docker Image to GHCR
-        run: docker push ghcr.io/angeloskol/expense-tracker-api:latest
+      - name: Build Multi-Service Docker Compose Images
+        run: docker compose build
 
+      - name: Tag and Push Backend Image to GHCR
+        run: |
+          docker tag expense-tracker_backend ghcr.io/angeloskol/expense-tracker-backend:latest
+          docker push ghcr.io/angeloskol/expense-tracker-backend:latest
+
+      - name: Tag and Push Database Image to GHCR
+        run: |
+          docker tag expense-tracker_database ghcr.io/angeloskol/expense-tracker-database:latest
+          docker push ghcr.io/angeloskol/expense-tracker-database:latest
