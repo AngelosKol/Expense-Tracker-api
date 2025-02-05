@@ -33,7 +33,9 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
     void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("name") String name);
 
 
-    @Query("SELECT new com.ang.rest.domain.dto.AnalyticsDto(s.name, TO_CHAR(t.date, 'YYYY-MM-DD'), SUM(td.price * td.quantity)) " + "FROM TransactionDetails td " + "INNER JOIN td.transaction t " + "INNER JOIN t.shop s " + "WHERE t.date >= :fromDate AND t.date <= :toDate " + "GROUP BY s.name, t.date")
+    @Query("SELECT new com.ang.rest.domain.dto.AnalyticsDto(s.name, TO_CHAR(t.date, 'YYYY-MM-DD'), SUM(td.price * td.quantity)) "
+            + "FROM TransactionDetails td " + "INNER JOIN td.transaction t " + "INNER JOIN t.shop s " +
+            "WHERE t.date >= :fromDate AND t.date <= :toDate " + "GROUP BY s.name, t.date")
     List<AnalyticsDto> getTotalSpent(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 

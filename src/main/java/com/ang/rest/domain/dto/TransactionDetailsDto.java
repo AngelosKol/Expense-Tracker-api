@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,14 +14,14 @@ public class TransactionDetailsDto {
 
 
     private String name;
-    private int quantity;
+    private BigDecimal quantity;
     private BigDecimal price;
 
     public String getName() {
         return this.name;
     }
 
-    public int getQuantity() {
+    public BigDecimal getQuantity() {
         return this.quantity;
     }
 
@@ -32,7 +33,7 @@ public class TransactionDetailsDto {
         this.name = name;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
@@ -59,15 +60,9 @@ public class TransactionDetailsDto {
         return other instanceof TransactionDetailsDto;
     }
 
+    @Override
     public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $name = this.getName();
-        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-        result = result * PRIME + this.getQuantity();
-        final Object $price = this.getPrice();
-        result = result * PRIME + ($price == null ? 43 : $price.hashCode());
-        return result;
+        return Objects.hash(name, quantity, price);
     }
 
     public String toString() {

@@ -15,5 +15,5 @@ import java.util.Set;
 public class ProductDetailsDto {
     private Long productId;
     private BigDecimal price;
-    private int quantity;
+    private BigDecimal quantity;
 }
