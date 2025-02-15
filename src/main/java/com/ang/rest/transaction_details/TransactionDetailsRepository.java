@@ -45,7 +45,8 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
             "JOIN td.product p " +
             "JOIN t.shop s " +
             "WHERE t.date BETWEEN :fromDate AND :toDate AND t.user.id = :userId " +
-            "GROUP BY t.date, s.name")
+            "GROUP BY t.date, s.name " +
+            "ORDER BY t.date ")
     List<MonthCostDto> getMonthTotalWithShop(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, Long userId);
 
 
@@ -54,7 +55,8 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
             "FROM TransactionDetails td " +
             "JOIN td.transaction t " +
             "WHERE YEAR(t.date) = :year AND t.user.id = :userId " +
-            "GROUP BY MONTH(t.date)")
+            "GROUP BY MONTH(t.date) " +
+            "ORDER BY MONTH(t.date) ")
     List<YearCostsDto> getYearsTotals(@Param("year") int year, Long userId);
 
 
