@@ -3,10 +3,10 @@ package com.ang.rest.transaction;
 
 import com.ang.rest.domain.dto.TransactionDto;
 import com.ang.rest.domain.entity.User;
-import com.ang.rest.exceptions.ResourceNotFoundException;
+import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
-import com.ang.rest.mappers.impl.TransactionMapper;
+import com.ang.rest.mapper.impl.TransactionMapper;
 import com.ang.rest.transaction_details.TransactionDetailsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

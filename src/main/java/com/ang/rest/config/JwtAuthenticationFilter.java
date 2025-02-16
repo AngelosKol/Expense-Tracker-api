@@ -1,6 +1,5 @@
 package com.ang.rest.config;
 
-import com.ang.rest.exceptions.MalformedTokenException;
 import com.ang.rest.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

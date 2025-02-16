@@ -1,7 +1,7 @@
 package com.ang.rest.config;
 
 
-import com.ang.rest.exceptions.MalformedTokenException;
+import com.ang.rest.exception.MalformedTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

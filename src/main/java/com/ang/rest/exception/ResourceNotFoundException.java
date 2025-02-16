@@ -1,4 +1,4 @@
-package com.ang.rest.exceptions;
+package com.ang.rest.exception;
 
 public class
 ResourceNotFoundException extends RuntimeException {

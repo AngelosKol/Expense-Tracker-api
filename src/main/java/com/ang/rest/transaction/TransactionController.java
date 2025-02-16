@@ -73,14 +73,6 @@ public interface TransactionController {
     @GetMapping("/id/{id}/details")
     Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable);
 
-    @Operation(summary = "Add product to transaction", description = "Add a product to an existing transaction")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Product added to transaction successfully"),
-            @ApiResponse(responseCode = "404", description = "Transaction or product not found")
-    })
-    @PostMapping("/id/{id}/product")
-    ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto);
-
     @Operation(summary = "Delete product from transaction", description = "Delete a product from an existing transaction by product name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Product removed from transaction successfully"),

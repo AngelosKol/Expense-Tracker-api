@@ -3,8 +3,8 @@ package com.ang.rest.transaction;
 import com.ang.rest.auth.AuthenticatedUserUtil;
 import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entity.*;
-import com.ang.rest.mappers.impl.TransactionDetailsMapper;
-import com.ang.rest.mappers.impl.TransactionMapper;
+import com.ang.rest.mapper.impl.TransactionDetailsMapper;
+import com.ang.rest.mapper.impl.TransactionMapper;
 import com.ang.rest.product.ProductService;
 import com.ang.rest.shop.ShopService;
 
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -85,20 +83,7 @@ public class TransactionControllerImpl implements TransactionController {
         return transactionDetails.map(transactionDetailsMapper::mapToDto);
     }
 
-    @PostMapping("/id/{id}/product")
-    public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDto productDetailsDto) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
-        Product product = productService.findOne(productDetailsDto.getProductId());
 
-        TransactionDetails transactionDetails = new TransactionDetails();
-        transactionDetails.setTransaction(transaction);
-        transactionDetails.setProduct(product);
-        transactionDetails.setPrice(productDetailsDto.getPrice());
-        transactionDetails.setQuantity(productDetailsDto.getQuantity());
-        transactionDetailsService.save(transactionDetails);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
     @DeleteMapping(path = "/id/{id}/product/{productName}")
     public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
         if (!transactionService.isExists(transactionId)) {

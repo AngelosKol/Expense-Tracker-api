@@ -1,11 +1,13 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.auth.AuthenticatedUserUtil;
-import com.ang.rest.domain.dto.AnalyticsDto;
-import com.ang.rest.domain.dto.MonthCostDto;
-import com.ang.rest.domain.dto.YearCostsDto;
+import com.ang.rest.domain.dto.*;
+import com.ang.rest.domain.entity.Product;
+import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.domain.entity.User;
+import com.ang.rest.product.ProductService;
+import com.ang.rest.transaction.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +28,23 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
     private final TransactionDetailsRepository transactionDetailsRepository;
     private final AuthenticatedUserUtil authenticatedUserUtil;
+    private final TransactionService transactionService;
+    private final ProductService productService;
+
+
+    @Transactional
+    @Override
+    public void addProductToTransaction(Long transactionId, ProductDetailsDto productDetailsDto) {
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
+        Product product = productService.findOneEntity(productDetailsDto.getProductId());
+        TransactionDetails transactionDetails = new TransactionDetails();
+        transactionDetails.setTransaction(transaction);
+        transactionDetails.setProduct(product);
+        transactionDetails.setPrice(productDetailsDto.getPrice());
+        transactionDetails.setQuantity(productDetailsDto.getQuantity());
+        transactionDetailsRepository.save(transactionDetails);
+    }
 
     @Override
     public void save(TransactionDetails transactionDetails) {

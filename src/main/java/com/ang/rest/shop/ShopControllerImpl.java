@@ -2,7 +2,7 @@ package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.domain.entity.Shop;
-import com.ang.rest.mappers.impl.ShopMapper;
+import com.ang.rest.mapper.impl.ShopMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

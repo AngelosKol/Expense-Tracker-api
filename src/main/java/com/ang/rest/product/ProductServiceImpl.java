@@ -1,9 +1,9 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDto;
-import com.ang.rest.exceptions.ResourceNotFoundException;
+import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Product;
-import com.ang.rest.mappers.impl.ProductMapper;
+import com.ang.rest.mapper.impl.ProductMapper;
 import com.ang.rest.transaction_details.TransactionDetailsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,8 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,24 +34,24 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product save(ProductDto productDto) {
+    public ProductDto save(ProductDto productDto) {
         Product product = productMapper.mapToEntity(productDto);
         ensureProductNameNotExists(product.getName());
-        return productRepository.save(product);
+        Product savedProduct =  productRepository.save(product);
+        return productMapper.mapToDto(savedProduct);
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDto> findAll() {
+        return productRepository.findAll().stream().map(productMapper::mapToDto).collect(Collectors.toList());
     }
 
 
     @Override
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(productMapper::mapToDto);
+
     }
-
-
     @Override
     @Transactional
     public void delete(Long productId) {
@@ -59,15 +60,21 @@ public class ProductServiceImpl implements ProductService {
             throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
         }
         productRepository.deleteById(productId);
-
-
     }
 
 
     @Override
-    public Product findOne(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found."));
+    public ProductDto findOne(Long id) {
+        return productRepository.findById(id)
+                .map(productMapper::mapToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found."));
     }
+    @Override
+    public Product findOneEntity(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found."));
+    }
+
 
 
     @Override

@@ -1,4 +1,4 @@
-package com.ang.rest.mappers.impl;
+package com.ang.rest.mapper.impl;
 
 import com.ang.rest.domain.dto.ShopDto;
 import com.ang.rest.domain.entity.Shop;

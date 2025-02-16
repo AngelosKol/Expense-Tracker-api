@@ -9,22 +9,24 @@ import java.util.List;
 public interface ProductService {
 
 
-    Product save(ProductDto product);
+    ProductDto save(ProductDto product);
 
 
 
-    List<Product> findAll();
+    List<ProductDto> findAll();
 
 
-    Page<Product> findAll(Pageable pageable);
+    Page<ProductDto> findAll(Pageable pageable);
 
 
-    Product findOne(Long id);
+    ProductDto findOne(Long id);
 
     void validateExists(Long id);
 
 
     void delete(Long productId);
+
+    Product findOneEntity(Long id);
 
     void ensureProductNameNotExists(String name);
 }

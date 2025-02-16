@@ -1,4 +1,4 @@
-package com.ang.rest.exceptions;
+package com.ang.rest.exception;
 
 import com.ang.rest.config.JwtAuthenticationFilter;
 import com.ang.rest.domain.dto.ErrorResponse;

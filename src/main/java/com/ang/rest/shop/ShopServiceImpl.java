@@ -1,9 +1,9 @@
 package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDto;
-import com.ang.rest.exceptions.ResourceNotFoundException;
+import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Shop;
-import com.ang.rest.mappers.impl.ShopMapper;
+import com.ang.rest.mapper.impl.ShopMapper;
 import com.ang.rest.transaction.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
