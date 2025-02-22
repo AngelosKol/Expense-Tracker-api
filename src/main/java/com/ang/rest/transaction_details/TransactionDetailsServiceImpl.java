@@ -6,6 +6,7 @@ import com.ang.rest.domain.entity.Product;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.domain.entity.User;
+import com.ang.rest.mapper.impl.TransactionDetailsMapper;
 import com.ang.rest.product.ProductService;
 import com.ang.rest.transaction.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,7 +32,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     private final AuthenticatedUserUtil authenticatedUserUtil;
     private final TransactionService transactionService;
     private final ProductService productService;
-
+private final TransactionDetailsMapper transactionDetailsMapper;
 
     @Transactional
     @Override
@@ -58,14 +60,21 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
 
+
+
     @Override
-    public List<TransactionDetails> getTransactionDetailsByTransactionId(Long id) {
-        return transactionDetailsRepository.findByTransactionId(id).orElseThrow(() -> new EntityNotFoundException("Transaction with " + id + "not found."));
+    public List<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id) {
+        List<TransactionDetails>  transactionDetails =
+                transactionDetailsRepository.findByTransactionId(id).
+                        orElseThrow(() -> new EntityNotFoundException("Transaction with " + id + "not found."));
+        return transactionDetails.stream().map(transactionDetailsMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Page<TransactionDetails> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
-        return transactionDetailsRepository.findByTransactionId(id, pageable);
+    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
+        return transactionDetailsRepository.findByTransactionId(id, pageable)
+                .map(transactionDetailsMapper::mapToDto);
     }
 
 

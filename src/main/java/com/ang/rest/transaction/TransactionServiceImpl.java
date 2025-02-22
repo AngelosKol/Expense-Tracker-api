@@ -1,12 +1,13 @@
 package com.ang.rest.transaction;
-
-
+import com.ang.rest.auth.AuthenticatedUserUtil;
 import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.domain.entity.User;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.mapper.impl.TransactionMapper;
+import com.ang.rest.shop.ShopService;
 import com.ang.rest.transaction_details.TransactionDetailsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,10 +28,11 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     private final TransactionRepository transactionRepository;
-
+    private final ShopService shopService;
     private final TransactionDetailsRepository tDetailsRepository;
-
     private final TransactionMapper transactionMapper;
+    private final AuthenticatedUserUtil authenticatedUserUtil;
+
 
 
 
@@ -41,7 +43,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public Transaction save(Transaction transaction) {
+    public Transaction save(TransactionDto transactionDto) {
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+        Transaction transaction = transactionMapper.mapToEntity(transactionDto);
+        Shop shop = shopService.findByName(transactionDto.getShopName());
+        transaction.setShop(shop);
+        transaction.setUser(authenticatedUser);
         return transactionRepository.save(transaction);
     }
 
@@ -58,17 +65,24 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> findAll(Long userId, Pageable pageable) {
-        return transactionRepository.findAllByUserId(userId, pageable);
+    public Page<TransactionDto> findAll(Pageable pageable) {
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+       Page<Transaction> transactions = transactionRepository.findAllByUserId(authenticatedUser.getId(), pageable);
+        return transactions.map(transactionMapper::mapToDto);
     }
-
 
     @Override
-    public Transaction findOne(Long transactionId, Long userId) {
-
-        return transactionRepository.findByIdAndUserId(transactionId, userId).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+    public TransactionDto findOne(Long transactionId) {
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+        return transactionRepository.findByIdAndUserId(transactionId, authenticatedUser.getId()).map(transactionMapper::mapToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
+   @Override
+   public Transaction findOne(Long transactionId, Long userId) {
+       User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+       return transactionRepository.findByIdAndUserId(transactionId,authenticatedUser.getId()).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+   }
     public Optional<List<TransactionDetails>> getTransactionDetailsByTransactionId(Long transactionId) {
         return tDetailsRepository.findByTransactionId(transactionId);
     }

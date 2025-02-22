@@ -23,26 +23,14 @@ import java.util.stream.Collectors;
 @RequestMapping("api/v1/transactions")
 @RequiredArgsConstructor
 public class TransactionControllerImpl implements TransactionController {
-
     private final TransactionService transactionService;
-    private final ProductService productService;
-    private final TransactionDetailsService transactionDetailsService;
-    private final ShopService shopService;
     private final TransactionMapper transactionMapper;
-    private final TransactionDetailsMapper transactionDetailsMapper;
-    private final AuthenticatedUserUtil authenticatedUserUtil;
 
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Transaction transaction = transactionMapper.mapToEntity(transactionDto);
-        Shop shop = shopService.findByName(transactionDto.getShopName());
-        transaction.setShop(shop);
-        transaction.setUser(authenticatedUser);
-        Transaction savedTransaction = transactionService.save(transaction);
+        Transaction savedTransaction = transactionService.save(transactionDto);
         return new ResponseEntity<>(transactionMapper.mapToDto(savedTransaction), HttpStatus.CREATED);
     }
-
     @GetMapping(path = "/all")
     public List<TransactionDto> getAllTransactions() {
         return transactionService.findAll();
@@ -50,46 +38,17 @@ public class TransactionControllerImpl implements TransactionController {
 
     @GetMapping
     public Page<TransactionDto> getTransactions(Pageable pageable) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Page<Transaction> transactions = transactionService.findAll(authenticatedUser.getId(),pageable);
-        return transactions.map(transaction -> transactionMapper.mapToDto(transaction));
+        return transactionService.findAll(pageable);
     }
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Transaction transaction = transactionService.findOne(id, authenticatedUser.getId());
-        TransactionDto transactionDto = transactionMapper.mapToDto(transaction);
-        return new ResponseEntity<>(transactionDto, HttpStatus.OK);
+        return  ResponseEntity.ok(transactionService.findOne(id));
     }
 
     @DeleteMapping(path = "/id/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
-
         transactionService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/id/{id}/details/all")
-    public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id) {
-        List<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id);
-        List<TransactionDetailsDto> transactionDetailsDtos = transactionDetails.stream().map(transactionDetailsMapper::mapToDto).collect(Collectors.toList());
-        return ResponseEntity.ok(transactionDetailsDtos);
-    }
-
-    @GetMapping("/id/{id}/details")
-    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
-        Page<TransactionDetails> transactionDetails = transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable);
-        return transactionDetails.map(transactionDetailsMapper::mapToDto);
-    }
-
-
-    @DeleteMapping(path = "/id/{id}/product/{productName}")
-    public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
-        if (!transactionService.isExists(transactionId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        transactionDetailsService.deleteProduct(transactionId, productName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

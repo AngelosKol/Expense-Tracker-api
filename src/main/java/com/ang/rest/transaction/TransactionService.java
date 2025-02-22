@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface TransactionService {
-    Transaction save(Transaction transaction);
+    Transaction save(TransactionDto transactionDto);
 
 
     List<TransactionDto> findAll();
 
-    Page<Transaction> findAll(Long userId, Pageable pageable);
+    Page<TransactionDto> findAll(Pageable pageable);
 
+    TransactionDto findOne(Long id);
     Transaction findOne(Long id, Long userId);
 
     boolean isExists(Long id);
