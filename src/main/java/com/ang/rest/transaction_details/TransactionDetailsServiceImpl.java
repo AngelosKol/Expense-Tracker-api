@@ -59,9 +59,6 @@ private final TransactionDetailsMapper transactionDetailsMapper;
         transactionDetailsRepository.removeProductFromTransaction(transactionId, productName);
     }
 
-
-
-
     @Override
     public List<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id) {
         List<TransactionDetails>  transactionDetails =
@@ -75,27 +72,6 @@ private final TransactionDetailsMapper transactionDetailsMapper;
     public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
         return transactionDetailsRepository.findByTransactionId(id, pageable)
                 .map(transactionDetailsMapper::mapToDto);
-    }
-
-
-    @Override
-    public List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate) {
-        return transactionDetailsRepository.getTotalSpent(fromDate, toDate);
-    }
-
-
-    @Override
-    public List<YearCostsDto> getYearTotals(int year) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        return transactionDetailsRepository.getYearsTotals(year, authenticatedUser.getId());
-    }
-
-    @Override
-    public List<MonthCostDto> getMonthTotalsWithShop(int year, int month) {
-        LocalDate fromDate = LocalDate.of(year, month, 1);
-        LocalDate toDate = YearMonth.from(fromDate).atEndOfMonth();
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        return transactionDetailsRepository.getMonthTotalWithShop(fromDate, toDate, authenticatedUser.getId());
     }
 
     @Override

@@ -19,13 +19,6 @@ public interface TransactionDetailsService {
 
     void deleteProduct(Long transactionId, String productName);
 
-
-    List<AnalyticsDto> getTotalSpentByDate(Date fromDate, Date toDate);
-
-    List<YearCostsDto> getYearTotals(int year);
-
-    List<MonthCostDto> getMonthTotalsWithShop(int year, int month);
-
     boolean checkIfProductExists(Long productId);
 
     void ensureProductNotInTransaction(Long productId) throws DataIntegrityViolationException;
