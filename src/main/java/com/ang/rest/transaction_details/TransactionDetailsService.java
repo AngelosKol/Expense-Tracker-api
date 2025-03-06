@@ -14,6 +14,7 @@ public interface TransactionDetailsService {
     Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id, Pageable pageable);
 
     void addProductToTransaction(Long transactionId, ProductDetailsDto productDetailsDto);
+    void addProductsBatch(Long id, List<ProductDetailsDto> productDetailsDto);
 
     void save(TransactionDetails transactionDetails);
 
@@ -22,4 +23,5 @@ public interface TransactionDetailsService {
     boolean checkIfProductExists(Long productId);
 
     void ensureProductNotInTransaction(Long productId) throws DataIntegrityViolationException;
+
 }

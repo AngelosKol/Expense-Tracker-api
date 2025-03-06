@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,7 +31,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     private final AuthenticatedUserUtil authenticatedUserUtil;
     private final TransactionService transactionService;
     private final ProductService productService;
-private final TransactionDetailsMapper transactionDetailsMapper;
+    private final TransactionDetailsMapper transactionDetailsMapper;
 
     @Transactional
     @Override
@@ -46,6 +45,26 @@ private final TransactionDetailsMapper transactionDetailsMapper;
         transactionDetails.setPrice(productDetailsDto.getPrice());
         transactionDetails.setQuantity(productDetailsDto.getQuantity());
         transactionDetailsRepository.save(transactionDetails);
+    }
+
+    @Override
+    @Transactional
+    public void addProductsBatch(Long transactionId, List<ProductDetailsDto> productDetailsList) {
+        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
+        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
+        Map<Long, ProductDetailsDto> productMap = productDetailsList.stream()
+                .collect(Collectors.toMap(ProductDetailsDto::getProductId, dto -> dto));
+        List<Long> productIDList = new ArrayList<>(productMap.keySet());
+        List<Product> fetchedProducts = productService.findAllByID(productIDList);
+        List<TransactionDetails> transactionDetails = fetchedProducts.stream()
+                .map(product -> TransactionDetails.builder()
+                        .transaction(transaction)
+                        .product(product)
+                        .price(productMap.get(product.getId()).getPrice())
+                        .quantity(productMap.get(product.getId()).getQuantity())
+                        .build())
+                .collect(Collectors.toList());
+        transactionDetailsRepository.saveAllAndFlush(transactionDetails);
     }
 
     @Override

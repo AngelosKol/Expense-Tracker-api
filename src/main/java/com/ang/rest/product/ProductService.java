@@ -24,6 +24,8 @@ public interface ProductService {
     void validateExists(Long id);
 
 
+    List<Product> findAllByID(List<Long> productIDList);
+
     void delete(Long productId);
 
     Product findOneEntity(Long id);

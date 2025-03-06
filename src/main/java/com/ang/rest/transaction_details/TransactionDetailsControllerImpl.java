@@ -23,6 +23,11 @@ public class TransactionDetailsControllerImpl {
         transactionDetailsService.addProductToTransaction(id, productDetailsDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    @PostMapping("/id/{id}/products")
+    public ResponseEntity<Void> addProductsBatch(@PathVariable Long id, @RequestBody List<ProductDetailsDto> productDetailsDto) {
+        transactionDetailsService.addProductsBatch(id, productDetailsDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     @GetMapping("/id/{id}/details/all")
     public ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id) {

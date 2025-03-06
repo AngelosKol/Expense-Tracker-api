@@ -53,6 +53,12 @@ public class ProductServiceImpl implements ProductService {
 
     }
     @Override
+    public List<Product> findAllByID(List<Long> productIDList) {
+        return productRepository.findAllById(productIDList);
+
+    }
+
+    @Override
     @Transactional
     public void delete(Long productId) {
         validateExists(productId);
