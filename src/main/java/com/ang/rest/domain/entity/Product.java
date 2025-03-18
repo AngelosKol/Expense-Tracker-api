@@ -16,14 +16,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Override
     public String toString() {
         return "Product{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
+
 
     public boolean equals(final Object o) {
         if (o == this) return true;

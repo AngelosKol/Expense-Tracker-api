@@ -1,6 +1,5 @@
 package com.ang.rest.domain.entity;
 
-
 import com.ang.rest.token.TokenType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

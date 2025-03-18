@@ -14,6 +14,7 @@ import lombok.*;
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
+    @SequenceGenerator(name = "shop_seq", sequenceName = "shop_id_seq", allocationSize = 50)
     private Long id;
 
     @Column(unique = true)
