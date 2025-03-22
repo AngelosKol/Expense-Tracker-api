@@ -1,6 +1,7 @@
 package com.ang.rest.config;
 import com.ang.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -65,5 +66,4 @@ public class AppConfig {
             }
         };
     }
-
 }

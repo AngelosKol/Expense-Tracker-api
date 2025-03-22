@@ -48,8 +48,8 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Page<ProductDto> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable).map(productMapper::mapToDto);
+    public Page<ProductDto> findAll(String filter, Pageable pageable) {
+        return productRepository.findByNameContainingIgnoreCase(filter,pageable).map(productMapper::mapToDto);
 
     }
     @Override

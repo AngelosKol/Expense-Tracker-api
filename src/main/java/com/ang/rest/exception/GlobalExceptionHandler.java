@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,13 +36,12 @@ public class GlobalExceptionHandler {
         return createJsonResponse(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-
     private ResponseEntity<String> createJsonResponse(ErrorResponse errorResponse, HttpStatus status) {
         try {
             String json = objectMapper.writeValueAsString(errorResponse);
             return new ResponseEntity<>(json, status);
         } catch (Exception e) {
-            return new ResponseEntity<>("unhandled exception", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Unhandled exception", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

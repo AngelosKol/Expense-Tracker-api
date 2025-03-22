@@ -8,21 +8,15 @@ import java.util.List;
 
 public interface ProductService {
 
-
     ProductDto save(ProductDto product);
-
-
 
     List<ProductDto> findAll();
 
-
-    Page<ProductDto> findAll(Pageable pageable);
-
+    Page<ProductDto> findAll(String filter, Pageable pageable);
 
     ProductDto findOne(Long id);
 
     void validateExists(Long id);
-
 
     List<Product> findAllByID(List<Long> productIDList);
 
