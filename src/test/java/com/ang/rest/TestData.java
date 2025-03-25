@@ -47,12 +47,7 @@ public class TestData {
                 .name("Milk")
                 .build();
     }
-    public static ProductDto createTestProductDTOA(){
-        return ProductDto.builder()
-                .id(2L)
-                .name("Butter")
-                .build();
-    }
+
     public static Product createTestProductC(){
         return Product.builder()
                 .id(1L)

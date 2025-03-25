@@ -1,6 +1,9 @@
 package com.ang.rest.product;
 
+import com.ang.rest.category.CategoryServiceImpl;
+import com.ang.rest.domain.dto.CategoryDto;
 import com.ang.rest.domain.dto.ProductDto;
+import com.ang.rest.domain.entity.Category;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Product;
 import com.ang.rest.mapper.impl.ProductMapper;
@@ -22,23 +25,35 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final TransactionDetailsRepository transactionDetailsRepository;
+    private final CategoryServiceImpl categoryService;
     private final ProductMapper productMapper;
 
 
-    @Override
-    public void validateExists(Long id) {
-        if(!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Product with id " + id + " not found.");
-        }
-    }
 
+
+    @Override
+    public ProductDto update(Long id, ProductDto productDto) {
+        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
+        if (!existingProduct.getName().equalsIgnoreCase(productDto.name())) {
+           boolean nameExists = productRepository.existsByName(productDto.name());
+           if(nameExists) {
+               throw new DataIntegrityViolationException("A product with this name already exists.");
+           }
+        }
+        Category category = productDto.categoryName() != null
+                ? categoryService.findCategory(productDto.categoryName())
+                : existingProduct.getCategory();
+        existingProduct.setName(productDto.name());
+        existingProduct.setCategory(category);
+        return productMapper.mapToDto(productRepository.save(existingProduct));
+    }
 
     @Override
     public ProductDto save(ProductDto productDto) {
-        Product product = productMapper.mapToEntity(productDto);
+        Category category = categoryService.findByName(productDto.categoryName());
+        Product product = productMapper.mapToEntity(productDto, category);
         ensureProductNameNotExists(product.getName());
-        Product savedProduct =  productRepository.save(product);
-        return productMapper.mapToDto(savedProduct);
+        return productMapper.mapToDto(productRepository.save(product));
     }
 
     @Override
@@ -61,7 +76,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(Long productId) {
-        validateExists(productId);
+        if(!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException("Product with id " + productId + " not found.");
+        }
         if (transactionDetailsRepository.existsByProduct_id(productId)) {
             throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
         }

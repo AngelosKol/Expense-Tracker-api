@@ -16,7 +16,7 @@ public interface ProductService {
 
     ProductDto findOne(Long id);
 
-    void validateExists(Long id);
+    ProductDto update(Long id, ProductDto dto);
 
     List<Product> findAllByID(List<Long> productIDList);
 

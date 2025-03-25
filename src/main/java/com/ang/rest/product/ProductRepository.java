@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
 
     Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Product findByName(String name);
 
     boolean existsByName(String name);
 

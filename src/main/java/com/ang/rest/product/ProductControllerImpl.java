@@ -45,9 +45,7 @@ public class ProductControllerImpl {
 
     @PutMapping(path = "/id/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
-        productService.validateExists(id);
-        productDto.setId(id);
-        return ResponseEntity.ok(productService.save(productDto));
+        return ResponseEntity.ok(productService.update(id, productDto));
     }
 
 
