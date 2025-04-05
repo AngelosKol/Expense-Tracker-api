@@ -110,6 +110,16 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>9.22.3</version>
+				<configuration>
+					<url>jdbc:postgresql://localhost:5432/EXPENSEDB</url>
+					<user>postgres</user>
+					<password>changemeinprod!</password>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

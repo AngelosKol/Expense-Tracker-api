@@ -1,6 +1,6 @@
 package com.ang.rest.shop;
 
-import com.ang.rest.domain.dto.ShopDto;
+import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mapper.impl.ShopMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,29 +31,29 @@ public class ShopControllerImpl {
 
 
     @GetMapping
-    public Page<ShopDto> getShops(Pageable pageable) {
+    public Page<ShopDTO> getShops(Pageable pageable) {
         Page<Shop> shops = shopService.findAll(pageable);
         return shops.map(shop -> shopMapper.mapToDto(shop));
     }
 
     @GetMapping(path = "/all")
-    public List<ShopDto> getShops() {
+    public List<ShopDTO> getShops() {
         List<Shop> shops = shopService.findAll();
         return shops.stream().map(shop -> shopMapper.mapToDto(shop)).collect(Collectors.toList());
     }
 
     @PostMapping
-    public ResponseEntity<ShopDto> createShop(@RequestBody ShopDto shopDto) {
+    public ResponseEntity<ShopDTO> createShop(@RequestBody ShopDTO shopDto) {
         Shop shop = shopService.save(shopDto);
-        ShopDto savedShopDto = shopMapper.mapToDto(shop);
-        return new ResponseEntity<>(savedShopDto, HttpStatus.CREATED);
+        ShopDTO savedShopDTO = shopMapper.mapToDto(shop);
+        return new ResponseEntity<>(savedShopDTO, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ShopDto> updateShop(@PathVariable Long id, @RequestBody ShopDto shopDto) {
+    public ResponseEntity<ShopDTO> updateShop(@PathVariable Long id, @RequestBody ShopDTO shopDto) {
         shopService.validateExists(id);
-        shopDto.setId(id);
-        Shop savedShop = shopService.save(shopDto);
+        ShopDTO shopDTO = shopDto.withId(id);
+        Shop savedShop = shopService.save(shopDTO);
         return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.OK);
     }
 

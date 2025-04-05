@@ -1,5 +1,5 @@
 package com.ang.rest.transaction;
-import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.dto.TransactionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.*;
-import com.ang.rest.domain.dto.*;
 
 import java.util.List;
 
@@ -21,33 +20,33 @@ public interface TransactionController {
 
     @Operation(summary = "Create a transaction", description = "Create a new transaction with associated shop")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
+            @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class))),
             @ApiResponse(responseCode = "404", description = "Shop not found", content = @Content(mediaType = "application/json"))
     })
     @PostMapping
-    ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto);
+    ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDto);
 
     @Operation(summary = "Get all transactions", description = "Retrieve all transactions")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class)))
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class)))
     })
     @GetMapping(path = "/all")
-    List<TransactionDto> getAllTransactions();
+    List<TransactionDTO> getAllTransactions();
 
     @Operation(summary = "Get transactions by page", description = "Retrieve transactions in a paginated format")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class)))
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class)))
     })
     @GetMapping
-    Page<TransactionDto> getTransactions(Pageable pageable);
+    Page<TransactionDTO> getTransactions(Pageable pageable);
 
     @Operation(summary = "Get a specific transaction", description = "Retrieve a transaction by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDto.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @GetMapping(path = "/id/{id}")
-    ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id);
+    ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id);
 
     @Operation(summary = "Delete a transaction", description = "Delete a transaction by its ID")
     @ApiResponses(value = {

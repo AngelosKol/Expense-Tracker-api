@@ -1,6 +1,5 @@
 package com.ang.rest.category;
 
-import com.ang.rest.domain.dto.CategoryDto;
 import com.ang.rest.domain.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

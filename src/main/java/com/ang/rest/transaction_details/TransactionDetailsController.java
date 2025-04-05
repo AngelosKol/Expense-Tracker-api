@@ -1,7 +1,6 @@
 package com.ang.rest.transaction_details;
 
-import com.ang.rest.domain.dto.TransactionDetailsDto;
-import com.ang.rest.domain.entity.TransactionDetails;
+import com.ang.rest.domain.dto.TransactionDetailsDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,24 +14,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface TransactionDetailsController {
     @Operation(summary = "Get all transaction details", description = "Retrieve all details for a specific transaction")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDTO.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @GetMapping("/id/{id}/details/all")
-    ResponseEntity<List<TransactionDetailsDto>> getAllTransactionDetails(@PathVariable Long id);
+    ResponseEntity<List<TransactionDetailsDTO>> getAllTransactionDetails(@PathVariable Long id);
 
     @Operation(summary = "Get paginated transaction details", description = "Retrieve paginated details for a specific transaction")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDto.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDTO.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @GetMapping("/id/{id}/details")
-    Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable);
+    Page<TransactionDetailsDTO> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable);
 
     @Operation(summary = "Delete product from transaction", description = "Delete a product from an existing transaction by product name")
     @ApiResponses(value = {

@@ -1,6 +1,6 @@
 package com.ang.rest.shop;
 
-import com.ang.rest.domain.dto.ShopDto;
+import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mapper.impl.ShopMapper;
@@ -31,7 +31,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Shop save(ShopDto shopDto) {
+    public Shop save(ShopDTO shopDto) {
         Shop shop = shopMapper.mapToEntity(shopDto);
         ensureShopNameNotExists(shop.getName());
         return shopRepository.save(shop);

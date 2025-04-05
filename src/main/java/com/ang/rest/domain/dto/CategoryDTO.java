@@ -1,6 +1,6 @@
 package com.ang.rest.domain.dto;
 
-public record CategoryDto(
+public record CategoryDTO(
         Long id,
         String name,
         String familyName

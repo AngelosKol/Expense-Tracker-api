@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,33 +33,33 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
 
     @Transactional
     @Override
-    public void addProductToTransaction(Long transactionId, ProductDetailsDto productDetailsDto) {
+    public void addProductToTransaction(Long transactionId, ProductDetailsDTO productDetailsDto) {
         User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
-        Product product = productService.findOneEntity(productDetailsDto.getProductId());
+        Product product = productService.findOneEntity(productDetailsDto.productId());
         TransactionDetails transactionDetails = new TransactionDetails();
         transactionDetails.setTransaction(transaction);
         transactionDetails.setProduct(product);
-        transactionDetails.setPrice(productDetailsDto.getPrice());
-        transactionDetails.setQuantity(productDetailsDto.getQuantity());
+        transactionDetails.setPrice(productDetailsDto.price());
+        transactionDetails.setQuantity(productDetailsDto.quantity());
         transactionDetailsRepository.save(transactionDetails);
     }
 
     @Override
     @Transactional
-    public void addProductsBatch(Long transactionId, List<ProductDetailsDto> productDetailsList) {
+    public void addProductsBatch(Long transactionId, List<ProductDetailsDTO> productDetailsList) {
         User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
         Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
-        Map<Long, ProductDetailsDto> productMap = productDetailsList.stream()
-                .collect(Collectors.toMap(ProductDetailsDto::getProductId, dto -> dto));
+        Map<Long, ProductDetailsDTO> productMap = productDetailsList.stream()
+                .collect(Collectors.toMap(ProductDetailsDTO::productId, dto -> dto));
         List<Long> productIDList = new ArrayList<>(productMap.keySet());
         List<Product> fetchedProducts = productService.findAllByID(productIDList);
         List<TransactionDetails> transactionDetails = fetchedProducts.stream()
                 .map(product -> TransactionDetails.builder()
                         .transaction(transaction)
                         .product(product)
-                        .price(productMap.get(product.getId()).getPrice())
-                        .quantity(productMap.get(product.getId()).getQuantity())
+                        .price(productMap.get(product.getId()).price())
+                        .quantity(productMap.get(product.getId()).quantity())
                         .build())
                 .collect(Collectors.toList());
         transactionDetailsRepository.saveAllAndFlush(transactionDetails);
@@ -79,7 +77,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public List<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id) {
+    public List<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id) {
         List<TransactionDetails>  transactionDetails =
                 transactionDetailsRepository.findByTransactionId(id).
                         orElseThrow(() -> new EntityNotFoundException("Transaction with " + id + "not found."));
@@ -88,7 +86,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
+    public Page<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
         return transactionDetailsRepository.findByTransactionId(id, pageable)
                 .map(transactionDetailsMapper::mapToDto);
     }

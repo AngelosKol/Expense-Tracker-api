@@ -1,14 +1,9 @@
 package com.ang.rest.transaction;
 
-import com.ang.rest.auth.AuthenticatedUserUtil;
 import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entity.*;
-import com.ang.rest.mapper.impl.TransactionDetailsMapper;
 import com.ang.rest.mapper.impl.TransactionMapper;
-import com.ang.rest.product.ProductService;
-import com.ang.rest.shop.ShopService;
 
-import com.ang.rest.transaction_details.TransactionDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/transactions")
@@ -27,22 +21,22 @@ public class TransactionControllerImpl implements TransactionController {
     private final TransactionMapper transactionMapper;
 
     @PostMapping
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDto) {
         Transaction savedTransaction = transactionService.save(transactionDto);
         return new ResponseEntity<>(transactionMapper.mapToDto(savedTransaction), HttpStatus.CREATED);
     }
     @GetMapping(path = "/all")
-    public List<TransactionDto> getAllTransactions() {
+    public List<TransactionDTO> getAllTransactions() {
         return transactionService.findAll();
     }
 
     @GetMapping
-    public Page<TransactionDto> getTransactions(Pageable pageable) {
+    public Page<TransactionDTO> getTransactions(Pageable pageable) {
         return transactionService.findAll(pageable);
     }
 
     @GetMapping(path = "/id/{id}")
-    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable("id") Long id) {
+    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id) {
         return  ResponseEntity.ok(transactionService.findOne(id));
     }
 

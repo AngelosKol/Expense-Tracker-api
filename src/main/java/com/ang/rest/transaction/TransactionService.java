@@ -1,6 +1,6 @@
 package com.ang.rest.transaction;
 
-import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.dto.TransactionDTO;
 import com.ang.rest.domain.entity.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,14 +8,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface TransactionService {
-    Transaction save(TransactionDto transactionDto);
+    Transaction save(TransactionDTO transactionDto);
 
 
-    List<TransactionDto> findAll();
+    List<TransactionDTO> findAll();
 
-    Page<TransactionDto> findAll(Pageable pageable);
+    Page<TransactionDTO> findAll(Pageable pageable);
 
-    TransactionDto findOne(Long id);
+    TransactionDTO findOne(Long id);
     Transaction findOne(Long id, Long userId);
 
     boolean isExists(Long id);

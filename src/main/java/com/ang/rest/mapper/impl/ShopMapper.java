@@ -1,18 +1,19 @@
 package com.ang.rest.mapper.impl;
 
-import com.ang.rest.domain.dto.ShopDto;
+import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.domain.entity.Shop;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopMapper  {
-
-
-    public ShopDto mapToDto(Shop shop) {
-        return ShopDto.builder().name(shop.getName()).id(shop.getId()).build();
+public class ShopMapper {
+    public ShopDTO mapToDto(Shop shop) {
+        return new ShopDTO(
+                shop.getId(),
+                shop.getName()
+        );
     }
 
-    public Shop mapToEntity(ShopDto shopDto) {
-        return Shop.builder().name(shopDto.getName()).id(shopDto.getId()).build();
+    public Shop mapToEntity(ShopDTO shopDto) {
+        return Shop.builder().name(shopDto.name()).id(shopDto.id()).build();
     }
 }

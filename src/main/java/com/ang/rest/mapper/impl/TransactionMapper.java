@@ -1,8 +1,9 @@
 package com.ang.rest.mapper.impl;
 
-import com.ang.rest.domain.dto.TransactionDto;
+import com.ang.rest.domain.dto.TransactionDTO;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.domain.entity.Transaction;
+import com.ang.rest.domain.entity.User;
 import com.ang.rest.shop.ShopServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,20 +14,20 @@ public class TransactionMapper  {
 
 private final ShopServiceImpl shopService;
 
-    public TransactionDto mapToDto(Transaction transaction) {
-        return TransactionDto.builder()
-                .id(transaction.getId())
-                .shopName(transaction.getShop().getName())
-                .date(transaction.getDate())
-                .build();
+    public TransactionDTO mapToDto(Transaction transaction) {
+        return  new TransactionDTO(
+                transaction.getId(),
+                transaction.getShop().getName(),
+                transaction.getDate()
+        );
         }
 
-    public Transaction mapToEntity(TransactionDto transactionDto)  {
-        Shop shop = shopService.findByName(transactionDto.getShopName());
+    public Transaction mapToEntity(TransactionDTO transactionDto, User authenticatedUser, Shop shop)  {
         return Transaction.builder()
-                .id(transactionDto.getId())
+                .id(transactionDto.id())
                 .shop(shop)
-                .date(transactionDto.getDate())
+                .date(transactionDto.date())
+                .user(authenticatedUser)
                 .build();
     }
 }

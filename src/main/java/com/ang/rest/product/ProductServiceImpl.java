@@ -1,8 +1,7 @@
 package com.ang.rest.product;
 
 import com.ang.rest.category.CategoryServiceImpl;
-import com.ang.rest.domain.dto.CategoryDto;
-import com.ang.rest.domain.dto.ProductDto;
+import com.ang.rest.domain.dto.ProductDTO;
 import com.ang.rest.domain.entity.Category;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Product;
@@ -32,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductDto update(Long id, ProductDto productDto) {
+    public ProductDTO update(Long id, ProductDTO productDto) {
         Product existingProduct = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
         if (!existingProduct.getName().equalsIgnoreCase(productDto.name())) {
            boolean nameExists = productRepository.existsByName(productDto.name());
@@ -49,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto save(ProductDto productDto) {
+    public ProductDTO save(ProductDTO productDto) {
         Category category = categoryService.findByName(productDto.categoryName());
         Product product = productMapper.mapToEntity(productDto, category);
         ensureProductNameNotExists(product.getName());
@@ -57,13 +56,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findAll() {
+    public List<ProductDTO> findAll() {
         return productRepository.findAll().stream().map(productMapper::mapToDto).collect(Collectors.toList());
     }
 
 
     @Override
-    public Page<ProductDto> findAll(String filter, Pageable pageable) {
+    public Page<ProductDTO> findAll(String filter, Pageable pageable) {
         return productRepository.findByNameContainingIgnoreCase(filter,pageable).map(productMapper::mapToDto);
 
     }
@@ -87,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductDto findOne(Long id) {
+    public ProductDTO findOne(Long id) {
         return productRepository.findById(id)
                 .map(productMapper::mapToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found."));

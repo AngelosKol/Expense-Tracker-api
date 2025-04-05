@@ -1,9 +1,8 @@
 package com.ang.rest.category;
 
-import com.ang.rest.domain.dto.CategoryDto;
+import com.ang.rest.domain.dto.CategoryDTO;
 import com.ang.rest.domain.entity.Category;
 import com.ang.rest.exception.ResourceNotFoundException;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +27,9 @@ public class CategoryServiceImpl {
     public Category findCategory(String name) {
         return this.repository.findCategoryWithOutProducts(name);
     }
-    public List<CategoryDto> findAll() {
+    public List<CategoryDTO> findAll() {
         return this.repository.findAllByOrderByNameAsc().stream().map(
-                c -> new CategoryDto(c.getId(),c.getName(), c.getFamily().name())
+                c -> new CategoryDTO(c.getId(),c.getName(), c.getFamily().name())
         ).collect(Collectors.toList());
     }
 }

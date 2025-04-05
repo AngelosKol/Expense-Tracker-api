@@ -5,16 +5,16 @@ import com.ang.rest.domain.entity.TransactionDetails;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.Date;
+
 import java.util.List;
 
 
 public interface TransactionDetailsService {
-    List<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id);
-    Page<TransactionDetailsDto> getTransactionDetailsByTransactionId(Long id, Pageable pageable);
+    List<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id);
+    Page<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id, Pageable pageable);
 
-    void addProductToTransaction(Long transactionId, ProductDetailsDto productDetailsDto);
-    void addProductsBatch(Long id, List<ProductDetailsDto> productDetailsDto);
+    void addProductToTransaction(Long transactionId, ProductDetailsDTO productDetailsDto);
+    void addProductsBatch(Long id, List<ProductDetailsDTO> productDetailsDto);
 
     void save(TransactionDetails transactionDetails);
 

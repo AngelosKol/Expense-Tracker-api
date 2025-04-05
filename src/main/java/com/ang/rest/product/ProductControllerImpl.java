@@ -1,6 +1,6 @@
 package com.ang.rest.product;
 
-import com.ang.rest.domain.dto.ProductDto;
+import com.ang.rest.domain.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,19 +19,19 @@ public class ProductControllerImpl {
 
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDto));
     }
 
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.findAll());
     }
 
 
     @GetMapping
-    public ResponseEntity<Page<ProductDto>> getProducts(
+    public ResponseEntity<Page<ProductDTO>> getProducts(
             @RequestParam(required = false, defaultValue = "") String filter, Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(filter, pageable));
 
@@ -39,12 +39,12 @@ public class ProductControllerImpl {
 
 
     @GetMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findOne(id));
     }
 
     @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDto) {
         return ResponseEntity.ok(productService.update(id, productDto));
     }
 

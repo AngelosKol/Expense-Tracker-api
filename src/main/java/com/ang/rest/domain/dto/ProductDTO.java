@@ -2,7 +2,7 @@ package com.ang.rest.domain.dto;
 
 
 
-public record ProductDto (
+public record ProductDTO(
         Long id,
         String name,
         String categoryName,

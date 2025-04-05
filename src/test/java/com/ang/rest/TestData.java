@@ -1,7 +1,6 @@
 package com.ang.rest;
 
 
-import com.ang.rest.domain.dto.ProductDto;
 import com.ang.rest.domain.entity.Product;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.domain.entity.Transaction;

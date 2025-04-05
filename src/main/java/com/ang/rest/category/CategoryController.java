@@ -1,6 +1,6 @@
 package com.ang.rest.category;
 
-import com.ang.rest.domain.dto.CategoryDto;
+import com.ang.rest.domain.dto.CategoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class CategoryController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getCategories() {
+    public ResponseEntity<List<CategoryDTO>> getCategories() {
         return ResponseEntity.ok(categoryService.findAll());
     }
 }
