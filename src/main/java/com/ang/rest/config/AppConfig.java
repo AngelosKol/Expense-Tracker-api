@@ -62,7 +62,11 @@ public class AppConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(allowDomains).allowedMethods("GET", "POST", "PUT", "DELETE").allowedHeaders("*");
+                registry.addMapping("/**")
+                        .allowedOrigins(allowDomains)
+                        .allowedOriginPatterns("http://192.168.1.*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE").allowedHeaders("*")
+                        .maxAge(3600);
             }
         };
     }
