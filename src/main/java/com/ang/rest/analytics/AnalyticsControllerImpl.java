@@ -4,33 +4,36 @@ package com.ang.rest.analytics;
 import com.ang.rest.domain.dto.AnalyticsDTO;
 import com.ang.rest.domain.dto.MonthCostDTO;
 import com.ang.rest.domain.dto.YearCostsDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
+
 
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-//@RequestMapping("api/v1/analytics")
+@Path("api/v2/analytics")
 public class AnalyticsControllerImpl  {
-    private final AnalyticsService analyticsService;
 
-    @GetMapping(path = "api/v1/analytics/{fromDate}/to/{toDate}")
-    public List<AnalyticsDTO> getTotalSpentByDate(@PathVariable("fromDate") Date fromDate, @PathVariable("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+    @Inject
+    AnalyticsService analyticsService;
+
+    @GET
+    @Path("/{fromDate}/to/{toDate}")
+    public List<AnalyticsDTO> getTotalSpentByDate(@PathParam("fromDate") Date fromDate, @PathParam("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         return analyticsService.getTotalSpentByDate(fromDate, toDate);
     }
 
-    @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}")
-    public List<YearCostsDTO> getTotalSpentByMonth(@PathVariable("year") int year) {
+    @GET
+    @Path("/totalSpent/year/{year}")
+    public List<YearCostsDTO> getTotalSpentByMonth(@PathParam("year") int year) {
         return analyticsService.getYearTotals(year);
     }
 
-    @GetMapping(path = "api/v1/analytics/totalSpent/year/{year}/month/{month}")
-    public List<MonthCostDTO> getMonthTotalsWithShop(@PathVariable("year") int year, @PathVariable("month") int month) {
+    @GET
+    @Path("/totalSpent/year/{year}/month/{month}")
+    public List<MonthCostDTO> getMonthTotalsWithShop(@PathParam("year") int year, @PathParam("month") int month) {
         return analyticsService.getMonthTotalsWithShop(year, month);
 
     }

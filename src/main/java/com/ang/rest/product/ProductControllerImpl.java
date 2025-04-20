@@ -1,57 +1,62 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import io.quarkus.panache.common.Page;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/products")
-@RequiredArgsConstructor
+@Path("api/v2/products")
 public class ProductControllerImpl {
 
-    private final ProductService productService;
+    @Inject
+    ProductService productService;
 
 
-    @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDto));
+    @POST
+    public RestResponse<ProductDTO> createProduct(ProductDTO productDto) {
+        ProductDTO created = productService.save(productDto);
+        return RestResponse.status(Response.Status.CREATED, created);
     }
 
 
-    @GetMapping(path = "/all")
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    @GET
+    @Path("/all")
+    public RestResponse<List<ProductDTO>> getAllProducts() {
+        return RestResponse.ok(productService.findAll());
     }
 
 
-    @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getProducts(
-            @RequestParam(required = false, defaultValue = "") String filter, Pageable pageable) {
-        return ResponseEntity.ok(productService.findAll(filter, pageable));
-
+    @GET
+    public RestResponse<List<ProductDTO>> getProducts(
+            @QueryParam("filter") @DefaultValue("") String filter,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size) {
+        Page panachePage = Page.of(page, size);
+        return RestResponse.ok(productService.findAll(filter, panachePage));
     }
 
 
-    @GetMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.findOne(id));
+    @GET
+    @Path("/id/{id}")
+    public RestResponse<ProductDTO> getProduct(@PathParam("id") Long id) {
+        return RestResponse.ok(productService.findOne(id));
     }
 
-    @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDto) {
-        return ResponseEntity.ok(productService.update(id, productDto));
+    @PUT
+    @Path("/id/{id}")
+    public RestResponse<ProductDTO> updateProduct(@PathParam("id") Long id, ProductDTO productDto) {
+        return RestResponse.ok(productService.update(id, productDto));
     }
 
 
-    @DeleteMapping(path = "/id/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+    @DELETE
+    @Path("/id/{id}")
+    public RestResponse<Void> deleteProduct(@PathParam("id") Long id) {
         productService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return RestResponse.noContent();
     }
 }
