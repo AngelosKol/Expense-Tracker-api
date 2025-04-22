@@ -1,16 +1,22 @@
 package com.ang.rest.domain.entity;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 @Table(name = "category")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
 
     @Id
@@ -26,11 +32,7 @@ public class Category {
     private ProductFamily family;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> products ;
+    private List<Product> products;
 
-    public Category(Long id, String name, ProductFamily family) {
-        this.id = id;
-        this.name = name;
-        this.family = family;
-    }
+
 }

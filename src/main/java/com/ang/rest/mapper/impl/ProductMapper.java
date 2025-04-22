@@ -3,9 +3,9 @@ package com.ang.rest.mapper.impl;
 import com.ang.rest.domain.dto.ProductDTO;
 import com.ang.rest.domain.entity.Category;
 import com.ang.rest.domain.entity.Product;
-import org.springframework.stereotype.Component;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@Component
+@ApplicationScoped
 public class ProductMapper {
 
 
@@ -13,7 +13,7 @@ public class ProductMapper {
         return new ProductDTO(
                 product.getId(),
                 product.getName(),
-                product.getCategory() != null ? product.getCategory().getName() : null,
+                product.getCategory() != null ? product.getCategory().getName(): null,
                 product.getCategory() != null ? product.getCategory().getId() : null
         );
     }
@@ -24,5 +24,9 @@ public class ProductMapper {
                 .name(productDto.name())
                 .category(category)
                 .build();
+    }
+    public void updateEntityFromDto(Product product, ProductDTO dto, Category category) {
+        product.setName(dto.name());
+        product.setCategory(category);
     }
 }

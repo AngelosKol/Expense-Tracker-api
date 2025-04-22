@@ -1,16 +1,22 @@
 package com.ang.rest.domain.entity;
 
+import com.ang.rest.domain.dto.ProductDTO;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 @Entity
 @Table(name = "product")
-public class Product {
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
@@ -35,8 +41,8 @@ public class Product {
         if (!(o instanceof Product)) return false;
         final Product other = (Product) o;
         if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.getId();
-        final Object other$id = other.getId();
+        final Object this$id = this.id;
+        final Object other$id = other.id;
         if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
         return true;
     }
@@ -48,8 +54,9 @@ public class Product {
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $id = this.getId();
+        final Object $id = this.id;
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
     }
+
 }

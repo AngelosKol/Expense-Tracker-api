@@ -21,7 +21,7 @@ public class AnalyticsControllerImpl  {
 
     @GET
     @Path("/{fromDate}/to/{toDate}")
-    public List<AnalyticsDTO> getTotalSpentByDate(@PathParam("fromDate") Date fromDate, @PathParam("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+    public List<AnalyticsDTO> getTotalSpentByDate(@PathParam("fromDate") Date fromDate, @PathParam("toDate") Date toDate) {
         return analyticsService.getTotalSpentByDate(fromDate, toDate);
     }
 
