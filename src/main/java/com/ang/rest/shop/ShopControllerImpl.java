@@ -3,63 +3,72 @@ package com.ang.rest.shop;
 import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mapper.impl.ShopMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.reactive.RestResponse;
+import io.quarkus.panache.common.Page;
 
+
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("api/v1/shops")
-@RequiredArgsConstructor
+
+@Path("api/v2/shops")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ShopControllerImpl {
 
-    private final ShopService shopService;
-    private final ShopMapper shopMapper;
-
-
-
-    @GetMapping(path = "/id/{id}")
-    public ResponseEntity<Shop> getShop(@PathVariable Long id) {
-        Shop shop = shopService.findOne(id);
-        return ResponseEntity.ok(shop);
+    @Inject ShopService shopService;
+    @Inject ShopMapper shopMapper;
+    @Inject UriInfo uriInfo;
+    @GET
+    @Path("/id/{id}")
+    public RestResponse<ShopDTO> getShop(@PathParam("id") Long id) {
+        Shop shop = shopService.findOneEntity(id);
+        return RestResponse.ok(shopMapper.mapToDto(shop));
     }
 
-
-    @GetMapping
-    public Page<ShopDTO> getShops(Pageable pageable) {
-        Page<Shop> shops = shopService.findAll(pageable);
-        return shops.map(shop -> shopMapper.mapToDto(shop));
+    @GET
+    public List<ShopDTO> getShops(
+            @QueryParam("filter") String filter,
+            @QueryParam("page") Integer page,
+            @QueryParam("size") Integer size) {
+        int pageIndex = page != null ? page : 0;
+        int pageSize = size != null ? size : 10;
+        Page panachePage = Page.of(pageIndex, pageSize);
+        return shopService.findAll(filter != null ? filter : "", panachePage);
     }
 
-    @GetMapping(path = "/all")
-    public List<ShopDTO> getShops() {
-        List<Shop> shops = shopService.findAll();
-        return shops.stream().map(shop -> shopMapper.mapToDto(shop)).collect(Collectors.toList());
+    @GET
+    @Path("/all")
+    public RestResponse<List<ShopDTO>> getAllShops() {
+        return RestResponse.ok(shopService.findAll());
     }
 
-    @PostMapping
-    public ResponseEntity<ShopDTO> createShop(@RequestBody ShopDTO shopDto) {
+    @POST
+    public Response createShop(ShopDTO shopDto) {
         Shop shop = shopService.save(shopDto);
-        ShopDTO savedShopDTO = shopMapper.mapToDto(shop);
-        return new ResponseEntity<>(savedShopDTO, HttpStatus.CREATED);
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(shop.getId()))
+                .build();
+        return Response.created(location).build();
     }
 
-    @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ShopDTO> updateShop(@PathVariable Long id, @RequestBody ShopDTO shopDto) {
-        shopService.validateExists(id);
-        ShopDTO shopDTO = shopDto.withId(id);
-        Shop savedShop = shopService.save(shopDTO);
-        return new ResponseEntity<>(shopMapper.mapToDto(savedShop), HttpStatus.OK);
+    @PUT
+    @Path("/id/{id}")
+    public RestResponse<ShopDTO> updateShop(@PathParam("id") Long id, ShopDTO shopDto) {
+        return  RestResponse.ok(shopService.update(id, shopDto));
     }
 
-    @DeleteMapping(path = "/id/{id}")
-    public ResponseEntity<Void> deleteShop(@PathVariable Long id) {
+    @DELETE
+    @Path("/id/{id}")
+    public RestResponse<Void> deleteShop(@PathParam("id") Long id) {
         shopService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return  RestResponse.noContent();
     }
 }

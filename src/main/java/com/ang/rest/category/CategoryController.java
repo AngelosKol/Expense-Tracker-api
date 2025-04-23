@@ -1,23 +1,20 @@
 package com.ang.rest.category;
 
 import com.ang.rest.domain.dto.CategoryDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/categories")
-@RequiredArgsConstructor
+
+@Path("api/v2/categories")
 public class CategoryController {
 
-    private final CategoryServiceImpl categoryService;
-
-    @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getCategories() {
-        return ResponseEntity.ok(categoryService.findAll());
+   @Inject CategoryServiceImpl categoryService;
+    @GET
+    public RestResponse<List<CategoryDTO>> getCategories() {
+        return RestResponse.ok(categoryService.findAll());
     }
 }

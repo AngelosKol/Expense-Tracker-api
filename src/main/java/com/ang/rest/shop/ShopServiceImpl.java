@@ -1,84 +1,84 @@
 package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDTO;
+import com.ang.rest.exception.ResourceConflictException;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mapper.impl.ShopMapper;
 import com.ang.rest.transaction.TransactionRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import io.quarkus.panache.common.Page;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
+@ApplicationScoped
 public class ShopServiceImpl implements ShopService {
 
-    private final ShopRepository shopRepository;
+    @Inject
+    ShopRepository shopRepository;
 
-    private final TransactionRepository transactionRepository;
+    @Inject TransactionRepository transactionRepository;
 
-    private final ShopMapper shopMapper;
-
-    @Override
-    public void validateExists(Long id) {
-        if(!shopRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Shop with id " + id + " not found.");
-        }
-    }
+    @Inject ShopMapper shopMapper;
 
     @Override
     public Shop save(ShopDTO shopDto) {
+        if (shopRepository.existsByName(shopDto.name())) {
+            throw new ResourceConflictException("A shop with this name already exists.");
+        }
         Shop shop = shopMapper.mapToEntity(shopDto);
-        ensureShopNameNotExists(shop.getName());
-        return shopRepository.save(shop);
+        shopRepository.persist(shop);
+        return shop;
+    }
+    @Transactional
+    @Override
+    public ShopDTO update(Long id, ShopDTO shopDTO) {
+        Shop existingShop = shopRepository.findById(id);
+        if(existingShop == null) throw new ResourceNotFoundException("Shop with id " + id + " not found.");
+        if(existingShop.getName().equalsIgnoreCase(shopDTO.name())) throw new ResourceConflictException("Current name is the same with the provided name.");
+        if(shopRepository.existsByName(shopDTO.name())) throw new ResourceConflictException("A shop with this name already exists.");
+        shopMapper.updateEntityFromDto(existingShop, shopDTO);
+        return shopMapper.mapToDto(existingShop);
     }
 
     @Override
-    public List<Shop> findAll() {
-        return shopRepository.findAll();
+    public List<ShopDTO> findAll() {
+        return shopRepository.findAll().stream().map(shopMapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
-    public Page<Shop> findAll(Pageable pageable) {
-        return shopRepository.findAll(pageable);
+    public List<ShopDTO> findAll(String filter, Page page) {
+        PanacheQuery<Shop> query = shopRepository.findByNameIgnoreCase(filter.toLowerCase());
+        return query.page(page).stream().map(shopMapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
-    public Shop findOne(Long id) {
-        return shopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
+    public ShopDTO findOne(Long id) {
+        return shopRepository.findByIdOptional(id).map(shopMapper::mapToDto).orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
+    }
+
+    @Override
+    public Shop findOneEntity(Long id) {
+        return shopRepository.findByIdOptional(id).orElseThrow(() -> new ResourceNotFoundException("Shop with ID " + id + " not found"));
     }
 
     @Override
     public Shop findByName(String name) {
-        return shopRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Shop  not found."));
-
+        return shopRepository.findByExactNameIgnoreCase(name).singleResultOptional().orElseThrow(() -> new ResourceNotFoundException("Shop  not found."));
     }
-
-    @Override
-    public boolean isExists(Long id) {
-        return shopRepository.existsById(id);
-    }
-
 
     @Override
     public void delete(Long id) {
-        Shop shop = findOne(id);
+        if(!shopRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Shop with ID " + id + " not found");
+        }
         if (transactionRepository.existsByShop_id(id)) {
-            throw new DataIntegrityViolationException("There is a transaction related with this shop.");
+            throw new ResourceConflictException("There is a transaction related with this shop.");
         }
         shopRepository.deleteById(id);
     }
-
-    @Override
-    public void ensureShopNameNotExists(String name) {
-        if (shopRepository.existsByName(name)) {
-            throw new DataIntegrityViolationException("A shop with this name already exists.");
-        }
-    }
-
-
 }

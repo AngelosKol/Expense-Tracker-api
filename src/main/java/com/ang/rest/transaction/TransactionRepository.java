@@ -1,26 +1,26 @@
 package com.ang.rest.transaction;
 
+import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.entity.Transaction;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Parameters;
+import jakarta.enterprise.context.ApplicationScoped;
 
 
-@Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Long>, PagingAndSortingRepository<Transaction, Long> {
+@ApplicationScoped
+public class TransactionRepository extends BaseRepository<Transaction, Long> {
 
-    List<Transaction> findAllByUserId(Long userId);
-
-    Page<Transaction> findAllByUserId(Long userId, Pageable pageable);
-
-    Optional<Transaction> findByIdAndUserId(Long transactionId, Long userId);
-
-    boolean existsByShop_id(Long id);
+    boolean existsByShop_id(Long shopId) {
+        return count("shop.id = :shopId", Parameters.with("shopId", shopId)) > 0;
+    }
+    PanacheQuery<Transaction> findAllByUserId(Long userId) {
+        return find("user.id = :userId", Parameters.with("userId", userId));
+    }
+    PanacheQuery<Transaction>  findByIdAndUserId(Long transactionId, Long userId) {
+        return find("id = :transactionId, user.id = :userId",
+                Parameters.with("transactionId", transactionId).and("userId", userId)
+        );
+    }
 
 
 }

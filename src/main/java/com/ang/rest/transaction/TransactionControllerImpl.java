@@ -3,46 +3,60 @@ package com.ang.rest.transaction;
 import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entity.*;
 import com.ang.rest.mapper.impl.TransactionMapper;
+import io.quarkus.panache.common.Page;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.reactive.RestResponse;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/transactions")
-@RequiredArgsConstructor
+@Path("api/v2/transactions")
 public class TransactionControllerImpl implements TransactionController {
-    private final TransactionService transactionService;
-    private final TransactionMapper transactionMapper;
+    @Inject TransactionService transactionService;
+    @Inject TransactionMapper transactionMapper;
 
-    @PostMapping
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDto) {
-        Transaction savedTransaction = transactionService.save(transactionDto);
-        return new ResponseEntity<>(transactionMapper.mapToDto(savedTransaction), HttpStatus.CREATED);
-    }
-    @GetMapping(path = "/all")
+    @Inject UriInfo uriInfo;
+
+    @GET
+    @Path("/all")
     public List<TransactionDTO> getAllTransactions() {
         return transactionService.findAll();
     }
 
-    @GetMapping
-    public Page<TransactionDTO> getTransactions(Pageable pageable) {
-        return transactionService.findAll(pageable);
+    @GET
+    public RestResponse<List<TransactionDTO>> getTransactions(
+            @QueryParam("page") Integer page,
+            @QueryParam("size") Integer size) {
+        int pageIndex = page != null ? page : 0;
+        int pageSize = size != null ? size : 10;
+        Page panachePage = Page.of(pageIndex, pageSize);
+        return RestResponse.ok(transactionService.findAll(panachePage));
     }
 
-    @GetMapping(path = "/id/{id}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id) {
-        return  ResponseEntity.ok(transactionService.findOne(id));
+    @GET
+    @Path("/id/{id}")
+    public RestResponse<TransactionDTO> getTransactionById(@PathParam("id") Long id) {
+        return  RestResponse.ok(transactionService.findOne(id));
     }
 
-    @DeleteMapping(path = "/id/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
+    @POST
+    public Response createTransaction(TransactionDTO transactionDto) {
+        Transaction savedTransaction = transactionService.save(transactionDto);
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(savedTransaction.getId()))
+                .build();
+        return  Response.created(location).build();
+
+    }
+
+    @DELETE
+    @Path("/id/{id}")
+    public RestResponse<Void> deleteTransaction(@PathParam("id") Long id) {
         transactionService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return  RestResponse.noContent();
     }
 }

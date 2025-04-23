@@ -1,17 +1,9 @@
 package com.ang.rest.shop;
 
+import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.entity.Shop;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Optional;
+public class ShopRepository extends BaseRepository<Shop, Long> {
 
-public interface ShopRepository extends JpaRepository<Shop, Long>, PagingAndSortingRepository<Shop, Long> {
-
-
-    Optional<Shop> findByName(String name);
-
-
-    boolean existsByName(String name);
 
 }

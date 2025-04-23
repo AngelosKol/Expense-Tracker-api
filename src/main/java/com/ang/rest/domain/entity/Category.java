@@ -1,8 +1,5 @@
 package com.ang.rest.domain.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,13 +7,14 @@ import java.util.List;
 
 
 
-@Entity
-@Table(name = "category")
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "category")
 public class Category {
 
     @Id

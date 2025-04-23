@@ -14,8 +14,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "transaction")
 
-public class
-Transaction {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_id_seq", allocationSize = 50)

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public interface TransactionController {
             @ApiResponse(responseCode = "404", description = "Shop not found", content = @Content(mediaType = "application/json"))
     })
     @PostMapping
-    ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDto);
+    Response createTransaction(@RequestBody TransactionDTO transactionDto);
 
     @Operation(summary = "Get all transactions", description = "Retrieve all transactions")
     @ApiResponses(value = {
@@ -38,7 +40,7 @@ public interface TransactionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transactions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class)))
     })
     @GetMapping
-    Page<TransactionDTO> getTransactions(Pageable pageable);
+    RestResponse<List<TransactionDTO>> getTransactions(Integer page, Integer pageSize);
 
     @Operation(summary = "Get a specific transaction", description = "Retrieve a transaction by its ID")
     @ApiResponses(value = {
@@ -46,7 +48,7 @@ public interface TransactionController {
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @GetMapping(path = "/id/{id}")
-    ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id);
+    RestResponse<TransactionDTO> getTransactionById(@PathVariable("id") Long id);
 
     @Operation(summary = "Delete a transaction", description = "Delete a transaction by its ID")
     @ApiResponses(value = {
@@ -54,6 +56,6 @@ public interface TransactionController {
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @DeleteMapping(path = "/id/{id}")
-    ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id);
+    RestResponse<Void> deleteTransaction(@PathVariable("id") Long id);
 
 }

@@ -9,13 +9,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-@Entity
-@Table(name = "product")
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "product")
 public class Product  {
 
     @Id
@@ -36,6 +37,7 @@ public class Product  {
     }
 
 
+    @Override
     public boolean equals(final Object o) {
         if (o == this) return true;
         if (!(o instanceof Product)) return false;

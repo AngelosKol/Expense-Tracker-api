@@ -1,19 +1,14 @@
 package com.ang.rest.product;
 
-import com.ang.rest.domain.dto.ProductDTO;
 import com.ang.rest.domain.dto.ErrorResponse;
-import jakarta.validation.Valid;
+import com.ang.rest.domain.dto.ProductDTO;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
@@ -48,9 +43,9 @@ public interface ProductController {
     public List<ProductDTO> getAllProducts();
 
     @Operation(summary = "Get products with pagination")
-    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Paginated list of products", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))})})
+    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Paginated list of products", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))})})
     @GET
-    public Page<ProductDTO> getProducts(Pageable pageable);
+    public List<ProductDTO> getProducts(String filter ,Integer Page, Integer pageSize);
 
     @Operation(summary = "Get a product by ID")
     @APIResponses(value = {@APIResponse(responseCode = "200", description = "Product found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))}), @APIResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})

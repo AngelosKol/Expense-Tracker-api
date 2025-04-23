@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "transaction_details")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @IdClass(TransactionDetailsId.class)
-
+@Entity
+@Table(name = "transaction_details")
 public class TransactionDetails {
 
 
