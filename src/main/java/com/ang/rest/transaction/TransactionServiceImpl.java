@@ -21,16 +21,11 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class TransactionServiceImpl implements TransactionService {
 
-    @Inject
-    TransactionRepository transactionRepository;
-    @Inject
-    ShopService shopService;
-    @Inject
-    TransactionDetailsRepository tDetailsRepository;
-    @Inject
-    TransactionMapper transactionMapper;
-    @Inject
-    AuthenticatedUserUtil authenticatedUserUtil;
+    @Inject TransactionRepository transactionRepository;
+    @Inject ShopService shopService;
+    @Inject TransactionDetailsRepository tDetailsRepository;
+    @Inject TransactionMapper transactionMapper;
+    @Inject AuthenticatedUserUtil authenticatedUserUtil;
 
     @Override
     public Transaction save(TransactionDTO transactionDto) {
@@ -78,6 +73,10 @@ public class TransactionServiceImpl implements TransactionService {
         }
         tDetailsRepository.deleteByTransactionId(id);
         transactionRepository.deleteById(id);
+    }
+    @Override
+    public boolean existsById(Long id) {
+        return transactionRepository.existsById(id);
     }
 
 }

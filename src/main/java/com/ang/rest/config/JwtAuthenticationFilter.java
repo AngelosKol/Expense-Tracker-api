@@ -1,6 +1,7 @@
 package com.ang.rest.config;
 
 import com.ang.rest.token.TokenRepository;
+import jakarta.inject.Inject;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,13 +24,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-@Component
-@RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+@Provider
+@Priority(Priorities.AUTHENTICATION)
+public class JwtAuthenticationFilter extends ContainerRequestFilter {
 
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
+    @Inject
+    JwtService jwtService;
+    @Inject UserDetailsService userDetailsService;
+    @Inject TokenRepository tokenRepository;
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private  HandlerExceptionResolver resolver;

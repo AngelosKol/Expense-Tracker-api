@@ -1,15 +1,16 @@
 package com.ang.rest.auth;
 
-import com.ang.rest.domain.entity.User;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-@Component
+@ApplicationScoped
 public class AuthenticatedUserUtil {
 
-    public User getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
+    @Inject
+    SecurityIdentity identity;
+
+    public String getAuthenticatedUser() {
+        return identity.getPrincipal().getName();
     }
 }

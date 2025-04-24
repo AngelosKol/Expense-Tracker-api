@@ -15,6 +15,11 @@ public abstract class BaseRepository<T, ID> implements PanacheRepositoryBase<T, 
         return find("id in ?1", ids).list();
     }
 
+    public PanacheQuery<T> findByColumn(String column, String value) {
+       String query = column + "=" + ":" + column;
+        return find(query, Parameters.with(column, value));
+    }
+
     public PanacheQuery<T> findByNameIgnoreCase(String name) {
         return find("lower(name) like ?1", "%" + name.toLowerCase() + "%");
     }

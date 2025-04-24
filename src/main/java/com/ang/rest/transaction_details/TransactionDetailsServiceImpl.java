@@ -6,30 +6,28 @@ import com.ang.rest.domain.entity.Product;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.TransactionDetails;
 import com.ang.rest.domain.entity.User;
+import com.ang.rest.exception.ResourceConflictException;
+import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.mapper.impl.TransactionDetailsMapper;
 import com.ang.rest.product.ProductService;
 import com.ang.rest.transaction.TransactionService;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Page;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
-@Service
-@RequiredArgsConstructor
+@ApplicationScoped
 public class TransactionDetailsServiceImpl implements TransactionDetailsService {
 
-    private final TransactionDetailsRepository transactionDetailsRepository;
-    private final AuthenticatedUserUtil authenticatedUserUtil;
-    private final TransactionService transactionService;
-    private final ProductService productService;
-    private final TransactionDetailsMapper transactionDetailsMapper;
+    @Inject TransactionDetailsRepository transactionDetailsRepository;
+    @Inject AuthenticatedUserUtil authenticatedUserUtil;
+    @Inject TransactionService transactionService;
+    @Inject ProductService productService;
+    @Inject TransactionDetailsMapper transactionDetailsMapper;
 
     @Transactional
     @Override
@@ -42,7 +40,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
         transactionDetails.setProduct(product);
         transactionDetails.setPrice(productDetailsDto.price());
         transactionDetails.setQuantity(productDetailsDto.quantity());
-        transactionDetailsRepository.save(transactionDetails);
+        transactionDetailsRepository.persist(transactionDetails);
     }
 
     @Override
@@ -62,12 +60,12 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
                         .quantity(productMap.get(product.getId()).quantity())
                         .build())
                 .collect(Collectors.toList());
-        transactionDetailsRepository.saveAllAndFlush(transactionDetails);
+        transactionDetailsRepository.persist(transactionDetails);
     }
 
     @Override
     public void save(TransactionDetails transactionDetails) {
-        transactionDetailsRepository.save(transactionDetails);
+        transactionDetailsRepository.persist(transactionDetails);
     }
 
     @Override
@@ -77,18 +75,18 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     }
 
     @Override
-    public List<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id) {
-        List<TransactionDetails>  transactionDetails =
-                transactionDetailsRepository.findByTransactionId(id).
-                        orElseThrow(() -> new EntityNotFoundException("Transaction with " + id + "not found."));
+    public List<TransactionDetailsDTO> findAllTransactionDetailsByTransactionId(Long id) {
+        PanacheQuery<TransactionDetails> transactionDetails = transactionDetailsRepository.findByTransactionId(id);
+        if(transactionDetails == null) {
+            throw  new ResourceNotFoundException("Transaction with " + id + "not found.");
+        }
         return transactionDetails.stream().map(transactionDetailsMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<TransactionDetailsDTO> getTransactionDetailsByTransactionId(Long id, Pageable pageable) {
-        return transactionDetailsRepository.findByTransactionId(id, pageable)
-                .map(transactionDetailsMapper::mapToDto);
+    public List<TransactionDetailsDTO> findTransactionDetailsByTransactionId(Long id, Page page) {
+        PanacheQuery<TransactionDetails> query = transactionDetailsRepository.findByTransactionId(id);
+        return query.page(page).stream().map(transactionDetailsMapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -100,7 +98,7 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Transactional
     public void ensureProductNotInTransaction(Long productId)  {
         if (transactionDetailsRepository.existsByProduct_id(productId)) {
-            throw new DataIntegrityViolationException("This product exists in a transaction. Please remove the product from the associated transaction first.");
+            throw new ResourceConflictException("This product exists in a transaction. Please remove the product from the associated transaction first.");
         }
     }
 

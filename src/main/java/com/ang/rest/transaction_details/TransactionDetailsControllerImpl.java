@@ -3,46 +3,61 @@ package com.ang.rest.transaction_details;
 import com.ang.rest.domain.dto.ProductDetailsDTO;
 import com.ang.rest.domain.dto.TransactionDetailsDTO;
 import com.ang.rest.transaction.TransactionService;
+import io.quarkus.panache.common.Page;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.jboss.resteasy.reactive.RestResponse;
+
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/transactions")
+@Path("api/v2/transactions")
 public class TransactionDetailsControllerImpl {
-    private final TransactionDetailsService transactionDetailsService;
-    private final TransactionService transactionService;
-    @PostMapping("/id/{id}/product")
-    public ResponseEntity<Void> addProductToTransaction(@PathVariable Long id, @RequestBody ProductDetailsDTO productDetailsDto) {
+    @Inject
+    TransactionDetailsService transactionDetailsService;
+    @Inject
+    TransactionService transactionService;
+
+    @POST
+    @Path("/id/{id}/product")
+    public RestResponse<Void> addProductToTransaction(@PathParam("id") Long id,  ProductDetailsDTO productDetailsDto) {
         transactionDetailsService.addProductToTransaction(id, productDetailsDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return  RestResponse.ok();
     }
-    @PostMapping("/id/{id}/products")
-    public ResponseEntity<Void> addProductsBatch(@PathVariable Long id, @RequestBody List<ProductDetailsDTO> productDetailsDto) {
+
+    @POST
+    @Path("/id/{id}/products")
+    public RestResponse<Void> addProductsBatch(@PathParam("id") Long id,  List<ProductDetailsDTO> productDetailsDto) {
         transactionDetailsService.addProductsBatch(id, productDetailsDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return  RestResponse.ok();
     }
 
-    @GetMapping("/id/{id}/details/all")
-    public ResponseEntity<List<TransactionDetailsDTO>> getAllTransactionDetails(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionDetailsService.getTransactionDetailsByTransactionId(id));
+    @GET
+    @Path("/id/{id}/details/all")
+    public RestResponse<List<TransactionDetailsDTO>> getAllTransactionDetails(@PathParam("id") Long id) {
+        return RestResponse.ok(transactionDetailsService.findAllTransactionDetailsByTransactionId(id));
     }
 
-    @GetMapping("/id/{id}/details")
-    public ResponseEntity<Page<TransactionDetailsDTO>> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
-        return ResponseEntity.ok(transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable));
+    @GET
+    @Path("/id/{id}/details")
+    public RestResponse<List<TransactionDetailsDTO>> getTransactionDetailsByTransactionId(
+            @PathParam("id") Long id,
+            @QueryParam("page") Integer page,
+            @QueryParam("size") Integer size) {
+        int pageIndex = page != null ? page : 0;
+        int pageSize = size != null ? size : 10;
+        Page panachePage = Page.of(pageIndex, pageSize);
+        return RestResponse.ok(transactionDetailsService.findTransactionDetailsByTransactionId(id, panachePage));
     }
-    @DeleteMapping(path = "/id/{id}/product/{productName}")
-    public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
-        if (!transactionService.isExists(transactionId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @DELETE
+    @Path("/id/{id}/product/{productName}")
+    public RestResponse<Void> deleteProductFromTransaction(@PathParam("id") Long transactionId, @PathParam("productName") String productName) {
+        if (!transactionService.existsById(transactionId)) {
+            return  RestResponse.notFound();
         }
         transactionDetailsService.deleteProduct(transactionId, productName);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return  RestResponse.noContent();
     }
 }

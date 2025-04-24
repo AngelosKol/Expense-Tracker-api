@@ -1,30 +1,29 @@
 package com.ang.rest.transaction_details;
 
+import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.entity.TransactionDetails;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-import java.util.List;
-import java.util.Optional;
-
-public interface TransactionDetailsRepository extends JpaRepository<TransactionDetails, Long>, PagingAndSortingRepository<TransactionDetails, Long> {
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Parameters;
 
 
-    void deleteByTransactionId(Long transactionId);
+public class TransactionDetailsRepository extends BaseRepository<TransactionDetails, Long> {
 
-    Optional<List<TransactionDetails>> findByTransactionId(Long transactionId);
+    public PanacheQuery<TransactionDetails> findByTransactionId(Long transactionId) {
+        return find("transaction.id = :transactionId", Parameters.with("transactionId", transactionId));
+    }
 
-    Page<TransactionDetails> findByTransactionId(Long transactionId, Pageable pageable);
+    public boolean existsByProduct_id(Long productId) {
+        return count("product.id = :productId", Parameters.with("productId", productId)) > 0;
+    }
 
-    boolean existsByProduct_id(Long id);
+    public void removeProductFromTransaction(Long transactionId, String productName) {
+         delete("transaction.id = :transactionId AND product.id IN (SELECT p.id FROM Product p where p.name = :productName)",
+                Parameters.with("transactionId", transactionId).and("productName", productName));
+    }
 
-    @Modifying
-    @Query("DELETE FROM TransactionDetails td WHERE td.transaction.id = :transactionId AND td.product.id IN (SELECT p.id FROM Product p WHERE p.name = :name)")
-    void removeProductFromTransaction(@Param("transactionId") Long transactionId, @Param("name") String name);
+    public void deleteByTransactionId(Long transactionId) {
+         delete("transaction.id = :transactionId", Parameters.with("transactionId", transactionId));
+    }
 
 
 }
