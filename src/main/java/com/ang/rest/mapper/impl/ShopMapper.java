@@ -7,14 +7,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ShopMapper {
     public ShopDTO mapToDto(Shop shop) {
-        return new ShopDTO(shop.getId(), shop.getName());
+        return new ShopDTO(shop.id, shop.name);
     }
 
     public Shop mapToEntity(ShopDTO shopDto) {
-        return Shop.builder().name(shopDto.name()).id(shopDto.id()).build();
+        Shop shop = new Shop();
+        shop.id = shopDto.id();
+        shop.name = shopDto.name();
+        return shop;
     }
 
     public void updateEntityFromDto(Shop shop, ShopDTO shopDTO) {
-        shop.setName(shopDTO.name());
+        shop.name = shopDTO.name();
     }
 }

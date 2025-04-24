@@ -8,11 +8,7 @@ import java.util.List;
 
 
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Table(name = "category")
 public class Category {
@@ -20,17 +16,17 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_id_seq")
     @SequenceGenerator(name = "category_seq", sequenceName = "category_id_seq", allocationSize = 50)
-    private Long id;
+    public Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    public String name;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ProductFamily family;
+    public ProductFamily family;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> products;
+    public List<Product> products;
 
 
 }

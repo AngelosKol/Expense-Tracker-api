@@ -4,21 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Table(name = "shop")
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_id_seq")
     @SequenceGenerator(name = "shop_seq", sequenceName = "shop_id_seq", allocationSize = 50)
-    private Long id;
+    public Long id;
 
     @Column(unique = true)
-    private String name;
+    public String name;
 
 
     public boolean equals(final Object o) {
@@ -26,8 +22,8 @@ public class Shop {
         if (!(o instanceof Shop)) return false;
         final Shop other = (Shop) o;
         if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.getId();
-        final Object other$id = other.getId();
+        final Object this$id = this.id;
+        final Object other$id = other.id;
         if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
         return true;
     }
@@ -39,7 +35,7 @@ public class Shop {
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $id = this.getId();
+        final Object $id = this.id;
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
     }

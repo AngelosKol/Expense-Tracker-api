@@ -36,10 +36,10 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
         Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
         Product product = productService.findOneEntity(productDetailsDto.productId());
         TransactionDetails transactionDetails = new TransactionDetails();
-        transactionDetails.setTransaction(transaction);
-        transactionDetails.setProduct(product);
-        transactionDetails.setPrice(productDetailsDto.price());
-        transactionDetails.setQuantity(productDetailsDto.quantity());
+        transactionDetails.transaction = transaction;
+        transactionDetails.product = product;
+        transactionDetails.price = productDetailsDto.price();
+        transactionDetails.quantity = productDetailsDto.quantity();
         transactionDetailsRepository.persist(transactionDetails);
     }
 
@@ -52,15 +52,18 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
                 .collect(Collectors.toMap(ProductDetailsDTO::productId, dto -> dto));
         List<Long> productIDList = new ArrayList<>(productMap.keySet());
         List<Product> fetchedProducts = productService.findAllByID(productIDList);
-        List<TransactionDetails> transactionDetails = fetchedProducts.stream()
-                .map(product -> TransactionDetails.builder()
-                        .transaction(transaction)
-                        .product(product)
-                        .price(productMap.get(product.getId()).price())
-                        .quantity(productMap.get(product.getId()).quantity())
-                        .build())
+        List<TransactionDetails> transactionDetailsList = fetchedProducts.stream()
+                .map(product -> {
+                    ProductDetailsDTO dto = productMap.get(product.id);
+                    TransactionDetails td = new TransactionDetails();
+                    td.transaction = transaction;
+                    td.product = product;
+                    td.price = dto.price();
+                    td.quantity = dto.quantity();
+                    return td;
+                        })
                 .collect(Collectors.toList());
-        transactionDetailsRepository.persist(transactionDetails);
+        transactionDetailsRepository.persist(transactionDetailsList);
     }
 
     @Override

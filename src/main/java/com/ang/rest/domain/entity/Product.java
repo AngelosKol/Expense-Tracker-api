@@ -10,26 +10,22 @@ import lombok.*;
 
 
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Table(name = "product")
 public class Product  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
-    private Long id;
+    public Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    public String name;
 
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    public Category category;
 
     @Override
     public String toString() {
