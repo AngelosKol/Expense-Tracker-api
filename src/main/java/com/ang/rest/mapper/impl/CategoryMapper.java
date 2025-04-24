@@ -10,12 +10,16 @@ public class CategoryMapper {
 
     public CategoryDTO mapToDto(Category category) {
         return new CategoryDTO(
-                category.getId(),
-                category.getName(),
-                category.getFamily().name()
+                category.id,
+                category.name,
+                category.family.name()
         );
     }
     public Category mapToEntity(CategoryDTO dto) {
-        return Category.builder().id(dto.id()).name(dto.name()).family(ProductFamily.valueOf(dto.familyName())).build();
+        Category category = new Category();
+        category.id = dto.id();
+        category.name = dto.name();
+        category.family = ProductFamily.valueOf(dto.familyName());
+        return category;
     }
 }

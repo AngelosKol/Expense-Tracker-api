@@ -11,22 +11,23 @@ public class ProductMapper {
 
     public ProductDTO mapToDto(Product product) {
         return new ProductDTO(
-                product.getId(),
-                product.getName(),
-                product.getCategory() != null ? product.getCategory().getName(): null,
-                product.getCategory() != null ? product.getCategory().getId() : null
+                product.id,
+                product.name,
+                product.category != null ? product.category.name: null,
+                product.category != null ? product.category.id : null
         );
     }
 
     public Product mapToEntity(ProductDTO productDto, Category category) {
-        return Product.builder()
-                .id(productDto.id())
-                .name(productDto.name())
-                .category(category)
-                .build();
+        Product product = new Product();
+        product.id = productDto.id();
+        product.name = productDto.name();
+        product.category = category;
+        return product;
+
     }
     public void updateEntityFromDto(Product product, ProductDTO dto, Category category) {
-        product.setName(dto.name());
-        product.setCategory(category);
+        product.name = dto.name();
+        product.category = category;
     }
 }
