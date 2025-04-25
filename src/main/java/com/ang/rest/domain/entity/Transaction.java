@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-
+import java.util.Objects;
 
 
 @Entity
@@ -33,19 +33,10 @@ public class Transaction {
 
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if (!(o instanceof Transaction)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         final Transaction other = (Transaction) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.id;
-        final Object other$id = other.id;
-        if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-        return true;
+        return Objects.equals(id, other.id);
     }
-
-    protected boolean canEqual(final Object other) {
-        return other instanceof Transaction;
-    }
-
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;

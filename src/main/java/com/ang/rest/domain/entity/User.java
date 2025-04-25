@@ -12,12 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "_user")
 public class User  implements UserDetails {
 
@@ -61,4 +58,20 @@ public class User  implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if(o == this) return true;
+        if( o == null ||  getClass() != o.getClass()) return false;
+        final User other = (User)  o;
+        return Objects.equals(id, other.id);
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 59;
+        int result = 1;
+        result = result * prime + (id == null ? 43 : id.hashCode());
+        return result;
+    }
+
 }

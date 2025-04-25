@@ -8,7 +8,7 @@ import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+import java.util.Objects;
 
 
 @Entity
@@ -32,29 +32,18 @@ public class Product  {
         return "Product{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 
-
     @Override
     public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Product)) return false;
-        final Product other = (Product) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.id;
-        final Object other$id = other.id;
-        if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-        return true;
+        if(o == this) return true;
+        if( o == null ||  getClass() != o.getClass()) return false;
+        final Product other = (Product)  o;
+        return Objects.equals(id, other.id);
     }
-
-    protected boolean canEqual(final Object other) {
-        return other instanceof Product;
-    }
-
+    @Override
     public int hashCode() {
-        final int PRIME = 59;
+        final int prime = 59;
         int result = 1;
-        final Object $id = this.id;
-        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+        result = result * prime + (id == null ? 43 : id.hashCode());
         return result;
     }
-
 }

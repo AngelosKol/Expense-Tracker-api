@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
-
-
+import java.util.Objects;
 
 
 @Entity
@@ -28,5 +26,16 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Product> products;
 
-
+    public boolean equals(final Object o) {
+        if(o == this) return true;
+        if( o == null ||  getClass() != o.getClass()) return false;
+        final Category other = (Category)  o;
+        return Objects.equals(id, other.id);
+    }
+    public int hashCode() {
+        final int prime = 59;
+        int result = 1;
+        result = result * prime + (id == null ? 43 : id.hashCode());
+        return result;
+    }
 }
