@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/transactions")
+@RequestMapping("api/v1/transaction-details")
 public class TransactionDetailsControllerImpl {
     private final TransactionDetailsService transactionDetailsService;
     private final TransactionService transactionService;
@@ -28,12 +28,12 @@ public class TransactionDetailsControllerImpl {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/id/{id}/details/all")
+    @GetMapping("/id/{id}/all")
     public ResponseEntity<List<TransactionDetailsDTO>> getAllTransactionDetails(@PathVariable Long id) {
         return ResponseEntity.ok(transactionDetailsService.getTransactionDetailsByTransactionId(id));
     }
 
-    @GetMapping("/id/{id}/details")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Page<TransactionDetailsDTO>> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable) {
         return ResponseEntity.ok(transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable));
     }

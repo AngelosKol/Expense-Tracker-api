@@ -25,7 +25,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void validateExists(Long id) {
-        if(!shopRepository.existsById(id)) {
+        if (!shopRepository.existsById(id)) {
             throw new ResourceNotFoundException("Shop with id " + id + " not found.");
         }
     }
@@ -66,10 +66,10 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void delete(Long id) {
-        Shop shop = findOne(id);
-        if (transactionRepository.existsByShop_id(id)) {
+        if (!shopRepository.existsById(id)) throw new ResourceNotFoundException("Shop with ID " + id + " not found");
+        if (transactionRepository.existsByShop_id(id))
             throw new DataIntegrityViolationException("There is a transaction related with this shop.");
-        }
+
         shopRepository.deleteById(id);
     }
 

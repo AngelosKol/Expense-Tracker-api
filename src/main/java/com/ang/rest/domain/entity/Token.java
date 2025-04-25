@@ -15,6 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -39,4 +41,19 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User user;
+
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Token other = (Token) o;
+        return Objects.equals(id, other.id);
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $id = this.getId();
+        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+        return result;
+    }
 }

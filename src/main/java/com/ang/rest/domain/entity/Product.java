@@ -3,6 +3,8 @@ package com.ang.rest.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,17 +34,9 @@ public class Product {
 
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if (!(o instanceof Product)) return false;
-        final Product other = (Product) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.getId();
-        final Object other$id = other.getId();
-        if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-        return true;
-    }
-
-    protected boolean canEqual(final Object other) {
-        return other instanceof Product;
+        if(o == null || getClass() != o.getClass()) return false;
+        Product other = (Product) o;
+        return Objects.equals(id, other.id);
     }
 
     public int hashCode() {

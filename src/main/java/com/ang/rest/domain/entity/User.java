@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -60,5 +61,19 @@ public class User  implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        User other = (User) o;
+        return Objects.equals(id, other.id);
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $id = this.getId();
+        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+        return result;
     }
 }
