@@ -11,6 +11,7 @@ import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.mapper.impl.TransactionDetailsMapper;
 import com.ang.rest.product.ProductService;
 import com.ang.rest.transaction.TransactionService;
+import com.ang.rest.user.UserService;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class TransactionDetailsServiceImpl implements TransactionDetailsService {
 
     @Inject TransactionDetailsRepository transactionDetailsRepository;
-    @Inject AuthenticatedUserUtil authenticatedUserUtil;
+    @Inject UserService userService;
     @Inject TransactionService transactionService;
     @Inject ProductService productService;
     @Inject TransactionDetailsMapper transactionDetailsMapper;
@@ -32,8 +33,8 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Transactional
     @Override
     public void addProductToTransaction(Long transactionId, ProductDetailsDTO productDetailsDto) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
+        User authenticatedUser = userService.findByEmail();
+        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.id);
         Product product = productService.findOneEntity(productDetailsDto.productId());
         TransactionDetails transactionDetails = new TransactionDetails();
         transactionDetails.transaction = transaction;
@@ -46,8 +47,8 @@ public class TransactionDetailsServiceImpl implements TransactionDetailsService 
     @Override
     @Transactional
     public void addProductsBatch(Long transactionId, List<ProductDetailsDTO> productDetailsList) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.getId());
+        User authenticatedUser = userService.findByEmail();
+        Transaction transaction = transactionService.findOne(transactionId, authenticatedUser.id);
         Map<Long, ProductDetailsDTO> productMap = productDetailsList.stream()
                 .collect(Collectors.toMap(ProductDetailsDTO::productId, dto -> dto));
         List<Long> productIDList = new ArrayList<>(productMap.keySet());

@@ -1,20 +1,19 @@
 package com.ang.rest.analytics;
 
+import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.dto.AnalyticsDTO;
 import com.ang.rest.domain.dto.MonthCostDTO;
 import com.ang.rest.domain.dto.YearCostsDTO;
 import com.ang.rest.domain.entity.TransactionDetails;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import jakarta.enterprise.context.ApplicationScoped;
+
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Repository
-public interface AnalyticsRepository extends JpaRepository<TransactionDetails, Long> {
+@ApplicationScoped
+public interface AnalyticsRepository extends BaseRepository<TransactionDetails, Long> {
     @Query("SELECT new com.ang.rest.domain.dto.AnalyticsDTO(s.name, TO_CHAR(t.date, 'YYYY-MM-DD'), SUM(td.price * td.quantity)) "
             + "FROM TransactionDetails td " + "INNER JOIN td.transaction t " + "INNER JOIN t.shop s " +
             "WHERE t.date >= :fromDate AND t.date <= :toDate " + "GROUP BY s.name, t.date")
