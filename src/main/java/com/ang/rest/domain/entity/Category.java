@@ -28,6 +28,12 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products ;
+
+    public Category(Long id, String name, ProductFamily family) {
+        this.id = id;
+        this.name = name;
+        this.family = family;
+    }
     public boolean equals(final Object o) {
         if (o == this) return true;
         if(o == null || getClass() != o.getClass()) return false;
