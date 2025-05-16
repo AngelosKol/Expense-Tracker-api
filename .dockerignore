@@ -1,0 +1,34 @@
+# Dependency directories 
+node_modules
+dist
+tmp
+.cache
+coverage
+
+# Git and local configuration
+.git
+.gitignore
+.idea
+.vscode
+
+# System/OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.bak
+*.swp
+*.tmp
+
+# Docker-related files 
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Misc
+*.md
+*.yml
+.env
+*.backup
