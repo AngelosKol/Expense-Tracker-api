@@ -13,14 +13,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "product")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
     private Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
-
 
     @ManyToOne
     @JoinColumn(name = "category_id")
