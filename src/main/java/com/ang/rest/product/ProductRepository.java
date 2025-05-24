@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, PagingA
     Page<Product> findAll(@NonNull Pageable pageable);
 
     @EntityGraph(attributePaths = {"category"})
-    Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    <T> Page<T> findByNameContainingIgnoreCase(String name, Pageable pageable, Class<T> type);
     Product findByName(String name);
 
     boolean existsByName(String name);

@@ -3,6 +3,7 @@ package com.ang.rest.transaction_details;
 import com.ang.rest.domain.entity.TransactionDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,7 @@ public interface TransactionDetailsRepository extends JpaRepository<TransactionD
 
     Optional<List<TransactionDetails>> findByTransactionId(Long transactionId);
 
+    @EntityGraph(attributePaths = {"product"})
     Page<TransactionDetails> findByTransactionId(Long transactionId, Pageable pageable);
 
     boolean existsByProduct_id(Long id);

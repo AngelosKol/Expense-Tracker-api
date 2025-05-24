@@ -1,7 +1,6 @@
 package com.ang.rest.domain.entity;
 
 
-import com.ang.rest.domain.entity.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +30,7 @@ public class User  implements UserDetails {
     private String password;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Token> tokens;
 
 
