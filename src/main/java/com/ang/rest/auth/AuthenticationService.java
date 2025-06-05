@@ -6,9 +6,9 @@ import com.ang.rest.domain.dto.AuthenticationRequest;
 import com.ang.rest.domain.dto.AuthenticationResponse;
 import com.ang.rest.domain.dto.RegisterRequest;
 import com.ang.rest.domain.entity.Token;
+import com.ang.rest.domain.entity.User;
 import com.ang.rest.token.TokenRepository;
 import com.ang.rest.token.TokenType;
-import com.ang.rest.domain.entity.User;
 import com.ang.rest.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 
 @Service

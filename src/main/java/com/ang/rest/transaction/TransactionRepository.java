@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TransactionRepository extends BaseRepository<Transaction, Long> {
 
-    boolean existsByShop_id(Long shopId) {
+    public boolean existsByShop_id(Long shopId) {
         return count("shop.id = :shopId", Parameters.with("shopId", shopId)) > 0;
     }
     PanacheQuery<Transaction> findAllByUserId(Long userId) {

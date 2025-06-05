@@ -2,6 +2,7 @@ package com.ang.rest.domain.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "_user")
 public class User {
