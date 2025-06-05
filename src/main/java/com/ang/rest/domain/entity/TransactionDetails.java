@@ -17,7 +17,7 @@ public class TransactionDetails {
 
 
     @Id
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
