@@ -21,7 +21,7 @@ public interface TransactionDetailsController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDTO.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @GetMapping("/id/{id}/details/all")
+    @GetMapping("/id/{id}/all")
     ResponseEntity<List<TransactionDetailsDTO>> getAllTransactionDetails(@PathVariable Long id);
 
     @Operation(summary = "Get paginated transaction details", description = "Retrieve paginated details for a specific transaction")
@@ -29,7 +29,7 @@ public interface TransactionDetailsController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated transaction details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDetailsDTO.class))),
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
-    @GetMapping("/id/{id}/details")
+    @GetMapping("/id/{id}")
     Page<TransactionDetailsDTO> getTransactionDetailsByTransactionId(@PathVariable Long id, Pageable pageable);
 
     @Operation(summary = "Delete product from transaction", description = "Delete a product from an existing transaction by product name")
