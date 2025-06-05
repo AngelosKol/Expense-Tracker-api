@@ -26,8 +26,7 @@ public class Category {
     @Column(nullable = false)
     private ProductFamily family;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products ;
 
     public Category(Long id, String name, ProductFamily family) {
