@@ -6,7 +6,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "transaction")
 
@@ -17,11 +18,11 @@ public class Transaction {
     public Long id;
 
     public LocalDate date;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
     public Shop shop;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     public User user;
 

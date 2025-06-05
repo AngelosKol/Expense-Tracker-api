@@ -1,16 +1,13 @@
 package com.ang.rest.domain.entity;
 
-import com.ang.rest.domain.dto.ProductDTO;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "product")
 public class Product  {

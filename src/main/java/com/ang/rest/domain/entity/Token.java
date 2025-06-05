@@ -2,11 +2,15 @@ package com.ang.rest.domain.entity;
 
 import com.ang.rest.token.TokenType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
-
+@Getter
+@Setter
 @Entity
+@Table(name = "token")
 public class Token {
 
     @Id
