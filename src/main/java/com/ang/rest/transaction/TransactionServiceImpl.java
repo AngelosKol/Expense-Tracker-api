@@ -60,8 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction findOne(Long transactionId, Long userId) {
-        User authenticatedUser = authenticatedUserUtil.getAuthenticatedUser();
-        return transactionRepository.findByIdAndUserId(transactionId, authenticatedUser.getId()).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        return transactionRepository.findByIdAndUserId(transactionId, userId).orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
     }
 
     @Override
