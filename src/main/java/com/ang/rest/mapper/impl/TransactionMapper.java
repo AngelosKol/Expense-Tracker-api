@@ -4,9 +4,10 @@ import com.ang.rest.domain.dto.TransactionDTO;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.domain.entity.Transaction;
 import com.ang.rest.domain.entity.User;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class TransactionMapper  {
-
 
     public TransactionDTO mapToDto(Transaction transaction) {
         return  new TransactionDTO(

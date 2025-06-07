@@ -4,7 +4,9 @@ import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.entity.Category;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Parameters;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class CategoryRepository extends BaseRepository<Category, Long> {
 
     public PanacheQuery<Category> findByNameLight(String name) {

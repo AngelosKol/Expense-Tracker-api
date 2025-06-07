@@ -2,6 +2,7 @@ package com.ang.rest.user;
 
 import com.ang.rest.domain.entity.Token;
 import com.ang.rest.domain.entity.User;
+import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.token.TokenRepository;
 import com.ang.rest.token.TokenType;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -55,5 +56,9 @@ public class UserService {
         token.expired   = false;
         token.user      = user;
         tokenRepository.persist(token);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findByIdOptional(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

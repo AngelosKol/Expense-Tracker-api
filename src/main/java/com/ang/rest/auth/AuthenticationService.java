@@ -15,6 +15,7 @@ import com.ang.rest.user.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
@@ -27,6 +28,9 @@ public class AuthenticationService {
     UserService userService;
     @Inject
     JwtProvider jwtProvider;
+
+    @Inject
+    JsonWebToken jwt;
 
     @Transactional
     public void register(RegisterRequest registerRequest) {
@@ -48,6 +52,11 @@ public class AuthenticationService {
         // userService.persistJwtToken(accessToken, user);
         // userService.persistJwtToken(refreshToken, user);
         return new AuthenticationResponse(accessToken, refreshToken);
+    }
+
+    public User getAuthenticatedUser() {
+        Long userId = jwt.getClaim("user_id");
+        return userService.findById(userId);
     }
 
 }

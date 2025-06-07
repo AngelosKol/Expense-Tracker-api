@@ -4,8 +4,10 @@ import com.ang.rest.BaseRepository;
 import com.ang.rest.domain.entity.TransactionDetails;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Parameters;
+import jakarta.enterprise.context.ApplicationScoped;
 
 
+@ApplicationScoped
 public class TransactionDetailsRepository extends BaseRepository<TransactionDetails, Long> {
 
     public PanacheQuery<TransactionDetails> findByTransactionId(Long transactionId) {
