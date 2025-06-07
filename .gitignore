@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### private ###
-!**/src/main/resources/jwt/
+!**/jwt/
