@@ -13,10 +13,10 @@ public class TransactionRepository extends BaseRepository<Transaction, Long> {
     public boolean existsByShop_id(Long shopId) {
         return count("shop.id = :shopId", Parameters.with("shopId", shopId)) > 0;
     }
-    PanacheQuery<Transaction> findAllByUserId(Long userId) {
+    public PanacheQuery<Transaction> findAllByUserId(Long userId) {
         return find("user.id = :userId", Parameters.with("userId", userId));
     }
-    PanacheQuery<Transaction>  findByIdAndUserId(Long transactionId, Long userId) {
+    public PanacheQuery<Transaction>  findByIdAndUserId(Long transactionId, Long userId) {
         return find("id = :transactionId, user.id = :userId",
                 Parameters.with("transactionId", transactionId).and("userId", userId)
         );

@@ -12,7 +12,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Path("api/v2/transactions")
+@Path("api/v1/transactions")
 public class TransactionDetailsControllerImpl {
     @Inject
     TransactionDetailsService transactionDetailsService;

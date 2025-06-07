@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Path("api/v2/shops")
+@Path("api/v1/shops")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ShopControllerImpl {

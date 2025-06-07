@@ -14,7 +14,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.net.URI;
 import java.util.List;
 
-@Path("api/v2/transactions")
+@Path("api/v1/transactions")
 public class TransactionControllerImpl implements TransactionController {
     @Inject TransactionService transactionService;
     @Inject TransactionMapper transactionMapper;

@@ -14,7 +14,9 @@ import java.util.Set;
 
 @ApplicationScoped
 public class JwtProvider {
-    private static final String ISSUER = "expense-api";
+
+    @ConfigProperty(name = "smallrye-jwt.verify.issuer")
+    String issuer ;
     private static final Set<String> DEFAULT_ROLES = Collections.singleton("user");
 
     @ConfigProperty(name = "security.jwt.expiration")
@@ -34,7 +36,7 @@ public class JwtProvider {
     private String buildToken(User user, long expirationMillis) {
         Instant now = Instant.now();
         long expiresAt = now.plusMillis(expirationMillis).toEpochMilli();
-        return Jwt.issuer(ISSUER)
+        return Jwt.issuer(issuer)
                 .subject(user.getEmail())
                 .claim("user_id", user.getId())
                 .groups(DEFAULT_ROLES)

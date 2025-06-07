@@ -1,5 +1,6 @@
 package com.ang.rest.user;
 
+import com.ang.rest.auth.AuthenticationService;
 import com.ang.rest.domain.entity.Token;
 import com.ang.rest.domain.entity.User;
 import com.ang.rest.exception.ResourceNotFoundException;
@@ -8,12 +9,14 @@ import com.ang.rest.token.TokenType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.jboss.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
 @ApplicationScoped
 public class UserService {
+    private static final Logger log = Logger.getLogger(UserService.class);
     @Inject
     UserRepository userRepository;
     @Inject
@@ -39,11 +42,16 @@ public class UserService {
     public Optional<User> validateCredentials(String email, String password) {
         User existingUSer = userRepository.findByEmail(email).firstResult();
         if(existingUSer == null){
+            log.info("user is null");
             return Optional.empty();
         }
         if(!BCrypt.checkpw(password, existingUSer.password)) {
+            log.info("password is wrong");
+
             return Optional.empty();
         }
+        log.info("user is " + existingUSer);
+
         return Optional.of(existingUSer);
     }
 

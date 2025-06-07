@@ -15,12 +15,14 @@ import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.jboss.logging.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class TransactionServiceImpl implements TransactionService {
+    private static final Logger log = Logger.getLogger(TransactionService.class);
 
     @Inject TransactionRepository transactionRepository;
     @Inject ShopService shopService;
@@ -40,12 +42,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDTO> findAll() {
+        User authenticatedUser = authenticationService.getAuthenticatedUser();
+
+        log.info("Current user ID = " + authenticatedUser);
         return transactionRepository.findAll().stream().map(transactionMapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<TransactionDTO> findAll(Page page) {
         User authenticatedUser = authenticationService.getAuthenticatedUser();
+        log.info("Current user ID = " + authenticatedUser.getId());
         PanacheQuery<Transaction> query = transactionRepository.findAllByUserId(authenticatedUser.id);
         return query.page(page).stream().map(transactionMapper::mapToDto).collect(Collectors.toList());
     }
@@ -53,6 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDTO findOne(Long transactionId) {
         User authenticatedUser = authenticationService.getAuthenticatedUser();
+        log.info("Current user ID = " + authenticatedUser);
         return transactionRepository.findByIdAndUserId(transactionId, authenticatedUser.id)
                 .singleResultOptional()
                 .map(transactionMapper::mapToDto)

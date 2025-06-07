@@ -12,7 +12,7 @@ import java.util.Optional;
 @ApplicationScoped
 public class UserRepository extends BaseRepository<User,Long> {
    public PanacheQuery<User> findByEmail(String email) {
-      return find("lower(name) = ?1", "%" + email.toLowerCase() + "%");
+      return find("email = ?1",  email);
    }
 
 

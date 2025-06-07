@@ -14,8 +14,10 @@ import com.ang.rest.user.UserRepository;
 import com.ang.rest.user.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.JsonNumber;
 import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
@@ -23,6 +25,7 @@ import java.util.Set;
 
 @ApplicationScoped
 public class AuthenticationService {
+    private static final Logger log = Logger.getLogger(AuthenticationService.class);
 
     @Inject
     UserService userService;
@@ -44,6 +47,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         String email = authenticationRequest.getEmail().trim().toLowerCase();
+        log.info("User email is " + email);
         String password = authenticationRequest.getPassword();
         User found = userService.validateCredentials(email, password)
                 .orElseThrow(() -> new InvalidCredentialsException("User does not exist or credentials are wrong"));
@@ -55,7 +59,8 @@ public class AuthenticationService {
     }
 
     public User getAuthenticatedUser() {
-        Long userId = jwt.getClaim("user_id");
+        JsonNumber jsonId = (JsonNumber) jwt.getClaim("user_id");
+        long userId = jsonId.longValue();
         return userService.findById(userId);
     }
 

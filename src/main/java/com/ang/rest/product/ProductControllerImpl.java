@@ -12,7 +12,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.net.URI;
 import java.util.List;
 
-@Path("api/v2/products")
+@Path("api/v1/products")
 public class ProductControllerImpl {
     @Inject ProductService productService;
     @Inject UriInfo uriInfo;

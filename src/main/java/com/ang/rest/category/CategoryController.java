@@ -9,7 +9,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 
 
-@Path("api/v2/categories")
+@Path("api/v1/categories")
 public class CategoryController {
 
    @Inject CategoryServiceImpl categoryService;

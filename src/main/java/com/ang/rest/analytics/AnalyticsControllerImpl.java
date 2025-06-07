@@ -13,7 +13,7 @@ import jakarta.ws.rs.*;
 import java.util.Date;
 import java.util.List;
 
-@Path("api/v2/analytics")
+@Path("api/v1/analytics")
 public class AnalyticsControllerImpl  {
 
     @Inject
