@@ -42,4 +42,13 @@ CREATE TABLE IF NOT EXISTS transaction_details (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-
+CREATE TABLE IF NOT EXISTS token (
+	id INT ,
+	expired bool ,
+	revoked bool ,
+	"token" varchar(255) UNIQUE,
+	token_type varchar(255) ,
+	user_id int4,
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES _user(id)
+);
