@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
-public interface AnalyticsRepository extends BaseRepository<TransactionDetails, Long> {
+public class AnalyticsRepository extends BaseRepository<TransactionDetails, Long> {
     @Query("SELECT new com.ang.rest.domain.dto.AnalyticsDTO(s.name, TO_CHAR(t.date, 'YYYY-MM-DD'), SUM(td.price * td.quantity)) "
             + "FROM TransactionDetails td " + "INNER JOIN td.transaction t " + "INNER JOIN t.shop s " +
             "WHERE t.date >= :fromDate AND t.date <= :toDate " + "GROUP BY s.name, t.date")

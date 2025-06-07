@@ -1,8 +1,8 @@
 package com.ang.rest.exception;
 
-public class MalformedTokenException extends  RuntimeException {
+public class MalformedTokenException extends RuntimeException {
 
-    public MalformedTokenException(String message){
-        super( message);
+    public MalformedTokenException(String message) {
+        super(message);
     }
 }

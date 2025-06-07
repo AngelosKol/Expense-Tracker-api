@@ -4,14 +4,13 @@ import com.ang.rest.domain.dto.ErrorResponse;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class ConstraintViolationExceptionMapper extends  BaseExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+public class ConstraintViolationExceptionMapper extends BaseExceptionMapper<ConstraintViolationException> {
 
     @Context
     UriInfo uriInfo;

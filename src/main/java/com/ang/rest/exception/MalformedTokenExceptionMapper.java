@@ -4,16 +4,16 @@ import com.ang.rest.domain.dto.ErrorResponse;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class MalformedTokenExceptionMapper extends BaseExceptionMapper implements ExceptionMapper<MalformedTokenException> {
+public class MalformedTokenExceptionMapper extends BaseExceptionMapper<MalformedTokenException> {
     private static final Logger logger = LoggerFactory.getLogger(MalformedTokenExceptionMapper.class);
     @Context
     UriInfo uriInfo;
+
     @Override
     public Response toResponse(MalformedTokenException e) {
         ErrorResponse errorResponse = new ErrorResponse(

@@ -7,33 +7,38 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
 import java.util.Set;
 
 
 @ApplicationScoped
 public class JwtProvider {
+    private static final String ISSUER = "expense-api";
+    private static final Set<String> DEFAULT_ROLES = Collections.singleton("user");
 
     @ConfigProperty(name = "security.jwt.expiration")
-    long jwtExpiration;
+    private long jwtExpirationMillis;
 
     @ConfigProperty(name = "security.jwt.refresh-token.expiration")
-    long refreshExpiration;
+    private long refreshExpirationMillis;
 
     public String generateToken(User user) {
-        return Jwt.issuer("expense-api")
-                .subject(user.getEmail())
-                .claim("user_id", user.getId())
-                .groups(Set.of("user"))
-                .expiresIn(Duration.ofMillis(jwtExpiration))
-                .sign();
+        return buildToken(user, jwtExpirationMillis);
     }
 
     public String generateRefreshToken(User user) {
-        return Jwt.issuer("expense-api")
+        return buildToken(user, refreshExpirationMillis);
+    }
+
+    private String buildToken(User user, long expirationMillis) {
+        Instant now = Instant.now();
+        long expiresAt = now.plusMillis(expirationMillis).toEpochMilli();
+        return Jwt.issuer(ISSUER)
                 .subject(user.getEmail())
                 .claim("user_id", user.getId())
-                .groups(Set.of("user"))
-                .expiresIn(Duration.ofMillis(refreshExpiration))
+                .groups(DEFAULT_ROLES)
+                .expiresAt(expiresAt)
                 .sign();
     }
 }

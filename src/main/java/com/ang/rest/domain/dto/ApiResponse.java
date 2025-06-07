@@ -20,9 +20,6 @@ public class ApiResponse<T> {
     public ApiResponse(int status) {
         this(status, null, null);
     }
-    public ApiResponse(URI location) {
-        this(null, null, location);
-    }
 
     public ApiResponse(int status, T body) {
         this(status, body, null);
