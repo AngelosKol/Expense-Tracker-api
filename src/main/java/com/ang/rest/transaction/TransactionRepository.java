@@ -17,7 +17,7 @@ public class TransactionRepository extends BaseRepository<Transaction, Long> {
         return find("user.id = :userId", Parameters.with("userId", userId));
     }
     public PanacheQuery<Transaction>  findByIdAndUserId(Long transactionId, Long userId) {
-        return find("id = :transactionId, user.id = :userId",
+        return find("id = :transactionId AND user.id = :userId",
                 Parameters.with("transactionId", transactionId).and("userId", userId)
         );
     }

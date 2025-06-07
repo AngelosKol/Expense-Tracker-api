@@ -6,8 +6,10 @@ import com.ang.rest.mapper.impl.TransactionMapper;
 import io.quarkus.panache.common.Page;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestResponse;
 
 
@@ -15,9 +17,11 @@ import java.net.URI;
 import java.util.List;
 
 @Path("api/v1/transactions")
+@Produces(MediaType.APPLICATION_JSON)
 public class TransactionControllerImpl implements TransactionController {
+    private static final Logger log = Logger.getLogger(TransactionController.class);
+
     @Inject TransactionService transactionService;
-    @Inject TransactionMapper transactionMapper;
 
     @Inject UriInfo uriInfo;
 
@@ -33,7 +37,10 @@ public class TransactionControllerImpl implements TransactionController {
             @QueryParam("size") Integer size) {
         int pageIndex = page != null ? page : 0;
         int pageSize = size != null ? size : 10;
+        log.info("pageIndex = " + pageIndex );
+        log.info("pageSize = " + pageSize );
         Page panachePage = Page.of(pageIndex, pageSize);
+        log.info("page is = " + panachePage );
         return RestResponse.ok(transactionService.findAll(panachePage));
     }
 

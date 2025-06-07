@@ -10,7 +10,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class CategoryRepository extends BaseRepository<Category, Long> {
 
     public PanacheQuery<Category> findByNameLight(String name) {
-        return find("SELECT new com.ang.rest.domain.entity.Category(id, name, family) WHERE name = :name",
+        return find(
+                "SELECT new com.ang.rest.domain.entity.Category(c.id, c.name, c.family) FROM Category c WHERE c.name = :name",
                 Parameters.with("name", name));
     }
 }
