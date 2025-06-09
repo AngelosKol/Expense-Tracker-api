@@ -2,10 +2,7 @@ package com.ang.rest.domain.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,7 +12,8 @@ import java.util.Objects;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "_user")
@@ -74,5 +72,17 @@ public class User  implements UserDetails {
         final Object $id = this.getId();
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", tokens=" + tokens +
+                '}';
     }
 }

@@ -10,15 +10,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
-@Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,7 +24,7 @@ public class Token {
 
     @Id
     @GeneratedValue
-    public Integer id;
+    public Long id;
 
     @Column(unique = true)
     public String token;
@@ -55,5 +53,17 @@ public class Token {
         final Object $id = this.getId();
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", tokenType=" + tokenType +
+                ", revoked=" + revoked +
+                ", expired=" + expired +
+                ", user=" + user +
+                '}';
     }
 }

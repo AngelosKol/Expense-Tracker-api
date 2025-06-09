@@ -1,3 +1,9 @@
+INSERT INTO _user (id, firstname, lastname, email, password)
+VALUES
+  (1, 'Alice', 'Smith', 'alice@example.com', 'pw'),
+  (2, 'Bob',   'Jones', 'bob@example.com',   'pw');
+
+
 -- Insert multiple rows into the Shop table
 INSERT INTO shop (id, name)
 VALUES 
@@ -21,26 +27,26 @@ VALUES
 (8,'Vegetables'),
 (9,'Fruits');
 
-insert into "transaction" (id,date,shop_id,user_id) values (102,'2024-07-02',1,2);
-insert into "transaction" (id,date,shop_id,user_id) values (103,'2024-06-02',1,2);
-insert into "transaction" (id,date,shop_id,user_id) values (104,'2024-03-02',1,2);
-insert into "transaction" (id,date,shop_id,user_id) values (105,'2024-04-20',1,2);
-insert into "transaction" (id,date,shop_id,user_id) values (106,'2024-05-17',1,2);
-insert into "transaction" (id,date,shop_id,user_id) values (107,'2024-04-19',5,2);
-insert into "transaction" (id,date,shop_id,user_id) values (108,'2024-05-01',4,2);
-insert into "transaction" (id,date,shop_id,user_id) values (109,'2024-05-02',5,2);
-insert into "transaction" (id,date,shop_id,user_id) values (110,'2024-05-03',5,2);
-insert into "transaction" (id,date,shop_id,user_id) values (111,'2023-12-17',3,2);
-insert into "transaction" (id,date,shop_id,user_id) values (112,'2024-06-02',1,52);
-insert into "transaction" (id,date,shop_id,user_id) values (113,'2024-03-02',1,52);
-insert into "transaction" (id,date,shop_id,user_id) values (114,'2024-04-20',1,52);
-insert into "transaction" (id,date,shop_id,user_id) values (115,'2024-05-3',1,52);
-insert into "transaction" (id,date,shop_id,user_id) values (116,'2024-05-5',5,52);
-insert into "transaction" (id,date,shop_id,user_id) values (117,'2024-05-1',3,52);
-insert into "transaction" (id,date,shop_id,user_id) values (118,'2024-06-01',4,52);
-insert into "transaction" (id,date,shop_id,user_id) values (119,'2024-06-02',5,52);
-insert into "transaction" (id,date,shop_id,user_id) values (120,'2024-06-03',5,52);
-insert into "transaction" (id,date,shop_id,user_id) values (121,'2024-07-02',1,52);
+insert into TRANSACTION (id,date,shop_id,user_id) values (102,'2024-07-02',1,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (103,'2024-06-02',1,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (104,'2024-03-02',1,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (105,'2024-04-20',1,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (106,'2024-05-17',1,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (107,'2024-04-19',5,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (108,'2024-05-01',4,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (109,'2024-05-02',5,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (110,'2024-05-03',5,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (111,'2023-12-17',3,2);
+insert into TRANSACTION (id,date,shop_id,user_id) values (112,'2024-06-02',1,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (113,'2024-03-02',1,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (114,'2024-04-20',1,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (115,'2024-05-3',1,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (116,'2024-05-5',5,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (117,'2024-05-1',3,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (118,'2024-06-01',4,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (119,'2024-06-02',5,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (120,'2024-06-03',5,1);
+insert into TRANSACTION (id,date,shop_id,user_id) values (121,'2024-07-02',1,1);
 
 insert into transaction_details (transaction_id,product_id,quantity,price) values (102,6,2,8);
 insert into transaction_details (transaction_id,product_id,quantity,price) values (103,6,2,8);
