@@ -37,4 +37,12 @@ public class Shop {
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Shop{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,11 +30,6 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products ;
 
-    public Category(Long id, String name, ProductFamily family) {
-        this.id = id;
-        this.name = name;
-        this.family = family;
-    }
     public boolean equals(final Object o) {
         if (o == this) return true;
         if(o == null || getClass() != o.getClass()) return false;
@@ -47,5 +43,15 @@ public class Category {
         final Object $id = this.getId();
         result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", family=" + family +
+                ", products=" + products +
+                '}';
     }
 }
