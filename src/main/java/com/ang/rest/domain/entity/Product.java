@@ -24,6 +24,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'UNIT'")
+    private MeasuringType measuringType;
+
     @Override
     public String toString() {
         return "Product{" + "id=" + id + ", name='" + name + '\'' + '}';
