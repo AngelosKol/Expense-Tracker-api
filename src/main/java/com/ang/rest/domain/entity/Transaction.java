@@ -15,8 +15,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "transaction")
 
-public class
-Transaction {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_id_seq", allocationSize = 50)
@@ -37,18 +36,16 @@ Transaction {
         return "Transaction{" + "id=" + id + ", date='" + date + '\'' + '}';
     }
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        Transaction other = (Transaction) o;
-        return Objects.equals(id, other.id);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(getId(), that.getId());
     }
 
+    @Override
     public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $id = this.getId();
-        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-        return result;
+        return Objects.hash(getId());
     }
 }

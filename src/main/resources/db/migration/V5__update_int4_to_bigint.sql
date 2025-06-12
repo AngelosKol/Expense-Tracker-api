@@ -1,11 +1,9 @@
 BEGIN;
 
--- 1) TOKEN.ID
 --------------------------------------------------------------------------------
 ALTER TABLE public.token
   ALTER COLUMN id TYPE BIGINT USING id::BIGINT;
---------------------------------------------------------------------------------
--- 2) TRANSACTION.USER_ID
+
 --------------------------------------------------------------------------------
 ALTER TABLE TRANSACTION
   DROP CONSTRAINT IF EXISTS transaction_user_id_fkey;
