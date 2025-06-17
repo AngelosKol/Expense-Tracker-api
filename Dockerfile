@@ -8,5 +8,8 @@ RUN mvn clean package -DskipTests
 # Stage 2 Runtime:
 FROM openjdk:17-jdk-alpine
 COPY --from=build /app/target/*.jar app.jar
+#COPY opentelemetry-javaagent.jar app/opentelemetry-javaagent.jar
+
 RUN apk add --no-cache bash
 CMD ["java", "-jar", "/app.jar"]
+#ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-jar", "app.jar"]
