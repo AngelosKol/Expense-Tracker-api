@@ -8,4 +8,5 @@ public record AnalyticsDTO(
         String shopName,
         LocalDate transactionDate,
         BigDecimal totalSpent
-) { }
+) {
+}
