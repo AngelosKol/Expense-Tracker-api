@@ -38,10 +38,10 @@ public interface ProductController {
     @Operation(summary = "Update a product by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Product updated", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))}), @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDto);
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDto);
 
     @Operation(summary = "Delete a product by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Product deleted", content = @Content), @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping(path = "/id/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id);
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id);
 }

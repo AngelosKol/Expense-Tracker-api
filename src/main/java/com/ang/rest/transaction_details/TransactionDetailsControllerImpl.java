@@ -38,7 +38,7 @@ public class TransactionDetailsControllerImpl {
         return ResponseEntity.ok(transactionDetailsService.getTransactionDetailsByTransactionId(id, pageable));
     }
     @DeleteMapping(path = "/id/{id}/product/{productName}")
-    public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName) {
+    public ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable String productName) {
         if (!transactionService.isExists(transactionId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

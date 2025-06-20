@@ -1,8 +1,10 @@
 package com.ang.rest.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +30,7 @@ public class Category {
     private ProductFamily family;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> products ;
+    private List<Product> products;
 
     public Category(Long id, String name, ProductFamily productFamily) {
         this.id = id;
@@ -38,7 +40,7 @@ public class Category {
 
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Category other = (Category) o;
         return Objects.equals(id, other.id);
     }
