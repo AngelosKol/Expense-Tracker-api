@@ -1,4 +1,4 @@
-package com.ang.rest.config;
+package com.ang.rest.jwt;
 
 
 import com.ang.rest.exception.MalformedTokenException;
@@ -20,11 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtService {
+public class JwtUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-
-
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;

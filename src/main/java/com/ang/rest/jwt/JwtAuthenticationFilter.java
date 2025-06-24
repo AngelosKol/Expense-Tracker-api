@@ -1,12 +1,14 @@
-package com.ang.rest.config;
+package com.ang.rest.jwt;
 
 import com.ang.rest.token.TokenRepository;
+import com.ang.rest.user.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,23 +25,25 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
+    private final CustomUserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-    private final HandlerExceptionResolver handlerExceptionResolver;
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private HandlerExceptionResolver handlerExceptionResolver;
 
-
-    public JwtAuthenticationFilter(
-            JwtService jwtService,
-            UserDetailsService userDetailsService,
-            TokenRepository tokenRepository,
-            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
-        this.jwtService = jwtService;
+    public JwtAuthenticationFilter(JwtUtils jwtUtils,
+                           CustomUserDetailsService userDetailsService,
+                           TokenRepository tokenRepository,
+                           @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
+        this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
         this.tokenRepository = tokenRepository;
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
+
+
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
 
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -66,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("JWT Token received: {}", jwt);
 
         try {
-            final String userEmail = jwtService.extractUsername(jwt);
+            final String userEmail = jwtUtils.extractUsername(jwt);
             logger.info("Extracted username from token: {}", userEmail);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -77,7 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 logger.info("Token validity check: {}", isTokenValid);
 
-                if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+                if (jwtUtils.isTokenValid(jwt, userDetails) && isTokenValid) {
                     logger.info("Token is valid, setting authentication context");
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,

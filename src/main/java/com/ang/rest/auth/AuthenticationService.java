@@ -1,7 +1,7 @@
 package com.ang.rest.auth;
 
 
-import com.ang.rest.config.JwtService;
+import com.ang.rest.jwt.JwtUtils;
 import com.ang.rest.domain.dto.AuthenticationRequest;
 import com.ang.rest.domain.dto.AuthenticationResponse;
 import com.ang.rest.domain.dto.RegisterRequest;
@@ -27,7 +27,7 @@ public class AuthenticationService {
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -38,8 +38,8 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
         var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var jwtToken = jwtUtils.generateToken(user);
+        var refreshToken = jwtUtils.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -55,8 +55,8 @@ public class AuthenticationService {
         );
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var jwtToken = jwtUtils.generateToken(user);
+        var refreshToken = jwtUtils.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
@@ -97,12 +97,12 @@ public class AuthenticationService {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
+        userEmail = jwtUtils.extractUsername(refreshToken);
         if (userEmail != null) {
             var user = this.repository.findByEmail(userEmail)
                     .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
+            if (jwtUtils.isTokenValid(refreshToken, user)) {
+                var accessToken = jwtUtils.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse.builder()
