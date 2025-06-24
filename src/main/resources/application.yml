@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/EXPENSEDB
+    username: postgres
+    password: changemeinprod!
+    driver-class-name: org.postgresql.Driver
+
+  # Hibernate configuration
+  jpa:
+    # hibernate:
+    #   ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 4
+        order_inserts: true
+
+  # Force SQL scripts on startup
+  sql:
+    init:
+      mode: never
+      # schema: classpath:V1__init_schema.sql
+
+  # Flyway configuration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# JWT configuration
+security:
+  jwt:
+    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    expiration: 86400000
+    refresh-token:
+      expiration: 604800000
+
+# Logging configuration
+logging:
+  level:
+    # org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
