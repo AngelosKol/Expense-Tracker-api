@@ -1,7 +1,6 @@
 package com.ang.rest.transaction_details;
 
 import com.ang.rest.auth.AuthenticatedUserUtil;
-import com.ang.rest.config.JwtAuthenticationFilter;
 import com.ang.rest.domain.dto.*;
 import com.ang.rest.domain.entity.Product;
 import com.ang.rest.domain.entity.Transaction;

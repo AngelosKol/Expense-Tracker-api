@@ -6,8 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory")
 @OpenAPIDefinition(info = @Info(title = "My API", version = "v1", description = "My API description"))
 
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})

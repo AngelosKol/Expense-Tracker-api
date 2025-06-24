@@ -19,7 +19,7 @@ public class AnalyticsService {
     private final AnalyticsRepository repository;
     private final AuthenticatedUserUtil authenticatedUserUtil;
 
-    public List<AnalyticsDTO> getTotalSpentByDate(Date fromDate, Date toDate) {
+    public List<AnalyticsDTO> getTotalSpentByDate(LocalDate fromDate, LocalDate toDate) {
         return repository.getTotalSpent(fromDate, toDate);
     }
 
