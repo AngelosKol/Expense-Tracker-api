@@ -1,6 +1,7 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDTO;
+import com.ang.rest.domain.entity.MeasuringType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,4 +55,10 @@ public class ProductControllerImpl {
         productService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(path = "/measuring-types")
+    public ResponseEntity<MeasuringType[]> getMeasuringTypes() {
+        return ResponseEntity.ok(productService.getMeasuringTypes());
+    }
+
 }

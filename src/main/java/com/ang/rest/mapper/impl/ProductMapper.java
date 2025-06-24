@@ -2,6 +2,7 @@ package com.ang.rest.mapper.impl;
 
 import com.ang.rest.domain.dto.ProductDTO;
 import com.ang.rest.domain.entity.Category;
+import com.ang.rest.domain.entity.MeasuringType;
 import com.ang.rest.domain.entity.Product;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,8 @@ public class ProductMapper {
                 product.getId(),
                 product.getName(),
                 product.getCategory() != null ? product.getCategory().getName() : null,
-                product.getCategory() != null ? product.getCategory().getId() : null
+                product.getCategory() != null ? product.getCategory().getId() : null,
+                product.getMeasuringType() != null ? product.getMeasuringType() : null
         );
     }
 
@@ -23,6 +25,7 @@ public class ProductMapper {
                 .id(productDto.id())
                 .name(productDto.name())
                 .category(category)
+                .measuringType(productDto.measuringType())
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package com.ang.rest.product;
 import com.ang.rest.category.CategoryServiceImpl;
 import com.ang.rest.domain.dto.ProductDTO;
 import com.ang.rest.domain.entity.Category;
+import com.ang.rest.domain.entity.MeasuringType;
 import com.ang.rest.exception.ResourceNotFoundException;
 import com.ang.rest.domain.entity.Product;
 import com.ang.rest.mapper.impl.ProductMapper;
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
                 : existingProduct.getCategory();
         existingProduct.setName(productDto.name());
         existingProduct.setCategory(category);
+        existingProduct.setMeasuringType(productDto.measuringType());
         return productMapper.mapToDto(productRepository.save(existingProduct));
     }
 
@@ -103,6 +105,11 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsByName(name)) {
             throw new DataIntegrityViolationException("A product with this name already exists.");
         }
+    }
+
+    @Override
+    public MeasuringType[] getMeasuringTypes() {
+        return MeasuringType.values();
     }
 
 

@@ -1,6 +1,7 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDTO;
+import com.ang.rest.domain.entity.MeasuringType;
 import com.ang.rest.domain.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,6 @@ public interface ProductService {
     Product findOneEntity(Long id);
 
     void ensureProductNameNotExists(String name);
+
+    MeasuringType[] getMeasuringTypes();
 }
