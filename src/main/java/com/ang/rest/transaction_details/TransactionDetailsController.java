@@ -38,6 +38,6 @@ public interface TransactionDetailsController {
             @ApiResponse(responseCode = "404", description = "Transaction or product not found")
     })
     @DeleteMapping(path = "/id/{id}/product/{productName}")
-    ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable("productName") String productName);
+    ResponseEntity<Void> deleteProductFromTransaction(@PathVariable("id") Long transactionId, @PathVariable String productName);
 
 }

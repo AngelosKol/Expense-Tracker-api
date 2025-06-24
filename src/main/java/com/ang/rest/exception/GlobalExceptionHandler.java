@@ -1,12 +1,11 @@
 package com.ang.rest.exception;
 
-import com.ang.rest.config.JwtAuthenticationFilter;
+import com.ang.rest.jwt.JwtAuthenticationFilter;
 import com.ang.rest.domain.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

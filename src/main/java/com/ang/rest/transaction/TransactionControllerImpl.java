@@ -36,12 +36,12 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @GetMapping(path = "/id/{id}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id) {
+    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
         return  ResponseEntity.ok(transactionService.findOne(id));
     }
 
     @DeleteMapping(path = "/id/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
         transactionService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

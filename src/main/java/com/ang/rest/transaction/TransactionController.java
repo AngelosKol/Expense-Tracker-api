@@ -46,7 +46,7 @@ public interface TransactionController {
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @GetMapping(path = "/id/{id}")
-    ResponseEntity<TransactionDTO> getTransactionById(@PathVariable("id") Long id);
+    ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id);
 
     @Operation(summary = "Delete a transaction", description = "Delete a transaction by its ID")
     @ApiResponses(value = {
@@ -54,6 +54,6 @@ public interface TransactionController {
             @ApiResponse(responseCode = "404", description = "Transaction not found")
     })
     @DeleteMapping(path = "/id/{id}")
-    ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long id);
+    ResponseEntity<Void> deleteTransaction(@PathVariable Long id);
 
 }

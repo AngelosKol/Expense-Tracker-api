@@ -19,21 +19,20 @@ CREATE TABLE IF NOT EXISTS  _user (
 );
 
 CREATE TABLE IF NOT EXISTS token (
-	id BIGINT ,
+	id BIGINT PRIMARY KEY,
 	expired bool ,
 	revoked bool ,
 	"token" varchar(255) UNIQUE,
 	token_type varchar(255) ,
 	user_id BIGINT,
-	PRIMARY KEY (id),
 	FOREIGN KEY (user_id) REFERENCES _user(id)
 );
 
 CREATE TABLE IF NOT EXISTS transaction (
     id BIGINT PRIMARY KEY,
     date DATE,
-    shop_id INT,
-    user_id INT,
+    shop_id BIGINT,
+    user_id BIGINT,
     FOREIGN KEY (shop_id) REFERENCES shop(id),
     FOREIGN KEY (user_id) REFERENCES _user(id)
 );
