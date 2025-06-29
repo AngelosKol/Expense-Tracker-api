@@ -15,6 +15,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Pagin
     Optional<Category> findByName(String name);
     List<Category> findAllByOrderByNameAsc();
 
-    @Query("SELECT new com.ang.rest.domain.entity.Category(id, name, family) FROM Category c WHERE c.name = :name")
-    Category findCategoryWithOutProducts(@Param("name") String name);
 }

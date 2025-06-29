@@ -3,6 +3,7 @@ package com.ang.rest.category;
 import com.ang.rest.domain.dto.CategoryDTO;
 import com.ang.rest.domain.entity.Category;
 import com.ang.rest.exception.ResourceNotFoundException;
+import com.ang.rest.mapper.impl.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,22 +15,24 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl {
 
     private  final CategoryRepository repository;
+    private final CategoryMapper categoryMapper;
 
-    public Category  findById(Long id) {
-        return this.repository.findById(id)
-                .orElseThrow( () -> new ResourceNotFoundException("Category with id " + id  + " not found"));
+    public CategoryDTO  findById(Long id) {
+        Category category = repository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Category with id " + id  + " not found"));
+        return categoryMapper.mapToDto(category);
     }
-    public Category findByName(String  name) {
-        return this.repository.findByName(name)
-                .orElseThrow( () -> new ResourceNotFoundException("Category with name " + name  + " not found"));
+    public CategoryDTO findByName(String  name) {
+        Category category = repository.findByName(name).orElseThrow( () -> new ResourceNotFoundException("Category with name " + name  + " not found"));
+        return categoryMapper.mapToDto(category);
+
+    }
+    public Category findByNameEntity(String  name) {
+       return repository.findByName(name).orElseThrow( () -> new ResourceNotFoundException("Category with name " + name  + " not found"));
     }
 
-    public Category findCategory(String name) {
-        return this.repository.findCategoryWithOutProducts(name);
-    }
     public List<CategoryDTO> findAll() {
         return this.repository.findAllByOrderByNameAsc().stream().map(
-                c -> new CategoryDTO(c.getId(),c.getName(), c.getFamily().name())
+                c -> new CategoryDTO(c.getId(),c.getName(), c.getFamily())
         ).collect(Collectors.toList());
     }
 }
