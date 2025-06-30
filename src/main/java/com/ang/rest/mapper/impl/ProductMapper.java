@@ -6,8 +6,6 @@ import com.ang.rest.domain.entity.MeasuringType;
 import com.ang.rest.domain.entity.Product;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Component
 public class ProductMapper {
 
@@ -15,13 +13,12 @@ public class ProductMapper {
     public ProductDTO mapToDto(Product product) {
         if (product == null) return null;
 
-        Objects.requireNonNull(product.getMeasuringType(), "MeasuringType must not be null");
         return new ProductDTO(
                 product.getId(),
                 product.getName(),
                 getCategoryName(product),
                 getCategoryId(product),
-                product.getMeasuringType()
+                getMeasuringType(product)
         );
     }
 
@@ -31,7 +28,7 @@ public class ProductMapper {
                 .id(productDto.id())
                 .name(productDto.name())
                 .category(category)
-                .measuringType(productDto.measuringType())
+                .measuringType(MeasuringType.of(productDto.measuringType().name()))
                 .build();
     }
 
@@ -40,5 +37,8 @@ public class ProductMapper {
     }
     private Long getCategoryId(Product product) {
         return product.getCategory() != null ? product.getCategory().getId() : null;
+    }
+    public MeasuringType getMeasuringType(Product product) {
+        return product.getMeasuringType() != null ? product.getMeasuringType() : MeasuringType.UNKNOWN;
     }
 }
