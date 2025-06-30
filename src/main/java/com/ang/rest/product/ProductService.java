@@ -1,14 +1,16 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDTO;
+import com.ang.rest.domain.entity.MeasuringType;
 import com.ang.rest.domain.entity.Product;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ProductService {
 
-    ProductDTO save(ProductDTO product);
+    ProductDTO save(@Valid ProductDTO product);
 
     List<ProductDTO> findAll();
 
@@ -16,7 +18,7 @@ public interface ProductService {
 
     ProductDTO findOne(Long id);
 
-    ProductDTO update(Long id, ProductDTO dto);
+    ProductDTO update(Long id, @Valid ProductDTO dto);
 
     List<Product> findAllByID(List<Long> productIDList);
 
@@ -25,4 +27,6 @@ public interface ProductService {
     Product findOneEntity(Long id);
 
     void ensureProductNameNotExists(String name);
+
+    MeasuringType[] getMeasuringTypes();
 }

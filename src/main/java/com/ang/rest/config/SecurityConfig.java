@@ -28,6 +28,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -66,16 +67,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:4200");
-        configuration.addAllowedOrigin("http://localhost:8080");
-        configuration.addAllowedOrigin("http://localhost");
+        configuration.setAllowedOrigins(List.of("http://localhost:4200","http://localhost:8080","http://localhost"));
         configuration.addAllowedOriginPattern("http://192.168.1.*");
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

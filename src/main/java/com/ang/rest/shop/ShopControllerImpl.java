@@ -3,6 +3,7 @@ package com.ang.rest.shop;
 import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.domain.entity.Shop;
 import com.ang.rest.mapper.impl.ShopMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,6 @@ public class ShopControllerImpl {
 
     private final ShopService shopService;
     private final ShopMapper shopMapper;
-
-
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<Shop> getShop(@PathVariable Long id) {
@@ -43,14 +42,14 @@ public class ShopControllerImpl {
     }
 
     @PostMapping
-    public ResponseEntity<ShopDTO> createShop(@RequestBody ShopDTO shopDto) {
+    public ResponseEntity<ShopDTO> createShop(@Valid @RequestBody ShopDTO shopDto) {
         Shop shop = shopService.save(shopDto);
         ShopDTO savedShopDTO = shopMapper.mapToDto(shop);
         return new ResponseEntity<>(savedShopDTO, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ShopDTO> updateShop(@PathVariable Long id, @RequestBody ShopDTO shopDto) {
+    public ResponseEntity<ShopDTO> updateShop(@Valid @PathVariable Long id, @RequestBody ShopDTO shopDto) {
         shopService.validateExists(id);
         ShopDTO shopDTO = shopDto.withId(id);
         Shop savedShop = shopService.save(shopDTO);

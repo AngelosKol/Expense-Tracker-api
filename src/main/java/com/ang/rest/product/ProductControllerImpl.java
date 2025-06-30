@@ -1,6 +1,8 @@
 package com.ang.rest.product;
 
 import com.ang.rest.domain.dto.ProductDTO;
+import com.ang.rest.domain.entity.MeasuringType;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,7 @@ public class ProductControllerImpl {
 
 
     @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDto) {
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDto));
     }
 
@@ -44,7 +46,7 @@ public class ProductControllerImpl {
     }
 
     @PutMapping(path = "/id/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDto) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDto) {
         return ResponseEntity.ok(productService.update(id, productDto));
     }
 
@@ -54,4 +56,10 @@ public class ProductControllerImpl {
         productService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(path = "/measuring-types")
+    public ResponseEntity<MeasuringType[]> getMeasuringTypes() {
+        return ResponseEntity.ok(productService.getMeasuringTypes());
+    }
+
 }

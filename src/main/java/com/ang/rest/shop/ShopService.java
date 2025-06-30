@@ -2,6 +2,7 @@ package com.ang.rest.shop;
 
 import com.ang.rest.domain.dto.ShopDTO;
 import com.ang.rest.domain.entity.Shop;
+import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ public interface ShopService {
 
     void validateExists(Long id);
 
-    Shop save(ShopDTO shopDto);
+    Shop save(@Valid ShopDTO shopDto);
 
     List<Shop> findAll();
 
